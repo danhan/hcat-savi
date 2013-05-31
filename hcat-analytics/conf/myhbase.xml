@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+<property>
+<name>hbase.zookeeper.property.clientPort</name>
+<value>2181</value>
+<description></description>
+</property>
+
+
+<property>
+<name>hbase.client.pause</name>
+<value>20</value>
+<description></description>
+</property>
+
+
+<property>
+<name>hbase.client.retries.number</name>
+<value>11</value>
+<description></description>
+</property>
+
+
+<property>
+<name>hbase.ipc.client.tcpnodelay</name>
+<value>true</value>
+<description></description>
+</property>
+
+
+<property>
+<name>hbase.client.write.buffer</name>
+<value>12582912</value>
+<description> 12*1024*1024 For writing data into hbase</description>
+</property>
+
+<property>
+<name>hbase.block.cache.size</name>
+<value>5000</value>
+<description>number of rows during query</description>
+</property>
+
+
+
+</configuration>

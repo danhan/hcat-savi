@@ -3,7 +3,6 @@ package savi.hcat.analytics.coprocessor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class RCopResult implements Serializable{	
@@ -17,10 +16,10 @@ public class RCopResult implements Serializable{
 	int cells = 0;
 	String parameter = null;
 	int kvLength = 0;
-	HashMap<String,Double> distances = null;
+	HashMap<String,Double> distances = null;	
 	
 	public RCopResult(){
-		this.res = new ArrayList<String>();		
+		this.res = new ArrayList<String>();			
 	}
 
 	/**

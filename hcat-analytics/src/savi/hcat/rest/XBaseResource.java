@@ -26,13 +26,14 @@ public class XBaseResource extends ServerResource {
 		responseHeaders.add("Access-Control-Allow-Origin", "*");
 		responseHeaders.add("Access-Control-Allow-Credentials", "true");
 	}
-
+	
 	protected JSONObject getErrorMessage(String message) {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("error", message);
 		} catch (JSONException e) {
-			return null;
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return obj;
 	}
