@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<coordinator-app name="data-collector" frequency="${coord:minutes{10)}" start="${start}" end="${end}" timezone="UTC"  
+<coordinator-app name="data-collector" frequency="${coord:minutes(10)}" start="${start}" end="${end}" timezone="UTC"  
                  xmlns="uri:oozie:coordinator:0.1">  
         <action>  
         <workflow>  

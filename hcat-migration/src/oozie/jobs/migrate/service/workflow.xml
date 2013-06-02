@@ -1,19 +1,22 @@
 <workflow-app name="migration" xmlns="uri:oozie:workflow:0.2">
-    <start to="service-import"/>
-   <!--
+<!--    <start to="hca-import"/> -->
     <start to="forking"/>  
   
     <fork name="forking">  
         <path start="service-import"/>  
         <path start="hca-import"/>  
     </fork>  
-  -->
 
      
     <action name="service-import">
         <sqoop xmlns="uri:oozie:sqoop-action:0.2">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+	    <prepare>
+                <delete path="${nameNode}/user/${wf:user()}/sqoop/output/service"/>
+                <mkdir path="${nameNode}/user/${wf:user()}/sqoop/output/service"/>
+            </prepare>
+
             <configuration>
                 <property>
                     <name>mapred.job.queue.name</name>
@@ -25,7 +28,7 @@
             <arg>${serviceSql}</arg>
            <file>${serviceSql}</file>
         </sqoop>
-        <ok to="end"/>
+        <ok to="joining"/>
         <error to="sqoop-import-fail"/>
     </action>
  
@@ -33,6 +36,11 @@
         <sqoop xmlns="uri:oozie:sqoop-action:0.2">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+	    <prepare>
+                <delete path="${nameNode}/user/${wf:user()}/sqoop/output/hca"/>
+                <mkdir path="${nameNode}/user/${wf:user()}/sqoop/output/hca"/>
+            </prepare>
+
             <configuration>
                 <property>
                     <name>mapred.job.queue.name</name>
@@ -44,7 +52,7 @@
             <arg>${hcaSql}</arg>
            <file>${hcaSql}</file>
         </sqoop>
-        <ok to="end"/>
+        <ok to="joining"/>
         <error to="sqoop-import-fail"/>
     </action>
    
@@ -53,7 +61,7 @@
         <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
  
-
+   <join name="joining" to="end"/>
    <end name="end"/>
 
  </workflow-app>
