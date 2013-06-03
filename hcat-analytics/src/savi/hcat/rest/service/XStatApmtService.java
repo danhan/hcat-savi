@@ -3,25 +3,29 @@ package savi.hcat.rest.service;
 import java.io.IOException;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.coprocessor.Batch;
 import org.apache.hadoop.hbase.filter.FilterList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.util.XTableSchema;
-
 import savi.hcat.analytics.coprocessor.HCATProtocol;
 import savi.hcat.analytics.coprocessor.RCopResult;
 import savi.hcat.analytics.coprocessor.RStatResult;
+import savi.hcat.common.util.XConstants;
 import savi.hcat.common.util.XTimestamp;
+
+
+import com.util.XTableSchema;
 
 
 
 public class XStatApmtService extends XStatisticsService implements XStatisticsInterface{
-
-	private JSONArray response = null;
-	
+		
+	private static Log log = LogFactory.getLog(XStatApmtService.class);
+	 
 	public XStatApmtService connectHBase(){
 		this.tableSchema = new XTableSchema("schema/appointment.schema");
 		try {
@@ -34,9 +38,12 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	}
 	
 	@Override
-	public JSONArray getSummary(JSONObject request) {
+	public JSONArray getSummary(JSONObject request){		
+		log.info("in getSummary");
 		// get parameters of the query
-		this.decompose(request);
+		boolean decomposed = this.decompose(request);
+		if(!decomposed)
+			log.error("decompose Error!");
 
 		//prepare the callback function
 		SummaryCallBack callback = new SummaryCallBack(this);
@@ -46,8 +53,8 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 		FilterList fList = getScanFilterList(rowRange);// getFilter list
 		// send separate queries for each city
 		for(String city: cities){			
-			rowRange[0] = city+"-"+rowRange[0];
-			rowRange[1] = city+"-"+rowRange[1];
+			rowRange[0] = city+XConstants.ROW_KEY_DELIMETER+rowRange[0];
+			rowRange[1] = city+XConstants.ROW_KEY_DELIMETER+rowRange[1];
 			try {
 				// create the scan 
 				final Scan scan = hbase.generateScan(rowRange, fList,
@@ -125,9 +132,11 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	 * @return
 	 */
 	private String[] getScanRowRange(){
+		log.info("getScanRowRange");
 		String[] rowRange = new String[2];
 		rowRange[0] = XTimestamp.parseDate(this.start_time);
 		rowRange[1] = XTimestamp.parseDate(this.end_time)+"*"; // it means include all rows before 
+		log.info("row range: "+rowRange[0]+"=>"+rowRange[1]);
 		return rowRange;
 	}
 
@@ -136,12 +145,12 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	 * @return
 	 */	
 	private FilterList getScanFilterList(String[] rowRange){
+		log.info("getScanFilterList");
 		FilterList fList = null;
 		return fList;
 	}
 	
-	
-	
+
 	/**
 	 * To compute the average value
 	 * @author dan
@@ -158,12 +167,13 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 		}
 
 		@Override
-		public void update(byte[] region, byte[] row, RStatResult result) {			
+		public void update(byte[] region, byte[] row, RStatResult result) {	
+			log.info("SummaryCallBack: update");
 			Set<String> keys = result.getHashUnit().keySet();
 			
-			for(String key:keys){
-				System.out.println(key + "=>"+result.getHashUnit().get(key));
-			}
+			for(String key:keys){				
+				log.info("result: "+key + "=>"+result.getHashUnit().get(key));
+			}			
 		}
 	}
 	

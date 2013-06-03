@@ -48,6 +48,5 @@ MYLIB=${PWD}/bin/hcat-analytics.jar
 MYCONF=${PWD}/conf/
 
 # jar file which is used to preprocess the files
-
-${JAVA_HOME}/bin/java -Xmx1500m -classpath ${COMMONLIB}:${HBASELIB}:${HBASECONF}:${HADOOPLIB}:${HADOOPCONF}:${MYLIB}:${MYCONF} savi.hcat.rest.XRestMain
+${JAVA_HOME}/bin/java -Xmx1500m -classpath ${COMMONLIB}:${HBASELIB}:${HBASECONF}:${HADOOPLIB}:${HADOOPCONF}:${MYLIB}:${MYCONF}  savi.hcat.rest.XRestMain
 

@@ -2,10 +2,12 @@ package savi.hcat.analytics.coprocessor;
 
 import java.util.Hashtable;
 
+import savi.hcat.common.util.XConstants;
 import savi.hcat.common.util.XTimestamp;
 
 public class RStatResult extends RCopResult{
 
+	private static final long serialVersionUID = 1L;
 	
 	Hashtable<String,Integer> hashUnit = null; // per month, weekly, daily
 	String city = null;
@@ -44,15 +46,19 @@ public class RStatResult extends RCopResult{
 	 */
 	public String parseUnitKey(String rowKey){
 		if(this.unit.equals("m")){
-			return rowKey.split("-")[1].substring(0, 5);
+			return rowKey.split(XConstants.ROW_KEY_DELIMETER)[1].substring(0, 5);
 		}else if(this.unit.equals("w")){
-			return rowKey.split("-")[1];
+			return rowKey.split(XConstants.ROW_KEY_DELIMETER)[1];
 		}
 		return null;
 	}
 
 	public Hashtable<String, Integer> getHashUnit() {
 		return hashUnit;
+	}
+
+	public String getCity() {
+		return city;
 	}
 	
 	

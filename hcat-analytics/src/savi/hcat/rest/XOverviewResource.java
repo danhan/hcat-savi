@@ -1,5 +1,5 @@
 package savi.hcat.rest;
 
-public class XOverviewResource {
+public class XOverviewResource extends XBaseResource{
 
 }

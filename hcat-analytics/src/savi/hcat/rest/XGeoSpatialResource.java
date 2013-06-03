@@ -1,5 +1,5 @@
 package savi.hcat.rest;
 
-public class XGeoSpatialResource {
+public class XGeoSpatialResource extends XBaseResource{
 
 }

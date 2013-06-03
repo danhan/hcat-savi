@@ -1,5 +1,7 @@
 package savi.hcat.rest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Server;
@@ -11,6 +13,8 @@ import org.restlet.data.Protocol;
  */
 public class XRestMain {
 
+	private static Log LOG = LogFactory.getLog(XRestMain.class);
+	
 	public static final String DOMAIN = "/analytics";
 
 	private static Context createContext() {
@@ -23,11 +27,11 @@ public class XRestMain {
 	}
 
 
-
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		LOG.info("start REST in main()");		
 		try {
 
 			Server server = new Server(createContext(),Protocol.HTTP, 9999);
@@ -47,7 +51,6 @@ public class XRestMain {
 			// Something is wrong.
 			e.printStackTrace();
 		}
-
 	}
 
 }

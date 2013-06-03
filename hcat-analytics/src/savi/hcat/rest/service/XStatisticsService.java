@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.hadoop.hbase.client.HTable;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import savi.hcat.common.util.XConstants;
@@ -25,6 +26,8 @@ public class XStatisticsService {
 	protected String unit = null;
 	protected ArrayList<String> cities = new ArrayList<String>();
 	
+	// output
+	protected JSONArray response = null; 
 	
 	protected HBaseUtil hbase = null;	
 	protected XTableSchema tableSchema = null;	
@@ -75,18 +78,23 @@ public class XStatisticsService {
 	}	
 	
 	protected boolean decompose(JSONObject reqObj){
+		System.out.println("[DEBUG]: in decompose");
 		try{
 			if(reqObj != null){
 				
 				if(reqObj.has(XConstants.STAT_KEY_STATUS)){
 					this.status = (String)reqObj.get(XConstants.STAT_KEY_STATUS);
-				}else if(reqObj.has(XConstants.STAT_KEY_START_TIME)){
+				}
+				if(reqObj.has(XConstants.STAT_KEY_START_TIME)){				
 					this.start_time = (String)reqObj.get(XConstants.STAT_KEY_START_TIME);
-				}else if(reqObj.has(XConstants.STAT_KEY_END_TIME)){
+				}
+				if(reqObj.has(XConstants.STAT_KEY_END_TIME)){
 					this.end_time = (String)reqObj.get(XConstants.STAT_KEY_END_TIME);
-				}else if(reqObj.has(XConstants.STAT_KEY_UNIT)){
+				}
+				if(reqObj.has(XConstants.STAT_KEY_UNIT)){
 					this.unit = (String)reqObj.get(XConstants.STAT_KEY_UNIT);
-				}else if(reqObj.has(XConstants.STAT_KEY_CITIES)){
+				}
+				if(reqObj.has(XConstants.STAT_KEY_CITIES)){
 					String cityObj = (String)reqObj.get(XConstants.STAT_KEY_CITIES);
 					this.cities.add((String)cityObj.split(",")[0]);
 					this.cities.add((String)cityObj.split(",")[1]);
@@ -98,6 +106,13 @@ public class XStatisticsService {
 		}
 
 		return false;
+	}
+	
+	
+	public JSONArray getResponse() {
+		if(response==null)
+			response = new JSONArray();
+		return response;
 	}
 	
 	

@@ -3,27 +3,45 @@ package savi.hcat.common.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class XTimestamp {
 
 	static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static Log LOG = LogFactory.getLog(XTimestamp.class);
 	 
 	public static String parseDate(String timestamp){
-/*		Date date;
+		
+		LOG.debug("in parseDate(): "+timestamp);
+		String result = "";
 		try {
-			date = dateFormat.parse(timestamp);		
-			
+			Date time = dateFormat.parse(timestamp);
+			 Calendar cal = Calendar.getInstance();
+			 cal.setTime(time);
+			 int year = cal.get(Calendar.YEAR);
+			 int month = cal.get(Calendar.MONTH)+1;
+			 int day = cal.get(Calendar.DAY_OF_MONTH);
+			result += year;
 			if(month < 10){
-				return "0"+month;
+				result+="0"+month;
 			}else{
-				return String.valueOf(month);
+				result+=String.valueOf(month);
 			}
+			if(day < 10){
+				result+="0"+day;
+			}else{
+				result+=String.valueOf(day);
+			}						
 		} catch (ParseException e) {			
 			e.printStackTrace();
-		}	*/	
-		return null;
+		}
+		LOG.debug("result: "+result);
+		return result;
 	}
 	
 	public static int parseWeekDay(String timestamp){
