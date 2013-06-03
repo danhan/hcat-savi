@@ -10,7 +10,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.json.simple.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -78,12 +79,17 @@ public class TimeSeriesPutTransformer extends PutTransformer{
 			// Add it if it's not null.
 			Object val = fieldEntry.getValue();
 			if (null != val) {
-				object.put(XUtil.toHBaseString(fieldEntry.getKey()), XUtil.toHBaseString(val));
+				try {
+					object.put(XUtil.toHBaseString(fieldEntry.getKey()), XUtil.toHBaseString(val));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		if(null != ts){
 			put.add(colFamilyBytes, Bytes.toBytes(qualifer),
-					Long.parseLong(ts),Bytes.toBytes(object.toJSONString()));		
+					Long.parseLong(ts),Bytes.toBytes(object.toString()));		
 		}		
 
 		return Collections.singletonList(put);

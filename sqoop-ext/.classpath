@@ -5,6 +5,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/sqoop"/>
 	<classpathentry kind="lib" path="/usr/local/hbase-0.94.1-security/hbase-0.94.1-security.jar"/>
 	<classpathentry kind="lib" path="/usr/local/hbase-0.94.1-security/lib/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/org.json.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
