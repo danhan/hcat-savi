@@ -1,0 +1,18 @@
+{   "name": "appointment",
+	"families":[
+	{
+	  "name":"d",
+	  "compression":"GZ",
+	  "versions":"6",
+	  "min_versions":"1",
+	  "blocksize":"",
+	  "in_memory":"",
+	  "blockcache":"true",
+	  "bloomfilter":"ROWCOL",
+	  "replication_scope":""
+	}
+	],
+	"max_file_size":"",
+	"mem_store_size":"",
+	"log_file_name":"appointment"
+}

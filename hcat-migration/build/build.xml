@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="hcat-migration" default="main" basedir="../">
+
+	<property environment="env" />		
+	
+	<property name="src.root" location="../" />
+	
+	<property name="hcat-migration.src" location="${src.root}/hcat-migration"/>
+	
+	<property name="java.home" value="${env.JAVA_HOME}" />
+	<property name="ant.home" value="${env.ANT_HOME}" />
+	<property name="bin.home" value="${hcat-migration.src}/bin" />	
+	<property name="lib.home" value="${hcat-migration.src}/lib" />
+	<property name="src.home" value="${hcat-migration.src}/src" />
+	
+	<property name="hbase.home" location="${env.HBASE_HOME}" />
+	<property name="hadoop.home" location="${env.HADOOP_HOME}" />
+
+	
+	<path id="classpath">
+		<fileset dir="${lib.home}">
+			<include name="org.json.jar"/>
+			<include name="hbase-hd.jar"/>			
+		</fileset>
+		<fileset dir="${hbase.home}">
+			<include name="hbase-0.94.1-security.jar" />
+		</fileset>
+		<fileset dir="${hbase.home}/lib">
+			<include name="log4j-1.2.16.jar" />
+			<include name="commons-logging-1.1.1.jar" />		
+			<include name="hadoop-core-1.0.3.jar" />
+			<include name="zookeeper-3.3.3.jar" />
+			<include name="commons-httpclient-3.1.jar" />
+		</fileset>
+	</path>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="${bin.home}" />
+		<javac srcdir="${src.home}" destdir="${bin.home}/">						
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+	
+	<!--create createHTable.jar -->
+	<target name="main" depends="compile">		
+		<jar jarfile="${bin.home}/createHTable.jar" basedir="${bin.home}" />
+	</target>
+	
+	<target name="clean">
+		<description>clean the jar file last time</description>		
+		<delete dir="${bin.home}" />	
+	</target>	
+	
+	
+</project>
