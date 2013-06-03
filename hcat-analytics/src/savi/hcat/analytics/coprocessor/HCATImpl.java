@@ -23,8 +23,8 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		InternalScanner scanner = ((RegionCoprocessorEnvironment) getEnvironment()).getRegion().getScanner(scan);
 		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
 		RStatResult results = new RStatResult();
-		results = results.setUnit(unit, starttime, endtime);
-		results.setCity(Bytes.toString(scan.getStartRow()).split("-")[0]);
+		results = results.setUnit(unit, starttime, endtime); // by month/week
+		results.setCity(Bytes.toString(scan.getStartRow()).split("-")[0]); // set city in order to aggregate in the client 
 		
 		boolean hasMoreResult = false;				
 		/**Step2: iterate the result from the scanner**/		

@@ -12,6 +12,7 @@ import org.restlet.resource.Post;
 
 import savi.hcat.common.util.XConstants;
 import savi.hcat.rest.service.XStatApmtService;
+import savi.hcat.rest.service.XStatPatientService;
 import savi.hcat.rest.service.XStatisticsService;
 
 /**
@@ -53,8 +54,15 @@ public class XStatisticsResource extends XBaseResource{
 					}													
 					System.out.println("after kpi "+kpi);
 				}else if(object.equals(XConstants.STAT_VALUE_PATIENT)){ // service statistics
-					XStatApmtService stat_service = (XStatApmtService)XStatisticsService.getInstance(XConstants.STAT_VALUE_PATIENT);
+					XStatPatientService stat_service = (XStatPatientService)XStatisticsService.getInstance(XConstants.STAT_VALUE_PATIENT);
 					stat_service.connectHBase();
+					System.out.println("after connecting hbase ");
+					if(kpi.equals("sum")){
+						stat_service.getSummary(payload);	
+					}else if(kpi.equals("avg")){
+						stat_service.getAverage(payload);
+					}													
+					System.out.println("after kpi "+kpi);					
 				}											
 			}
 
