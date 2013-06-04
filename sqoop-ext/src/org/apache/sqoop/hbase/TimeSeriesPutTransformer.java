@@ -1,7 +1,6 @@
 package org.apache.sqoop.hbase;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class TimeSeriesPutTransformer extends PutTransformer{
 	  private String columnFamily = null;
 	  private String columnName = null;
 	  private String versionName = null;
-	  private char delimiter = '.';
+	  private char delimiter = '-';
 	
 	@Override
 	public List<Put> getPutCommand(Map<String, Object> fields)

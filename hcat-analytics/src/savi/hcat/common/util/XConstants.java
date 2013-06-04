@@ -26,7 +26,7 @@ public class XConstants {
 	public static final String TABLE_APPOINTMENT="appointment";
 	public static final String TABLE_PATIENT="patient";
 	
-	public static final String ROW_KEY_DELIMETER = ".";
+	public static final String ROW_KEY_DELIMETER = "-";
 	
 	
 	

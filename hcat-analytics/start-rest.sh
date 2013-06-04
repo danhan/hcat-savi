@@ -32,10 +32,13 @@ ${HBASE_HOME}/lib/zookeeper-3.4.3.jar:\
 ${HBASE_HOME}/lib/slf4j-api-1.4.3.jar:\
 ${HBASE_HOME}/lib/slf4j-log4j12-1.4.3.jar:\
 ${HBASE_HOME}/lib/protobuf-java-2.4.0a.jar:\
+${HBASE_HOME}/lib/jackson-mapper-asl-1.8.8.jar:\
+${HBASE_HOME}/lib/jackson-core-asl-1.8.8.jar:\
 ${PWD}/lib/hbase-hd.jar:\
 ${PWD}/lib/org.json.jar:\
 ${PWD}/lib/org.restlet.ext.json.jar:\
-${PWD}/lib/org.restlet.jar
+${PWD}/lib/org.restlet.jar:\
+${PWD}/lib/google-collections-0.8.jar
 
 HBASELIB=${HBASE_HOME}/hbase-0.94.1-security.jar
 HBASECONF=${HBASE_HOME}/conf

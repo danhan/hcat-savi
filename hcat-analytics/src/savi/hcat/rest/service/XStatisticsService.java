@@ -3,6 +3,8 @@ package savi.hcat.rest.service;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hbase.client.HTable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +22,8 @@ import com.util.XTableSchema;
 
 public class XStatisticsService {
 		
+	private static Log LOG = LogFactory.getLog(XStatisticsService.class);
+	
 	protected String status = null;
 	protected String start_time = null; // 2013-08-28 12:22:22
 	protected String end_time = null; // 2013-08-28 12:22:22
@@ -27,7 +31,7 @@ public class XStatisticsService {
 	protected ArrayList<String> cities = new ArrayList<String>();
 	
 	// output
-	protected JSONArray response = null; 
+	protected JSONArray response = new JSONArray(); 
 	
 	protected HBaseUtil hbase = null;	
 	protected XTableSchema tableSchema = null;	
@@ -55,19 +59,22 @@ public class XStatisticsService {
 	 * @throws IOException
 	 */
 	protected XStatisticsService setHBase() throws IOException {
+		LOG.info("in setHBase()");
 		try{
 			if(hbase == null){
 				hbase = new HBaseUtil(HBASE_CONF_PATH);
 				HTable tableHandler = hbase.getTableHandler(this.tableSchema.getTableName());
-				
+				LOG.info("table name: "+this.tableSchema.getTableName());
 				String scanCache = hbase.getHBaseConfig().get("hbase.block.cache.size");	
 								
 				if(scanCache != null){				
 					hbase.setScanConfig(Integer.valueOf(scanCache), true);				
-				}else{
+				}else{					
 					System.out.println("Default scan cache: "+tableHandler.getScannerCaching());
 				}				
-			}		
+			}else{
+				LOG.info("HBase is not null");
+			}
 						
 		}catch(Exception e){
 			if(hbase != null)
@@ -96,8 +103,10 @@ public class XStatisticsService {
 				}
 				if(reqObj.has(XConstants.STAT_KEY_CITIES)){
 					String cityObj = (String)reqObj.get(XConstants.STAT_KEY_CITIES);
-					this.cities.add((String)cityObj.split(",")[0]);
-					this.cities.add((String)cityObj.split(",")[1]);
+					String[] items = cityObj.split(",");
+					for(String item: items){
+						this.cities.add(item);	
+					}					
 				}				
 				return true;
 			}

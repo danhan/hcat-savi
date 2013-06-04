@@ -1,14 +1,21 @@
 package savi.hcat.rest.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.coprocessor.Batch;
+import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterList;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import savi.hcat.analytics.coprocessor.HCATProtocol;
@@ -24,26 +31,30 @@ import com.util.XTableSchema;
 
 public class XStatApmtService extends XStatisticsService implements XStatisticsInterface{
 		
-	private static Log log = LogFactory.getLog(XStatApmtService.class);
+	private static Log LOG = LogFactory.getLog(XStatApmtService.class);
 	 
-	public XStatApmtService connectHBase(){
+	public XStatApmtService(){
 		this.tableSchema = new XTableSchema("schema/appointment.schema");
+		if(this.tableSchema == null){
+			LOG.error("the table schema fails to be loaded ");
+		}else{
+			LOG.info("family name: "+this.tableSchema.getFamilyName()+"; version"+this.tableSchema.getMaxVersions());
+		}
 		try {
 			this.setHBase();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		return this;
+		}		
 	}
 	
 	@Override
 	public JSONArray getSummary(JSONObject request){		
-		log.info("in getSummary");
+		LOG.info("in getSummary");
 		// get parameters of the query
 		boolean decomposed = this.decompose(request);
 		if(!decomposed)
-			log.error("decompose Error!");
+			LOG.error("decompose Error!");
 
 		//prepare the callback function
 		SummaryCallBack callback = new SummaryCallBack(this);
@@ -53,14 +64,16 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 		FilterList fList = getScanFilterList(rowRange);// getFilter list
 		// send separate queries for each city
 		for(String city: cities){			
-			rowRange[0] = city+XConstants.ROW_KEY_DELIMETER+rowRange[0];
-			rowRange[1] = city+XConstants.ROW_KEY_DELIMETER+rowRange[1];
+			String start = city+XConstants.ROW_KEY_DELIMETER+rowRange[0];
+			String end = city+XConstants.ROW_KEY_DELIMETER+rowRange[1];
 			try {
 				// create the scan 
-				final Scan scan = hbase.generateScan(rowRange, fList,
-						new String[] { this.tableSchema.getFamilyName() }, null,					
+				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
+						new String[] { this.tableSchema.getFamilyName() }, 
+						new String[] {"0","1","2","3","4","5","6"},					
 						this.tableSchema.getMaxVersions());
-
+				
+				LOG.info("scan: "+scan.toString());
 				//send the caller 
 				hbase.getHTable().coprocessorExec(HCATProtocol.class,
 						scan.getStartRow(), scan.getStopRow(),
@@ -82,6 +95,25 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 				e.printStackTrace();
 			}
 		}
+		// TODO callback.cities;
+		LOG.info("the returned value: "+callback.cities.toString());
+		for(String key: callback.cities.keySet()){
+			JSONObject one_city = new JSONObject();
+			TreeMap<String,Integer> treemap = new TreeMap<String,Integer>(callback.cities.get(key));
+			try {
+				one_city.put("city", key);
+				JSONArray values = new JSONArray();
+				for(Integer v:treemap.values()){
+					values.put(v);
+				}
+				one_city.put("values", values);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			this.response.put(one_city);
+		}
+		
 		return this.response;
 	}
 
@@ -132,11 +164,11 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	 * @return
 	 */
 	private String[] getScanRowRange(){
-		log.info("getScanRowRange");
+		LOG.info("getScanRowRange");
 		String[] rowRange = new String[2];
 		rowRange[0] = XTimestamp.parseDate(this.start_time);
 		rowRange[1] = XTimestamp.parseDate(this.end_time)+"*"; // it means include all rows before 
-		log.info("row range: "+rowRange[0]+"=>"+rowRange[1]);
+		LOG.info("row range: "+rowRange[0]+"=>"+rowRange[1]);
 		return rowRange;
 	}
 
@@ -145,8 +177,19 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	 * @return
 	 */	
 	private FilterList getScanFilterList(String[] rowRange){
-		log.info("getScanFilterList");
-		FilterList fList = null;
+		LOG.info("getScanFilterList");		
+		FilterList fList = new FilterList(FilterList.Operator.MUST_PASS_ONE);
+		List<Long> timestamps = new ArrayList<Long>();
+		for(int i=0;i<this.tableSchema.getMaxVersions();i++)
+			timestamps.add(Long.valueOf(i));
+		try {
+			Filter timestampFilter = hbase.getTimeStampFilter(timestamps);
+			fList.addFilter(timestampFilter);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return fList;
 	}
 	
@@ -158,21 +201,28 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	 */
 
 	class SummaryCallBack implements Batch.Callback<RStatResult> {
-		RStatResult res = new RStatResult();
+		public HashMap<String, Hashtable<String,Integer>> cities = new HashMap<String,Hashtable<String,Integer>>();
 		int count = 0; // the number of coprocessor
 		XStatisticsService service = null;
 
 		public SummaryCallBack(XStatisticsService s) {
 			this.service = s;
+				
 		}
 
 		@Override
 		public void update(byte[] region, byte[] row, RStatResult result) {	
-			log.info("SummaryCallBack: update");
-			Set<String> keys = result.getHashUnit().keySet();
-			
-			for(String key:keys){				
-				log.info("result: "+key + "=>"+result.getHashUnit().get(key));
+			LOG.info("SummaryCallBack: update");			
+			String city = result.getCity();
+			Hashtable<String,Integer> hashUnit = result.getHashUnit();
+			if(this.cities.containsKey(city)){
+				Hashtable<String,Integer> temp = this.cities.get(city);
+				for(String key:temp.keySet()){
+					temp.put(key, temp.get(key)+hashUnit.get(key));
+				}
+				
+			}else{
+				this.cities.put(city, result.getHashUnit());
 			}			
 		}
 	}

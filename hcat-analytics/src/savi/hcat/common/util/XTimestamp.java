@@ -27,16 +27,8 @@ public class XTimestamp {
 			 int month = cal.get(Calendar.MONTH)+1;
 			 int day = cal.get(Calendar.DAY_OF_MONTH);
 			result += year;
-			if(month < 10){
-				result+="0"+month;
-			}else{
-				result+=String.valueOf(month);
-			}
-			if(day < 10){
-				result+="0"+day;
-			}else{
-				result+=String.valueOf(day);
-			}						
+			result += formatDigit(month);
+			result += formatDigit(day);						
 		} catch (ParseException e) {			
 			e.printStackTrace();
 		}
@@ -59,12 +51,9 @@ public class XTimestamp {
 		Date date;
 		try {
 			date = dateFormat.parse(timestamp);		
-			int month = date.getMonth();
-			if(month < 10){
-				return "0"+month;
-			}else{
-				return String.valueOf(month);
-			}
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);			
+			return formatDigit(cal.get(Calendar.MONTH));
 		} catch (ParseException e) {			
 			e.printStackTrace();
 		}		
@@ -76,9 +65,48 @@ public class XTimestamp {
 	 * @param end: 2014-08-28 12:22:22
 	 * @return: [{201308,?},{201309,?}]
 	 */
-	public static Hashtable<String,Integer> getHashMonth(String starttime, String endtime){
-		
-		return null;
+	public static Hashtable<String,Integer> getHashMonth(String starttime, String endtime){	
+		LOG.info("getHashMonth "+ starttime+";"+endtime);
+		Hashtable<String, Integer> unitHash = new Hashtable<String,Integer>();
+		try {
+			Date start = dateFormat.parse(starttime);
+			Date end = dateFormat.parse(endtime);
+			Calendar start_cal = Calendar.getInstance();
+			start_cal.setTime(start);
+			Calendar end_cal = Calendar.getInstance();
+			end_cal.setTime(end);
+			int start_year = start_cal.get(Calendar.YEAR);
+			int end_year = end_cal.get(Calendar.YEAR);
+			int start_month = start_cal.get(Calendar.MONTH)+1;
+			int end_month = end_cal.get(Calendar.MONTH)+1;
+			if(start_year == end_year){
+				for(int i=start_month;i<=end_month;i++){					
+					unitHash.put(String.valueOf(start_year)+formatDigit(i), 0);
+				}
+			}else{
+				// the left of the start year
+				for(int i=start_month;i<=12;i++){					
+					unitHash.put(String.valueOf(start_year)+formatDigit(i), 0);
+				}
+				// the whole months of the middle year
+				for(int i=start_year+1;i<=end_year;i++){					
+					for(int j = 1;j<=12;j++){
+						unitHash.put(String.valueOf(i)+formatDigit(j), 0);
+					}
+				}
+				// the left of the end year
+				for(int i=1;i<=end_month;i++){					
+					unitHash.put(String.valueOf(end_year)+formatDigit(i), 0);
+				}
+				
+			}
+			
+		} catch (ParseException e) {			
+			e.printStackTrace();
+		}	
+
+		LOG.info("formuated unit hash: "+unitHash.toString());
+		return unitHash;
 	}
 	
 	/**
@@ -88,8 +116,15 @@ public class XTimestamp {
 	 * @return: [{201308,?},{201309,?}]
 	 */
 	public static Hashtable<String,Integer> getHashWeek(String starttime, String endtime){
-		
+		//TODO
 		return null;
 	}	
+	
+	private static String formatDigit(int m){
+		if(m<10)
+			return "0"+m;
+		else
+			return String.valueOf(m);
+	}
 	
 }

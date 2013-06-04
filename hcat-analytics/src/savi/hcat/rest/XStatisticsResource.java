@@ -46,21 +46,18 @@ public class XStatisticsResource extends XBaseResource{
 
 			LOG.info("the request: "+payload.toString());
 			// call service to get the data based on the parameter
-			
+			JSONArray result = null;
 			if(object!= null){
 				if(object.equals(XConstants.STAT_VALUE_APPOINTMENT)){ // appointment statistics
-					XStatApmtService stat_service = (XStatApmtService)XStatisticsService.getInstance(XConstants.STAT_VALUE_APPOINTMENT);
-					stat_service.connectHBase();
-					LOG.info("after connecting hbase ");
+					XStatApmtService stat_service = (XStatApmtService)XStatisticsService.getInstance(XConstants.STAT_VALUE_APPOINTMENT);										
 					if(kpi.equals("sum")){
-						stat_service.getSummary(payload);	
+						result = stat_service.getSummary(payload);	
 					}else if(kpi.equals("avg")){
-						stat_service.getAverage(payload);
+						result = stat_service.getAverage(payload);
 					}													
 					LOG.info("after kpi "+kpi);
 				}else if(object.equals(XConstants.STAT_VALUE_PATIENT)){ // service statistics
-					XStatPatientService stat_service = (XStatPatientService)XStatisticsService.getInstance(XConstants.STAT_VALUE_PATIENT);
-					stat_service = stat_service.connectHBase();
+					XStatPatientService stat_service = (XStatPatientService)XStatisticsService.getInstance(XConstants.STAT_VALUE_PATIENT);					
 					LOG.info("after connecting hbase ");
 					if(kpi.equals("sum")){
 						stat_service.getSummary(payload);	
@@ -72,9 +69,7 @@ public class XStatisticsResource extends XBaseResource{
 			}
 
 			getResponse().setStatus(Status.SUCCESS_OK);
-
-			JSONArray result = null;
-			
+				
 			return new JsonRepresentation(result);
 
 		} catch (JSONException e) {

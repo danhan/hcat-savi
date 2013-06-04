@@ -2,12 +2,16 @@ package savi.hcat.analytics.coprocessor;
 
 import java.util.Hashtable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import savi.hcat.common.util.XConstants;
 import savi.hcat.common.util.XTimestamp;
 
 public class RStatResult extends RCopResult{
 
 	private static final long serialVersionUID = 1L;
+	private static Log LOG = LogFactory.getLog(RStatResult.class);
 	
 	Hashtable<String,Integer> hashUnit = null; // per month, weekly, daily
 	String city = null;
@@ -27,8 +31,9 @@ public class RStatResult extends RCopResult{
 		return this;
 	}
 	
-	public void addOn(String unitKey, int count){
-		if(hashUnit.contains(unitKey)){
+	public void addOn(String unitKey, int count){		
+		LOG.info("addOn: "+unitKey+";"+count);
+		if(hashUnit.containsKey(unitKey)){
 			int num = this.hashUnit.get(unitKey).intValue();
 			this.hashUnit.put(unitKey, num+count);
 		}else{
@@ -45,12 +50,15 @@ public class RStatResult extends RCopResult{
 	 * @return
 	 */
 	public String parseUnitKey(String rowKey){
+		LOG.info("parseUnitKey: rowkey: " + rowKey);
+		String result = null;
 		if(this.unit.equals("m")){
-			return rowKey.split(XConstants.ROW_KEY_DELIMETER)[1].substring(0, 5);
+			result = rowKey.split(XConstants.ROW_KEY_DELIMETER)[1].substring(0, 6);
 		}else if(this.unit.equals("w")){
-			return rowKey.split(XConstants.ROW_KEY_DELIMETER)[1];
+			result = rowKey.split(XConstants.ROW_KEY_DELIMETER)[1];
 		}
-		return null;
+		LOG.info("the parsed unit key : "+ result);
+		return result;
 	}
 
 	public Hashtable<String, Integer> getHashUnit() {
