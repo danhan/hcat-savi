@@ -1,0 +1,20 @@
+--connect
+jdbc:mysql://abedge/hcaschedule
+--username
+root
+--password
+zhu88jie
+--verbose
+--query
+'select * from Service where
+Service$PersistentID >= 1 and Service$PersistentID <= 20
+$CONDITIONS'
+--split-by
+'Service$PersistentID'
+--hbase-table
+test
+column-family
+d
+--hbase-create-table
+--target-dir
+user/${wf:user()}/sqoop/jobs/output/patient

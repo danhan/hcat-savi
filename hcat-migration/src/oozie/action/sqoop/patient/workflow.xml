@@ -1,0 +1,60 @@
+<workflow-app name="patient-wf" xmlns="uri:oozie:workflow:0.2">
+   <start to="patient-sqoop"/> 
+
+    <action name="patient-sqoop">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+	    <prepare>
+                <delete path="${nameNode}/user/${wf:user()}/sqoop/output/patient"/>
+                <mkdir path="${nameNode}/user/${wf:user()}/sqoop/output"/>
+            </prepare>
+	    <job-xml>hbase-conf.xml</job-xml>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+		<property>
+		    <name>sqoop.connection.factories</name>
+		    <value>com.cloudera.sqoop.manager.DefaultManagerFactory</value>
+		</property>
+            </configuration>
+            <arg>import</arg>
+            <arg>--options-file</arg> 
+            <arg>${optionFile}</arg>
+           <file>${optionFile}</file>
+        </sqoop>
+        <ok to="shell-updatebatch"/>
+        <error to="sqoop-import-fail"/>
+    </action>
+    <kill name="sqoop-import-fail">
+        <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill> 
+    
+   <action name="shell-updatebatch">
+       <shell xmlns="uri:oozie:shell-action:0.1">
+          <job-tracker>${jobTracker}</job-tracker>
+          <name-node>${nameNode}</name-node>
+          <configuration>
+             <property>
+               <name>mapred.job.queue.name</name>
+               <value>${queueName}</value>
+             </property>
+         </configuration>
+         <exec>${script}</exec>
+         <file>${script}</file>
+         <file>${propertyFile}</file>
+         <file>${optionFile}</file>
+        </shell>
+        <ok to="end"/>
+        <error to="shell-fail"/>
+    </action>
+ 
+  <kill name="shell-fail">
+        <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill> 
+
+   <end name="end"/>
+
+ </workflow-app>

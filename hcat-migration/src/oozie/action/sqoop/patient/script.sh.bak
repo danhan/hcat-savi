@@ -1,0 +1,37 @@
+#!/bin/sh
+
+importFile=import.properties
+optionsFile=option-ab
+hdfsJobFolder=/user/ubuntu/sqoop/jobs/patient
+indexField='Service$PersistentID'
+
+. $importFile
+
+newStartIndex=`expr $chunkSize + $startIndex`
+newStartIndexStr=startIndex=$newStartIndex
+
+oldStartIndexStr=startIndex=$startIndex
+chunkSizeStr=chunkSize=$chunkSize
+
+oldWhereClause=`grep "$indexField >" $optionFile`
+newWhereClause="$indexField >= "$startIndex" and $indexField <= "$newStartIndex
+
+echo "Removing old properties and option file"
+
+hadoop fs -rm $hdfsJobFolder/$importFile
+hadoop fs -rm $hdfsJobFolder/$optionFile
+
+
+sed -i "s|$oldStartIndexStr|$newStartIndexStr|g" $importFile
+sed -i "s|$oldWhereClause|$newWhereClause|g" $optionFile
+
+echo "Creating updated properties and option file"
+
+hadoop fs -put $importFile $hdfsJobFolder
+hadoop fs -put $optionFile $hdfsJobFolder
+
+
+echo "Giving read/write permission to other users"
+
+hadoop fs -chmod 777 $hdfsJobFolder/$importFile
+hadoop fs -chmod 777 $hdfsJobFolder/$optionFile
