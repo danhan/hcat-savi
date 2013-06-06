@@ -17,7 +17,7 @@ import ca.ualberta.ssrg.hschema.XUtil;
 
 public abstract class HSchemaPutTransformer extends PutTransformer{
 
-	public static final Log LOG = LogFactory.getLog(HSchemaPutTransformer.class);
+	public static final Log LOG = LogFactory.getLog(HSchemaPutTransformer.class.getName());
 	protected Hashtable<String,String> rowkeyColumns = new Hashtable<String,String>();    
 	protected String columnFamily = null;
 	protected String columnName = null;
@@ -38,6 +38,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 				this.columnName = spliter[1];
 				this.versionName = spliter[2];
 			}else{
+				this.columnFamily = spliter[0];
 				LOG.warn("The column family setting is wrong,should be cf:c:v "+ colFamily);
 			}
 		}else{
@@ -256,6 +257,11 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		return null;
 	}
 	
+	
+	public String getColumnFamily() {
+		return columnFamily;
+	}
+
 	protected String getFieldValue(Map<String, Object> fields, String name){
 		Object value = fields.get(name);
 		if(null != value){
@@ -263,6 +269,8 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		}
 		return null;
 	}
+	
+	
 	
 	@Override
 	public abstract List<Put> getPutCommand(Map<String, Object> fields) throws IOException;

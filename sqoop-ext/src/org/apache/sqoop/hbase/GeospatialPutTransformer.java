@@ -32,7 +32,7 @@ import ca.ualberta.ssrg.hschema.XUtil;
 
 public class GeospatialPutTransformer extends HSchemaPutTransformer{
 
-	public static final Log LOG = LogFactory.getLog(GeospatialPutTransformer.class);				
+	public static final Log LOG = LogFactory.getLog(GeospatialPutTransformer.class.getName());				
 	
 	@Override
 	public List<Put> getPutCommand(Map<String, Object> fields)
@@ -40,21 +40,22 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 		
 		String colFamily = getColumnFamily();
 		byte [] colFamilyBytes = Bytes.toBytes(colFamily);
-		
+		System.out.println("family name: "+colFamily);
 
 		String indicator[] = this.buildHGridModel(fields);				
 		
 		if (null == indicator) {
 			// If the row-key column is null, we don't insert this row.
 			LOG.error("could not get the HGrid index");
+			System.out.println("could not get the HGrid index");
 			return null;
 		}
 		
 		String rowkey = indicator[0];
 		String qualifer = indicator[1];		
 		Put put = new Put(Bytes.toBytes(rowkey));	
-			
-		LOG.debug("rowkey=>"+rowkey+";column=>"+qualifer);
+					
+		System.out.println("rowkey=>"+rowkey+";column=>"+qualifer);
 		
 		JSONObject object = new JSONObject();
 		
@@ -91,31 +92,31 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 	 * @return the identifer of the cell
 	 */
 	private String[] buildHGridModel(Map<String, Object> fields){
-		LOG.debug("build HGrid model: "+fields);
+		System.out.println("build HGrid model: "+fields);
 		XTableSchema tableSchema = new XTableSchema("hschema/spatial.schema");		
-		LOG.debug("get the table schema successfully");
+		System.out.println("get the table schema successfully");
 		Rectangle2D.Double space = tableSchema.getEntireSpace();
 		double min_size_of_subspace = tableSchema.getSubSpace();
 		int encoding = tableSchema.getEncoding();
 		Point2D.Double offset = tableSchema.getOffset();
-		LOG.debug("prepare all configuration items: space=>"+space.toString()+
+		System.out.println("prepare all configuration items: space=>"+space.toString()+
 				";subspace=>"+min_size_of_subspace+";encoding=>"+encoding+";offset=>"+offset);
 		
 		XHybridIndex hybrid = new XHybridIndex(space,tableSchema.getTileSize(),offset,min_size_of_subspace);
 		hybrid.buildZone(encoding);
 		
 		String region = this.getRegionInfo(fields);
-		LOG.debug("get region: "+region);
+		System.out.println("get region: "+region);
 		//get the current location
 		double[] location = this.getSpatialRaw(fields);
 		if(location == null){
 			LOG.error("the location is null");
 			return null;
 		}
-		LOG.debug("get location: latitude=>"+location[0]+";longitude=>"+location[1]);
+		System.out.println("get location: latitude=>"+location[0]+";longitude=>"+location[1]);
 		// get object id
 		String objectId = this.getObjectIdentifier(fields);
-		LOG.debug("get object Id : "+objectId);		
+		System.out.println("get object Id : "+objectId);		
 		if(objectId == null){
 			LOG.error("the object id is null");
 			return null;
