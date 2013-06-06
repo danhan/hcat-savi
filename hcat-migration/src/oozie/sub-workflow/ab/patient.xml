@@ -1,0 +1,57 @@
+<workflow-app name="ab-patient-move" xmlns="uri:oozie:workflow:0.2">
+   <start to="patient-sqoop"/> 
+
+    <action name="patient-sqoop">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+	    <prepare>
+                <delete path="${nameNode}/user/${wf:user()}/oozie/output/patient"/>
+                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+            <arg>import</arg>
+            <arg>--options-file</arg>
+            <arg>patient.option</arg>
+           <file>patient.option</file>
+        </sqoop>
+        <ok to="patient-updatebatch"/>
+        <error to="patient-sqoop-fail"/>
+    </action>
+ 
+    <kill name="patient-sqoop-fail">
+        <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="patient-updatebatch">
+       <shell xmlns="uri:oozie:shell-action:0.1">
+          <job-tracker>${jobTracker}</job-tracker>
+          <name-node>${nameNode}</name-node>
+          <configuration>
+             <property>
+               <name>mapred.job.queue.name</name>
+               <value>${queueName}</value>
+             </property>
+         </configuration>
+         <exec>patient.script</exec>
+         <file>patient.script</file>
+         <file>patient.import</file>
+         <file>patient.option</file>
+        </shell>
+        <ok to="end"/>
+        <error to="patient-shell-fail"/>
+    </action>
+ 
+  <kill name="patient-shell-fail">
+        <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill> 
+
+  
+   <end name="end"/>
+
+ </workflow-app>
