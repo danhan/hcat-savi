@@ -36,7 +36,7 @@ ${HBASE_HOME}/lib/slf4j-api-1.4.3.jar:\
 ${HBASE_HOME}/lib/slf4j-log4j12-1.4.3.jar:\
 ${HBASE_HOME}/lib/protobuf-java-2.4.0a.jar:\
 ${PWD}/lib/org.json.jar:\
-${PWD}/lib/hbase-hd.jar
+${PWD}/lib/hschema-hd.jar
 
 HBASELIB=${HBASE_HOME}/hbase-0.94.1-security.jar
 HBASECONF=${HBASE_HOME}/conf
@@ -50,5 +50,5 @@ MYCONF=${PWD}/conf/
 
 # jar file which is used to preprocess the files
 
-${JAVA_HOME}/bin/java -Xmx1500m -classpath ${COMMONLIB}:${HBASELIB}:${HBASECONF}:${HADOOPLIB}:${HADOOPCONF}:${MYLIB}:${MYCONF}  java.app.createhtable.CreateHBaseTable $* 
+${JAVA_HOME}/bin/java -Xmx1500m -classpath ${COMMONLIB}:${HBASELIB}:${HBASECONF}:${HADOOPLIB}:${HADOOPCONF}:${MYLIB}:${MYCONF}  preprocess.createhtable.CreateHBaseTable $* 
 
