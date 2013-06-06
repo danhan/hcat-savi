@@ -54,7 +54,7 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 		String qualifer = indicator[1];		
 		Put put = new Put(Bytes.toBytes(rowkey));	
 			
-		LOG.info("rowkey=>"+rowkey+";column=>"+qualifer);
+		LOG.debug("rowkey=>"+rowkey+";column=>"+qualifer);
 		
 		JSONObject object = new JSONObject();
 		
@@ -91,31 +91,31 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 	 * @return the identifer of the cell
 	 */
 	private String[] buildHGridModel(Map<String, Object> fields){
-		LOG.info("build HGrid model: "+fields);
+		LOG.debug("build HGrid model: "+fields);
 		XTableSchema tableSchema = new XTableSchema("hschema/spatial.schema");		
-		LOG.info("get the table schema successfully");
+		LOG.debug("get the table schema successfully");
 		Rectangle2D.Double space = tableSchema.getEntireSpace();
 		double min_size_of_subspace = tableSchema.getSubSpace();
 		int encoding = tableSchema.getEncoding();
 		Point2D.Double offset = tableSchema.getOffset();
-		LOG.info("prepare all configuration items: space=>"+space.toString()+
+		LOG.debug("prepare all configuration items: space=>"+space.toString()+
 				";subspace=>"+min_size_of_subspace+";encoding=>"+encoding+";offset=>"+offset);
 		
 		XHybridIndex hybrid = new XHybridIndex(space,tableSchema.getTileSize(),offset,min_size_of_subspace);
 		hybrid.buildZone(encoding);
 		
 		String region = this.getRegionInfo(fields);
-		LOG.info("get region: "+region);
+		LOG.debug("get region: "+region);
 		//get the current location
 		double[] location = this.getSpatialRaw(fields);
 		if(location == null){
 			LOG.error("the location is null");
 			return null;
 		}
-		LOG.info("get location: latitude=>"+location[0]+";longitude=>"+location[1]);
+		LOG.debug("get location: latitude=>"+location[0]+";longitude=>"+location[1]);
 		// get object id
 		String objectId = this.getObjectIdentifier(fields);
-		LOG.info("get object Id : "+objectId);		
+		LOG.debug("get object Id : "+objectId);		
 		if(objectId == null){
 			LOG.error("the object id is null");
 			return null;

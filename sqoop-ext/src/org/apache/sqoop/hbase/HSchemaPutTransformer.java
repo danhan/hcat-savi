@@ -56,7 +56,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 */
 	@Override
 	public void setRowKeyColumn(String rowKeyCol) {
-		LOG.info("setRowKeyColumn(): "+rowKeyCol);
+		LOG.debug("setRowKeyColumn(): "+rowKeyCol);
 		try{
 			if(rowKeyCol != null){
 				JSONTokener tokener = new JSONTokener(rowKeyCol);				
