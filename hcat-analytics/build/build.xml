@@ -19,7 +19,7 @@
 	
 	<path id="classpath">
 		<fileset dir="${lib.home}">
-			<include name="hbase-hd.jar"/>
+			<include name="hschema-hd.jar"/>
 			<include name="org.json.jar"/>
 			<include name="org.restlet.ext.json.jar"/>
 			<include name="org.restlet.jar"/>			

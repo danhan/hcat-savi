@@ -20,7 +20,7 @@
 	<path id="classpath">
 		<fileset dir="${lib.home}">
 			<include name="org.json.jar"/>
-			<include name="hbase-hd.jar"/>			
+			<include name="hschema-hd.jar"/>			
 		</fileset>
 		<fileset dir="${hbase.home}">
 			<include name="hbase-0.94.1-security.jar" />
