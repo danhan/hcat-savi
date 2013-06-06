@@ -1,4 +1,4 @@
-package oozie.action.app.createhtable;
+package java.app.createhtable;
 
 import org.json.JSONObject;
 

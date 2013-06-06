@@ -50,5 +50,5 @@ MYCONF=${PWD}/conf/
 
 # jar file which is used to preprocess the files
 
-${JAVA_HOME}/bin/java -Xmx1500m -classpath ${COMMONLIB}:${HBASELIB}:${HBASECONF}:${HADOOPLIB}:${HADOOPCONF}:${MYLIB}:${MYCONF}  oozie.action.app.createhtable.CreateHBaseTable $* 
+${JAVA_HOME}/bin/java -Xmx1500m -classpath ${COMMONLIB}:${HBASELIB}:${HBASECONF}:${HADOOPLIB}:${HADOOPCONF}:${MYLIB}:${MYCONF}  java.app.createhtable.CreateHBaseTable $* 
 
