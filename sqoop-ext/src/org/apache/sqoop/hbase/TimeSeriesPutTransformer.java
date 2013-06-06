@@ -12,11 +12,13 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ca.ualberta.ssrg.hschema.XUtil;
+
 
 /**
  * support two types of row keys and column-versions
  * row key : 1 in one column 
- *           2 concated by two columns with delimiter
+ *           2 concated by two columns with XConstants.DELIMETER_ROW_KEY
  * column-version: 1 in two columns corresponding to column value and version value, 
  * e.g. 
  * Source table: key1,key2, col1,col2,value1,value2,value3,value4
@@ -26,16 +28,12 @@ import org.json.JSONObject;
  * @author dan
  *
  */
-public class TimeSeriesPutTransformer extends PutTransformer{
+public class TimeSeriesPutTransformer extends HSchemaPutTransformer{
 
 	  public static final Log LOG = LogFactory.getLog(
-			  TimeSeriesPutTransformer.class.getName());		
-	  private String[] rowkeyColumns = null;
-	  private String columnFamily = null;
-	  private String columnName = null;
-	  private String versionName = null;
-	  private char delimiter = '-';
+			  TimeSeriesPutTransformer.class.getName());			  
 	
+	  //TODO need test
 	@Override
 	public List<Put> getPutCommand(Map<String, Object> fields)
 			throws IOException {
@@ -43,19 +41,7 @@ public class TimeSeriesPutTransformer extends PutTransformer{
 		String colFamily = getColumnFamily();
 		byte [] colFamilyBytes = Bytes.toBytes(colFamily);
 		
-		String rowKey = null;
-		if(this.rowkeyColumns.length > 0){
-			rowKey = "";
-			for(int i=0;i<this.rowkeyColumns.length;i++){
-				LOG.info("rowKey*********"+this.rowkeyColumns[i]);
-				String val = this.getFieldValue(fields, this.rowkeyColumns[i]);
-				if(null == val) return null;				
-				rowKey += val;
-				fields.remove(this.rowkeyColumns[i]);
-				if(i < this.rowkeyColumns.length-1) 
-					rowKey += this.delimiter;					
-			}			
-		}
+		String rowKey = buildRowKeyValue(fields); // build the row key value
 		
 		if (null == rowKey) {
 			// If the row-key column is null, we don't insert this row.
@@ -80,8 +66,7 @@ public class TimeSeriesPutTransformer extends PutTransformer{
 			if (null != val) {
 				try {
 					object.put(XUtil.toHBaseString(fieldEntry.getKey()), XUtil.toHBaseString(val));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
+				} catch (JSONException e) {					
 					e.printStackTrace();
 				}
 			}
@@ -94,74 +79,4 @@ public class TimeSeriesPutTransformer extends PutTransformer{
 		return Collections.singletonList(put);
 	}
 	
-	private String getFieldValue(Map<String, Object> fields, String name){
-		Object value = fields.get(name);
-		if(null != value){
-			return XUtil.toHBaseString(value);
-		}
-		return null;
-	}
-
-	/**
-	 * This is to parse the input of the options
-	 * The column Family be input as: 
-	 * 1 d:col1:col2 ==> the value of col1 will be the column name in hbase, the value of col2 will be the version value in hbase
-	 */
-	@Override
-	public void setColumnFamily(String colFamily) {
-		String orig = colFamily;
-		if(orig != null){
-			String[] spliter = colFamily.split("#");
-			if(spliter.length == 3){ // there should be three part for the column family input
-				this.columnFamily = spliter[0];
-				this.columnName = spliter[1];
-				this.versionName = spliter[2];
-			}else{
-				LOG.warn("The column family setting is wrong,should be cf:c:v "+ colFamily);
-			}
-		}else{
-			LOG.warn("The column family setting is wrong,should be cf:c:v "+ colFamily);
-		}				
-	}
-
-	/**
-	 * This is to parse the input of the options
-	 * The row key should be input as 
-	 * 1: (rowkey part1, rowkey part2)
-	 * 2: rowkey
-	 */	
-	@Override
-	public void setRowKeyColumn(String rowKeyCol) {
-		if(rowKeyCol != null){
-			
-			if(rowKeyCol.matches("(.*)")){ // there are more than one columns responding to the row in sequence
-				rowKeyCol = rowKeyCol.substring(1,rowKeyCol.length()-1);
-				String[] parts = rowKeyCol.split(",");
-				rowkeyColumns = new String[parts.length];
-				for(int i=0;i<parts.length;i++){
-					this.rowkeyColumns[i] = parts[i];
-				}
-			}else{ // there is only one column responding to the row
-				this.rowkeyColumns = new String[]{rowKeyCol};
-			}
-		}else{
-			LOG.warn("The row key setting is wrong,should be rowkey, or (key1,key2) "+ rowKeyCol);
-		}
-	}
-	
-	
-	public String[] getRowKeyColumns(){
-		return this.rowkeyColumns;
-	}
-	
-	@Override
-	public String getColumnFamily() {
-		return this.columnFamily;
-	}
-
-	@Override
-	public String getRowKeyColumn() {
-		return null;
-	}
-
 }

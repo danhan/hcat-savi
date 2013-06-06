@@ -1,4 +1,4 @@
-package org.apache.sqoop.hbase;
+package ca.ualberta.ssrg.hschema;
 
 import java.math.BigDecimal;
 
