@@ -57,8 +57,8 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		}
 	 */
 	@Override
-	public void setRowKeyColumn(String rowKeyCol) {
-		LOG.debug("setRowKeyColumn(): "+rowKeyCol);
+	public void setRowKeyColumn(String rowKeyCol) {		
+		System.out.println("setRowKeyColumn(): "+rowKeyCol);
 		try{
 			if(rowKeyCol != null){
 				JSONTokener tokener = new JSONTokener(rowKeyCol);				
@@ -91,7 +91,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		String rowKey = "";
 		if(this.rowkeyColumns.size() > 0){			
 			// region information
-			if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_REGION)){
+			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_REGION)){
 				rowKey += this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_REGION);
 			}
 		}
@@ -107,7 +107,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		String region = null;
 		if(this.rowkeyColumns.size() > 0){			
 			// region information
-			if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_REGION)){
+			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_REGION)){
 				region = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_REGION);
 			}
 		}
@@ -124,7 +124,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		String rowKey = "";
 		if(this.rowkeyColumns.size() > 0){			
 			// many columns in MYSQL to be added in the row key
-			if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_IDENTIFIER)){
+			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_IDENTIFIER)){
 				String field = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_IDENTIFIER);
 				String val = this.getFieldValue(fields, field);
 				if(null == val) return null;				
@@ -145,7 +145,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		String objectId = null;
 		if(this.rowkeyColumns.size() > 0){			
 			// many columns in MYSQL to be added in the row key
-			if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_IDENTIFIER)){
+			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_IDENTIFIER)){
 				String field = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_IDENTIFIER);
 				String val = this.getFieldValue(fields, field);
 				if(null == val) return null;				
@@ -166,7 +166,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		String rowKey = "";
 		if(this.rowkeyColumns.size() > 0){
 			// many columns in MYSQL to be added in the row key
-			if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_COMBINED)){
+			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_COMBINED)){
 				String identifiers = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_COMBINED);
 				if(null != identifiers && !identifiers.isEmpty()){
 					String[] items = identifiers.split(",");
@@ -196,7 +196,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	protected String buildTimestampToRowKey(Map<String, Object> fields){
 		String rowKey = "";
 		if(this.rowkeyColumns.size() > 0){			
-			if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_TIMESTAMP)){
+			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_TIMESTAMP)){
 				String field = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_TIMESTAMP);
 				String val = this.getFieldValue(fields, field);
 				if(null == val) return null;				
@@ -238,7 +238,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 		if(this.rowkeyColumns.size() > 0){	
 			try{
 				// spatial index
-				if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_SPATIAL)){
+				if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_SPATIAL)){
 					String spatial = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_SPATIAL);
 					JSONObject object = new JSONObject(spatial);
 					if(object.has(XConstants.EXT_ROW_KEY_SPATIAL_FIELDS)){
@@ -263,25 +263,30 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * @param fields
 	 * @return
 	 */
-	protected XHGridSchema getSpatialSchema(){
+	protected XHGridSchema getSpatialSchema() throws Exception{
 		XHGridSchema schema = null;
 		if(this.rowkeyColumns.size() > 0){	
 			try{
 				// spatial index
-				if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_SPATIAL)){
+				if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_SPATIAL)){
 					String spatial = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_SPATIAL);
+					System.out.println("spatial string: "+spatial);
 					JSONObject object = new JSONObject(spatial);
+					System.out.println("spatial object: "+object.toString());
 					if(object.has(XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA)){
 						String schemaStr = object.getString(XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA);
 						if(null != schemaStr && !schemaStr.isEmpty()){								
 							schema = new XHGridSchema(schemaStr);				
 						}					
+					}else{
+						throw new Exception("There is no "+XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA + " in "+XConstants.EXT_ROW_KEY_SPATIAL);
 					}
-
 				}				
 			}catch(Exception e){
 				e.printStackTrace();
 			}				
+		}else{
+			throw new Exception("the row key columns size is 0");
 		}
 		return schema;
 	}	
@@ -331,6 +336,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	
 	@Override
 	public abstract List<Put> getPutCommand(Map<String, Object> fields) throws IOException;
+		
 	
 	
 }
