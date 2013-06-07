@@ -1,0 +1,27 @@
+--connect
+jdbc:mysql://10.0.0.7/hcaschedule
+--username
+root
+--password
+zhu88jie
+--verbose
+--query
+
+'select ID, row_key, alerts, ccEmail, ccName, ccPhone, cellNum, emailAdd,emergAddr, emergName, emergPhone, emergeRelation, extraInfo, homeNum,medicalHis,  risks, socialHis, pCode, city, country, lattd, longtd, province, street,sid, sReq from (SELECT Patient$PersistentID as ID, CONCAT(Patient$firstName,'-',Patient$lastName,'-',Patient$PersistentID) AS row_key, Patient$alerts AS alerts, Patient$ccEmail AS ccEmail, Patient$ccName AS ccName, Patient$ccPhone AS ccPhone, Patient$cellNumber AS cellNum, Patient$emailAddress AS emailAdd, Patient$emergAddr AS emergAddr, Patient$emergName AS emergName, Patient$emergPhone AS emergPhone, Patient$emergRelation AS emergeRelation, Patient$extraInformation AS extraInfo, Patient$homeNumber AS homeNum, Patient$medicalHistory AS medicalHis, Patient$risks AS risks, Patient$socialHistory AS socialHis, PersistentAddress$PCode AS pCode, PersistentAddress$city AS city, PersistentAddress$country AS country, PersistentAddress$latitude AS lattd, PersistentAddress$longituted AS longtd, PersistentAddress$province AS province, PersistentAddress$street AS street, R_Service AS sid, serviceReq AS sReq FROM Patient p LEFT JOIN PersistentAddress pt ON p.Patient$PersistentID = pt.R_Patient LEFT JOIN ( SELECT R_Service,R_Patient,CONCAT('{',setv,',','[',b1,',',b2,',',b3,',',b4,']','}') AS serviceReq FROM( SELECT   R_Service, R_Patient,ServiceRequirement$SENSITIVE AS setv,CONCAT ( MAX(CASE   WHEN   ServiceRequirement$TIME=0  THEN   0  ELSE -1 END), ':','[',ServiceRequirement$days$0,',',ServiceRequirement$days$1,',',ServiceRequirement$days$2,',',ServiceRequirement$days$3,',',ServiceRequirement$days$4,',',ServiceRequirement$days$5,',',ServiceRequirement$days$6,']')AS b1,CONCAT ( MAX(CASE   WHEN   ServiceRequirement$TIME=1  THEN   1  ELSE -1 END), ':','[',ServiceRequirement$days$0,',',ServiceRequirement$days$1,',',ServiceRequirement$days$2,',',ServiceRequirement$days$3,',',ServiceRequirement$days$4,',',ServiceRequirement$days$5,',',ServiceRequirement$days$6,']' )  AS   b2, CONCAT ( MAX(CASE   WHEN   ServiceRequirement$TIME=2  THEN   2  ELSE -1 END), ':', '[',ServiceRequirement$days$0,',',ServiceRequirement$days$1,',',ServiceRequirement$days$2,',',ServiceRequirement$days$3,',',ServiceRequirement$days$4,',',ServiceRequirement$days$5,',',ServiceRequirement$days$6,']' )AS   b3, CONCAT (MAX(CASE   WHEN   ServiceRequirement$TIME=3  THEN   3  ELSE -1 END), ':', '[',ServiceRequirement$days$0,',',ServiceRequirement$days$1,',',ServiceRequirement$days$2,',',ServiceRequirement$days$3,',',ServiceRequirement$days$4,',',ServiceRequirement$days$5,',',ServiceRequirement$days$6,']' )AS   b4 FROM   ServiceRequirement  GROUP BY R_Patient,R_Service ) AS requirement) AS SRequirement  ON p.Patient$PersistentID = SRequirement.R_Patient where Patient$PersistentID >= 1 and Patient$PersistentID <= 10 ) as short where $CONDITIONS'
+
+--split-by
+ID
+--map-column-java
+row_key=String,sReq=String
+
+--hbase-table
+patient
+
+--hbase-row-key
+'{"region":"bc","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"0,0,1000,1000","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
+
+--column-family
+d#d2#d3
+
+--target-dir
+/home/ubuntu/csqoop/hcat
