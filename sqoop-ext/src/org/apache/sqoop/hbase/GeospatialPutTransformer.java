@@ -14,7 +14,6 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.util.XTableSchema;
 import com.util.hybrid.XHybridIndex;
 
 import ca.ualberta.ssrg.hschema.XConstants;
@@ -38,18 +37,18 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 	@Override
 	public List<Put> getPutCommand(Map<String, Object> fields)
 			throws IOException {
-		
+		System.out.println("GeospatialPutTransformer: getPutCommand()"+fields.toString());
 		String colFamily = getColumnFamily();
 		byte [] colFamilyBytes = Bytes.toBytes(colFamily);
 		System.out.println("family name: "+colFamily);
 
-		String indicator[] = this.buildHGridModel(fields);				
-		
+		String indicator[] = this.buildHGridModel(fields);		
+				
 		if (null == indicator) {
 			// If the row-key column is null, we don't insert this row.
-			LOG.error("could not get the HGrid index");
 			System.out.println("could not get the HGrid index");
-			return null;
+		}else{
+			System.out.println("indicator: "+indicator[0]+";"+indicator[1]);
 		}
 		
 		String rowkey = indicator[0];
