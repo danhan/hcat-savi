@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import com.util.XTableSchema;
 
-public class XStatPatientService extends XStatisticsService implements XStatisticsInterface{
+public class XStatPatientService extends XBaseStatService implements XStatisticsInterface{
 
 
 	public XStatPatientService connectHBase(){

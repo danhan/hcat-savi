@@ -19,7 +19,7 @@ public class XRestApplication extends Application{
         router.attach("/statistics/{kpi}", XStatisticsResource.class);
         
         // HCAT resource 
-        router.attach("/spatial/{kpi}", XGeoSpatialResource.class);
+        router.attach("/spatial/{query}", XGeoSpatialResource.class);
         
         // Patient resource
         router.attach("/report/{kpi}", XOverviewResource.class);

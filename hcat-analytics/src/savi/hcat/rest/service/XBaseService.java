@@ -14,22 +14,9 @@ import savi.hcat.common.util.XConstants;
 import com.hbase.service.HBaseUtil;
 import com.util.XTableSchema;
 
-/**
- * This is to send call hBase client to send the request
- * @author dan
- *
- */
+public class XBaseService {
 
-public class XStatisticsService {
-		
-	private static Log LOG = LogFactory.getLog(XStatisticsService.class);
-	
-	protected String status = null;
-	protected String start_time = null; // 2013-08-28 12:22:22
-	protected String end_time = null; // 2013-08-28 12:22:22
-	protected String unit = null;
-	protected ArrayList<String> cities = new ArrayList<String>();
-	
+	private static Log LOG = LogFactory.getLog(XBaseStatService.class);
 	// output
 	protected JSONArray response = new JSONArray(); 
 	
@@ -37,20 +24,11 @@ public class XStatisticsService {
 	protected XTableSchema tableSchema = null;	
 	private String HBASE_CONF_PATH = "conf/myhbase.xml";
 	
-	/**
-	 * should be called first to get the instance
-	 * @param objName
-	 * @return
-	 */
-	public static XStatisticsService getInstance(String objName){		
-		if(objName.equals(XConstants.STAT_VALUE_APPOINTMENT)){		
-			return new XStatApmtService(); 
-		}else if(objName.equals(XConstants.STAT_VALUE_SERVICE)){						
-			return new XStatPatientService();
-		}
-		
-		return null;
-	}
+	// common parameters included in POST body
+	protected String start_time = null; // 2013-08-28 12:22:22
+	protected String end_time = null; // 2013-08-28 12:22:22
+	protected ArrayList<String> regions = new ArrayList<String>();
+	
 	
 	/**
 	 * should be called second to connect with HBase
@@ -58,7 +36,7 @@ public class XStatisticsService {
 	 * @return
 	 * @throws IOException
 	 */
-	protected XStatisticsService setHBase() throws IOException {
+	protected void setHBase() throws IOException {
 		LOG.info("in setHBase()");
 		try{
 			if(hbase == null){
@@ -80,32 +58,25 @@ public class XStatisticsService {
 			if(hbase != null)
 				hbase.closeTableHandler();
 			e.printStackTrace();
-		}	
-		return this;
-	}	
+		}			
+	}
 	
-	protected boolean decompose(JSONObject reqObj){
-		System.out.println("[DEBUG]: in decompose");
+
+	protected boolean decomposeCommonParams(JSONObject reqObj){
+		System.out.println("[DEBUG]: in doComposeCommonParams");
 		try{
 			if(reqObj != null){
-				
-				if(reqObj.has(XConstants.STAT_KEY_STATUS)){
-					this.status = (String)reqObj.get(XConstants.STAT_KEY_STATUS);
+				if(reqObj.has(XConstants.POST_KEY_START_TIME)){				
+					this.start_time = (String)reqObj.get(XConstants.POST_KEY_START_TIME);
 				}
-				if(reqObj.has(XConstants.STAT_KEY_START_TIME)){				
-					this.start_time = (String)reqObj.get(XConstants.STAT_KEY_START_TIME);
+				if(reqObj.has(XConstants.POST_KEY_END_TIME)){
+					this.end_time = (String)reqObj.get(XConstants.POST_KEY_END_TIME);
 				}
-				if(reqObj.has(XConstants.STAT_KEY_END_TIME)){
-					this.end_time = (String)reqObj.get(XConstants.STAT_KEY_END_TIME);
-				}
-				if(reqObj.has(XConstants.STAT_KEY_UNIT)){
-					this.unit = (String)reqObj.get(XConstants.STAT_KEY_UNIT);
-				}
-				if(reqObj.has(XConstants.STAT_KEY_CITIES)){
-					String cityObj = (String)reqObj.get(XConstants.STAT_KEY_CITIES);
+				if(reqObj.has(XConstants.POST_KEY_REGIONS)){
+					String cityObj = (String)reqObj.get(XConstants.POST_KEY_REGIONS);
 					String[] items = cityObj.split(",");
 					for(String item: items){
-						this.cities.add(item);	
+						this.regions.add(item);	
 					}					
 				}				
 				return true;
@@ -113,10 +84,8 @@ public class XStatisticsService {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-
 		return false;
 	}
-	
 	
 	public JSONArray getResponse() {
 		if(response==null)
@@ -124,17 +93,11 @@ public class XStatisticsService {
 		return response;
 	}
 	
-	
-	public String getStatus() {
-		return status;
-	}
 	public String getStart_time() {
 		return start_time;
 	}
 	public String getEnd_time() {
 		return end_time;
 	}
-	
-	
 	
 }

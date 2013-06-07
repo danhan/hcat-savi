@@ -14,7 +14,7 @@ public class RStatResult extends RCopResult{
 	private static Log LOG = LogFactory.getLog(RStatResult.class);
 	
 	Hashtable<String,Integer> hashUnit = null; // per month, weekly, daily
-	String city = null;
+	String region = null;
 	String unit = null;
 	
 	public RStatResult(){
@@ -41,8 +41,8 @@ public class RStatResult extends RCopResult{
 		}
 	}		
 	
-	public void setCity(String c){
-		this.city = c;
+	public void setRegion(String r){
+		this.region = r;
 	}	
 	/**
 	 * row key: city-20130405-hcaid-pid
@@ -65,8 +65,8 @@ public class RStatResult extends RCopResult{
 		return hashUnit;
 	}
 
-	public String getCity() {
-		return city;
+	public String getRegion() {
+		return region;
 	}
 	
 	

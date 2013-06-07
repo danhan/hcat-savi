@@ -1,4 +1,4 @@
-{   "name": "appointment",
+{   "name": "patient-spatial",
 	"families":[
 	{
 	  "name":"d",
@@ -12,7 +12,13 @@
 	  "replication_scope":""	  
 	}
 	],
-	"max_file_size":"",
-	"mem_store_size":"",
-	"log_file_name":"appointment"
+	
+	"schema":{
+		"space":"0,0,1000,1000",
+		"indexing":"2",
+		"encoding":"1",
+		"tile":"-1",
+		"subspace":"0.01"
+	},
+	"num_of_points":10000000,
 }

@@ -15,7 +15,7 @@ import org.restlet.resource.Post;
 import savi.hcat.common.util.XConstants;
 import savi.hcat.rest.service.XStatApmtService;
 import savi.hcat.rest.service.XStatPatientService;
-import savi.hcat.rest.service.XStatisticsService;
+import savi.hcat.rest.service.XBaseStatService;
 
 /**
  * This is to do the sum and average of all objects
@@ -42,22 +42,22 @@ public class XStatisticsResource extends XBaseResource{
 			String kpi = (String)getRequestAttributes().get("kpi");			
 			
 			JSONObject payload = new JSONObject(jsonStr);
-			Object object = payload.get(XConstants.STAT_KEY_OBJECT);			
+			Object object = payload.get(XConstants.POST_KEY_OBJECT);			
 
 			LOG.info("the request: "+payload.toString());
 			// call service to get the data based on the parameter
 			JSONArray result = null;
 			if(object!= null){
-				if(object.equals(XConstants.STAT_VALUE_APPOINTMENT)){ // appointment statistics
-					XStatApmtService stat_service = (XStatApmtService)XStatisticsService.getInstance(XConstants.STAT_VALUE_APPOINTMENT);										
+				if(object.equals(XConstants.POST_VALUE_APPOINTMENT)){ // appointment statistics
+					XStatApmtService stat_service = (XStatApmtService)XBaseStatService.getInstance(XConstants.POST_VALUE_APPOINTMENT);										
 					if(kpi.equals("sum")){
 						result = stat_service.getSummary(payload);	
 					}else if(kpi.equals("avg")){
 						result = stat_service.getAverage(payload);
 					}													
 					LOG.info("after kpi "+kpi);
-				}else if(object.equals(XConstants.STAT_VALUE_PATIENT)){ // service statistics
-					XStatPatientService stat_service = (XStatPatientService)XStatisticsService.getInstance(XConstants.STAT_VALUE_PATIENT);					
+				}else if(object.equals(XConstants.POST_VALUE_PATIENT)){ // service statistics
+					XStatPatientService stat_service = (XStatPatientService)XBaseStatService.getInstance(XConstants.POST_VALUE_PATIENT);					
 					LOG.info("after connecting hbase ");
 					if(kpi.equals("sum")){
 						stat_service.getSummary(payload);	

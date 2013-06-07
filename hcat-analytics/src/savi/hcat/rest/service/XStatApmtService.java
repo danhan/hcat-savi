@@ -29,12 +29,12 @@ import com.util.XTableSchema;
 
 
 
-public class XStatApmtService extends XStatisticsService implements XStatisticsInterface{
+public class XStatApmtService extends XBaseStatService implements XStatisticsInterface{
 		
 	private static Log LOG = LogFactory.getLog(XStatApmtService.class);
 	 
 	public XStatApmtService(){
-		this.tableSchema = new XTableSchema("schema/appointment.schema");
+		this.tableSchema = new XTableSchema("schema/appointment.schema"); // it is used for proving table description to query in hbase
 		if(this.tableSchema == null){
 			LOG.error("the table schema fails to be loaded ");
 		}else{
@@ -63,7 +63,7 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 		String[] rowRange = getScanRowRange();// getRowRange		
 		FilterList fList = getScanFilterList(rowRange);// getFilter list
 		// send separate queries for each city
-		for(String city: cities){			
+		for(String city: regions){			
 			String start = city+XConstants.ROW_KEY_DELIMETER+rowRange[0];
 			String end = city+XConstants.ROW_KEY_DELIMETER+rowRange[1];
 			try {
@@ -163,7 +163,7 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	 * 
 	 * @return
 	 */
-	private String[] getScanRowRange(){
+	protected String[] getScanRowRange(){
 		LOG.info("getScanRowRange");
 		String[] rowRange = new String[2];
 		rowRange[0] = XTimestamp.parseDate(this.start_time);
@@ -176,7 +176,7 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	 * 
 	 * @return
 	 */	
-	private FilterList getScanFilterList(String[] rowRange){
+	protected FilterList getScanFilterList(String[] rowRange){
 		LOG.info("getScanFilterList");		
 		FilterList fList = new FilterList(FilterList.Operator.MUST_PASS_ONE);
 		List<Long> timestamps = new ArrayList<Long>();
@@ -203,9 +203,9 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	class SummaryCallBack implements Batch.Callback<RStatResult> {
 		public HashMap<String, Hashtable<String,Integer>> cities = new HashMap<String,Hashtable<String,Integer>>();
 		int count = 0; // the number of coprocessor
-		XStatisticsService service = null;
+		XBaseStatService service = null;
 
-		public SummaryCallBack(XStatisticsService s) {
+		public SummaryCallBack(XBaseStatService s) {
 			this.service = s;
 				
 		}
@@ -213,7 +213,7 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 		@Override
 		public void update(byte[] region, byte[] row, RStatResult result) {	
 			LOG.info("SummaryCallBack: update");			
-			String city = result.getCity();
+			String city = result.getRegion();
 			Hashtable<String,Integer> hashUnit = result.getHashUnit();
 			if(this.cities.containsKey(city)){
 				Hashtable<String,Integer> temp = this.cities.get(city);
@@ -235,9 +235,9 @@ public class XStatApmtService extends XStatisticsService implements XStatisticsI
 	class AverageCallBack implements Batch.Callback<RCopResult> {
 		RCopResult res = new RCopResult();
 		int count = 0; // the number of coprocessor
-		XStatisticsService service = null;
+		XBaseStatService service = null;
 
-		public AverageCallBack(XStatisticsService s) {
+		public AverageCallBack(XBaseStatService s) {
 			this.service = s;
 		}
 
