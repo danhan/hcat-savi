@@ -18,6 +18,7 @@ import com.util.XTableSchema;
 import com.util.hybrid.XHybridIndex;
 
 import ca.ualberta.ssrg.hschema.XConstants;
+import ca.ualberta.ssrg.hschema.XHGridSchema;
 import ca.ualberta.ssrg.hschema.XUtil;
 /**
  * 
@@ -78,14 +79,6 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 		return Collections.singletonList(put);
 	}
 	
-
-	
-/*	private String getObjectID(Map<String,Object> fields){
-		Object val = fields.get(objectid);
-		if(null != val)
-			return val.toString();
-		return null;
-	}*/
 	
 	/**
 	 *  
@@ -93,22 +86,22 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 	 */
 	private String[] buildHGridModel(Map<String, Object> fields){
 		System.out.println("build HGrid model: "+fields);
-		XTableSchema tableSchema = new XTableSchema("hschema/spatial.schema");		
+		XHGridSchema schema = this.getSpatialSchema();	
 		System.out.println("get the table schema successfully");
-		Rectangle2D.Double space = tableSchema.getEntireSpace();
-		double min_size_of_subspace = tableSchema.getSubSpace();
-		int encoding = tableSchema.getEncoding();
-		Point2D.Double offset = tableSchema.getOffset();
+		Rectangle2D.Double space = schema.getEntireSpace();
+		double min_size_of_subspace = schema.getSubSpace();
+		int encoding = schema.getEncoding();
+		Point2D.Double offset = schema.getOffset();
 		System.out.println("prepare all configuration items: space=>"+space.toString()+
 				";subspace=>"+min_size_of_subspace+";encoding=>"+encoding+";offset=>"+offset);
 		
-		XHybridIndex hybrid = new XHybridIndex(space,tableSchema.getTileSize(),offset,min_size_of_subspace);
+		XHybridIndex hybrid = new XHybridIndex(space,schema.getTileSize(),offset,min_size_of_subspace);
 		hybrid.buildZone(encoding);
 		
 		String region = this.getRegionInfo(fields);
 		System.out.println("get region: "+region);
 		//get the current location
-		double[] location = this.getSpatialRaw(fields);
+		double[] location = this.getSpatialLocationValue(fields);
 		if(location == null){
 			LOG.error("the location is null");
 			return null;

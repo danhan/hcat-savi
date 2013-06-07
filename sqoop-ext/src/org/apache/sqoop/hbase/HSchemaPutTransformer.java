@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import ca.ualberta.ssrg.hschema.XConstants;
+import ca.ualberta.ssrg.hschema.XHGridSchema;
 import ca.ualberta.ssrg.hschema.XUtil;
 
 
@@ -213,21 +214,77 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * @param fields
 	 * @return
 	 */
-	protected double[] getSpatialRaw(Map<String, Object> fields){
-		double[] location = new double[2];
-		if(this.rowkeyColumns.size() > 0){			
-			// spatial index
-			if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_SPATIAL)){
-				String spatial = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_SPATIAL);
-				if(null != spatial && !spatial.isEmpty()){
-					String[] items = spatial.split(",");
-					location[0] = Double.valueOf(items[0]);
-					location[1] = Double.valueOf(items[1]);					
-				}
+	protected double[] getSpatialLocationValue(Map<String, Object> fields){
+		double[] location = new double[]{-1,-1};
+		String[] columns = this.getSpatialField();
+		String val = this.getFieldValue(fields, columns[0]);
+		location[0] = (null!=val)?Double.valueOf(val).doubleValue():-1;
+		String val1 = this.getFieldValue(fields, columns[1]);
+		location[1] = (null!=val1)?Double.valueOf(val).doubleValue():-1;
+		
+		return location;
+	}
+	
+	
+	/**
+	 * 
+	 * get the row key value for the cell, just build the common rowkey value
+	 * in each child class, they should add their own special row key value
+	 * @param fields
+	 * @return
+	 */
+	protected String[] getSpatialField(){
+		String[] location = null;
+		if(this.rowkeyColumns.size() > 0){	
+			try{
+				// spatial index
+				if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_SPATIAL)){
+					String spatial = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_SPATIAL);
+					JSONObject object = new JSONObject(spatial);
+					if(object.has(XConstants.EXT_ROW_KEY_SPATIAL_FIELDS)){
+						String fields = object.getString(XConstants.EXT_ROW_KEY_SPATIAL_FIELDS);
+						if(null != fields && !fields.isEmpty()){					
+							location = fields.split(",");					
+						}					
+					}
+
+				}				
+			}catch(Exception e){
+				e.printStackTrace();
 			}				
 		}
 		return location;
 	}
+	
+	/**
+	 * 
+	 * get the row key value for the cell, just build the common rowkey value
+	 * in each child class, they should add their own special row key value
+	 * @param fields
+	 * @return
+	 */
+	protected XHGridSchema getSpatialSchema(){
+		XHGridSchema schema = null;
+		if(this.rowkeyColumns.size() > 0){	
+			try{
+				// spatial index
+				if(this.rowkeyColumns.contains(XConstants.EXT_ROW_KEY_SPATIAL)){
+					String spatial = this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_SPATIAL);
+					JSONObject object = new JSONObject(spatial);
+					if(object.has(XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA)){
+						String schemaStr = object.getString(XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA);
+						if(null != schemaStr && !schemaStr.isEmpty()){					
+							schema = new XHGridSchema(schemaStr);				
+						}					
+					}
+
+				}				
+			}catch(Exception e){
+				e.printStackTrace();
+			}				
+		}
+		return schema;
+	}	
 	
 	/**
 	 * get the row key value for the cell 
