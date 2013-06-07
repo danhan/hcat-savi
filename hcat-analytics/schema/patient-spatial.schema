@@ -1,0 +1,24 @@
+{   "name": "patient-spatial",
+	"families":[
+	{
+	  "name":"d",
+	  "compression":"GZ",
+	  "versions":"10",
+	  "min_versions":"1",
+	  "blocksize":"",
+	  "in_memory":"",
+	  "blockcache":"true",
+	  "bloomfilter":"ROWCOL",
+	  "replication_scope":""	  
+	}
+	],
+	
+	"schema":{
+		"space":"0,0,1000,1000",
+		"indexing":"2",
+		"encoding":"1",
+		"tile":"-1",
+		"subspace":"0.01"
+	},
+	"num_of_points":10000000,
+}
