@@ -105,27 +105,29 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 				//get the current location
 				double[] location = this.getSpatialLocationValue(fields);
 				if(location == null){
-					LOG.error("the location is null");
-					return null;
+					throw new Exception("the location is null");					
 				}
 				System.out.println("get location: latitude=>"+location[0]+";longitude=>"+location[1]);
 				// get object id
 				String objectId = this.getObjectIdentifier(fields);
 				System.out.println("get object Id : "+objectId);		
 				if(objectId == null){
-					LOG.error("the object id is null");
-					return null;
+					throw new Exception ("the object id is null");					
 				}
 				
-				if(hybrid != null){				
+				if(hybrid != null){	
+					System.out.println("the real location: "+location[0]+";"+location[1]);
 					String[] keys = hybrid.locate(location[0],location[1]);
 					indicator = new String[2]; // 1st: rowIndex; 2nd: columnIndex
+					if(keys[0]=="null" || keys[1] == "null"){
+						throw new Exception ("Spatial failed!");
+					}
 					indicator[0] = (null != region)?(region+XConstants.DELIMETER_ROW_KEY+keys[0]):keys[0];
 					indicator[1] = keys[1]+"-"+objectId;
 				}							
 		
 			}else{
-				System.out.println("schema is wrong!");
+				throw new Exception ("schema is wrong!");
 			}			
 		}catch(Exception e){
 			e.printStackTrace();
