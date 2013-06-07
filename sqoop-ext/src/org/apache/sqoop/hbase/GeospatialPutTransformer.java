@@ -88,40 +88,47 @@ public class GeospatialPutTransformer extends HSchemaPutTransformer{
 		System.out.println("build HGrid model: "+fields);
 		XHGridSchema schema = this.getSpatialSchema();	
 		System.out.println("get the table schema successfully");
-		Rectangle2D.Double space = schema.getEntireSpace();
-		double min_size_of_subspace = schema.getSubSpace();
-		int encoding = schema.getEncoding();
-		Point2D.Double offset = schema.getOffset();
-		System.out.println("prepare all configuration items: space=>"+space.toString()+
-				";subspace=>"+min_size_of_subspace+";encoding=>"+encoding+";offset=>"+offset);
+		XHybridIndex hybrid = null;
 		
-		XHybridIndex hybrid = new XHybridIndex(space,schema.getTileSize(),offset,min_size_of_subspace);
-		hybrid.buildZone(encoding);
-		
-		String region = this.getRegionInfo(fields);
-		System.out.println("get region: "+region);
-		//get the current location
-		double[] location = this.getSpatialLocationValue(fields);
-		if(location == null){
-			LOG.error("the location is null");
-			return null;
-		}
-		System.out.println("get location: latitude=>"+location[0]+";longitude=>"+location[1]);
-		// get object id
-		String objectId = this.getObjectIdentifier(fields);
-		System.out.println("get object Id : "+objectId);		
-		if(objectId == null){
-			LOG.error("the object id is null");
-			return null;
-		}
-		
-		String indicator[] = new String[2]; // 1st: rowIndex; 2nd: columnIndex		
-		if(hybrid != null){
+		String indicator[] = null;
+		if(schema != null){
+			Rectangle2D.Double space = schema.getEntireSpace();
+			double min_size_of_subspace = schema.getSubSpace();
+			int encoding = schema.getEncoding();
+			Point2D.Double offset = schema.getOffset();
+			System.out.println("prepare all configuration items: space=>"+space.toString()+
+					";subspace=>"+min_size_of_subspace+";encoding=>"+encoding+";offset=>"+offset);	
+			hybrid = new XHybridIndex(space,schema.getTileSize(),offset,min_size_of_subspace);
+			hybrid.buildZone(encoding);	
+			String region = this.getRegionInfo(fields);
+			System.out.println("get region: "+region);
+			//get the current location
+			double[] location = this.getSpatialLocationValue(fields);
+			if(location == null){
+				LOG.error("the location is null");
+				return null;
+			}
+			System.out.println("get location: latitude=>"+location[0]+";longitude=>"+location[1]);
+			// get object id
+			String objectId = this.getObjectIdentifier(fields);
+			System.out.println("get object Id : "+objectId);		
+			if(objectId == null){
+				LOG.error("the object id is null");
+				return null;
+			}
 			
-			String[] keys = hybrid.locate(location[0],location[1]);
-			indicator[0] = (null != region)?(region+XConstants.DELIMETER_ROW_KEY+keys[0]):keys[0];
-			indicator[1] = keys[1]+"-"+objectId;
-		}					
+			if(hybrid != null){				
+				String[] keys = hybrid.locate(location[0],location[1]);
+				indicator = new String[2]; // 1st: rowIndex; 2nd: columnIndex
+				indicator[0] = (null != region)?(region+XConstants.DELIMETER_ROW_KEY+keys[0]):keys[0];
+				indicator[1] = keys[1]+"-"+objectId;
+			}							
+	
+		}else{
+			System.out.println("schema is wrong!");
+		}
+	
+	
 		return indicator;		
 	}
 	

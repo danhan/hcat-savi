@@ -13,8 +13,10 @@ public class XHGridSchema {
 	
 	public XHGridSchema(String schema_str){
 		try{
+			System.out.println("schema string: "+schema_str);
 			JSONTokener tokener = new JSONTokener(schema_str);
-			this.schema = new JSONObject(tokener);			
+			this.schema = new JSONObject(tokener);
+			System.out.println("the json schema is ready:"+this.schema.toString());
 		}catch(Exception e){
 			e.printStackTrace();
 		}

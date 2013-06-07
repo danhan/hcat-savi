@@ -273,7 +273,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 					JSONObject object = new JSONObject(spatial);
 					if(object.has(XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA)){
 						String schemaStr = object.getString(XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA);
-						if(null != schemaStr && !schemaStr.isEmpty()){					
+						if(null != schemaStr && !schemaStr.isEmpty()){								
 							schema = new XHGridSchema(schemaStr);				
 						}					
 					}
