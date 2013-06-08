@@ -5,6 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
@@ -77,9 +78,10 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
 			try {
 				// create the scan 
-				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
-						new String[] { this.tableSchema.getFamilyName() }, 
-						null,-1);
+				//final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
+					//	new String[] { this.tableSchema.getFamilyName() }, null,-1);
+				final Scan scan = hbase.generateScan(null, fList,
+						new String[] { this.tableSchema.getFamilyName() }, null,-1);
 				
 				LOG.info("scan: "+scan.toString());
 				//send the caller 
@@ -184,6 +186,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 			LOG.info("windowsStatCallback: update");			
 			String patientRegion = result.getRegion();
 			Hashtable<String,Integer> hashUnit = result.getHashUnit();
+			System.out.println(patientRegion+"=>"+hashUnit.toString());
 			if(this.regions.containsKey(patientRegion)){
 				Hashtable<String,Integer> temp = this.regions.get(patientRegion);
 				for(String key:temp.keySet()){
@@ -214,7 +217,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		// compose the HBase RPC call
 		final double x = Math.abs(this.latitude);
 		final double y = Math.abs(this.longitude);
-		Hashtable<String, XBox[]> matched = this.hybrid.match(x,y, this.distance);
+		Hashtable<String, XBox[]> matched = this.hybrid.match(x,y, this.radius);
 		String[] rowRange = getRangeScanRowRange(matched);// getRowRange		
 
 		// send separate queries for each city
@@ -225,8 +228,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				// create the scan 
 				FilterList fList = getRangeScanFilterList(region,matched);// getFilter list
 				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
-						new String[] { this.tableSchema.getFamilyName() }, 
-						null,-1);
+						new String[] { this.tableSchema.getFamilyName() }, null,-1);
 				
 				LOG.info("scan: "+scan.toString());
 				//send the caller 
@@ -236,9 +238,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 
 					public RStatResult call(HCATProtocol instance)
 							throws IOException {
-						
-						final HashMap<String,Rectangle2D.Double> scopes = getQuads();
-						return instance.doWindowQuery(scan, scopes);
+												
+						return instance.doRangeQuery(scan, latitude, longitude,radius);
 					};
 				}, callback);	
 				
@@ -258,17 +259,18 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 					
 		LOG.info("the returned value: "+callback.regions.toString()+";exe_time=>"+exe_time);
 		for(String key: callback.regions.keySet()){
-			JSONObject one_region = new JSONObject();
-			TreeMap<String,Double> treemap = new TreeMap<String,Double>(callback.regions.get(key));
+			HashMap<String,Double> one_region = callback.regions.get(key);
+			JSONObject one_json = new JSONObject();
+		//	TreeMap<String,Double> treemap = new TreeMap<String,Double>(callback.regions.get(key));
 			try {
-				one_region.put("region", key);
+				one_json.put("region", key);
 				JSONArray values = new JSONArray();
-				for(Double v:treemap.values()){
-					values.put(v);
+				for(Entry<String,Double> entry: one_region.entrySet()){
+					values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
 				}
-				one_region.put("values", values);
+				one_json.put("values", values);
+				
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 			this.response.put(one_region);

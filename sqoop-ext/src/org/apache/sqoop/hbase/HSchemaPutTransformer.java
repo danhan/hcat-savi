@@ -217,11 +217,10 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	protected double[] getSpatialLocationValue(Map<String, Object> fields){
 		double[] location = new double[]{-1,-1};
 		String[] columns = this.getSpatialField();
-		String val = this.getFieldValue(fields, columns[0]);
-		location[0] = (null!=val)?Double.valueOf(val).doubleValue():-1;
-		String val1 = this.getFieldValue(fields, columns[1]);
-		location[1] = (null!=val1)?Double.valueOf(val).doubleValue():-1;
-		
+		String v1 = this.getFieldValue(fields, columns[0]);
+		location[0] = (null!=v1)?Double.valueOf(v1).doubleValue():-1; 
+		String v2 = this.getFieldValue(fields, columns[1]);
+		location[1] = (null!=v2)?Double.valueOf(v2).doubleValue():-1;		
 		return location;
 	}
 	
@@ -234,6 +233,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * @return
 	 */
 	protected String[] getSpatialField(){
+		System.out.println("in getSpatialFiled()");
 		String[] location = null;
 		if(this.rowkeyColumns.size() > 0){	
 			try{
@@ -253,6 +253,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 				e.printStackTrace();
 			}				
 		}
+		System.out.println("the spatial Filed is : "+ location[0]+","+location[1]);
 		return location;
 	}
 	

@@ -42,9 +42,9 @@ public class XGeoSpatialResource extends XBaseResource{
 			if(query != null){
 				XGeoPatientService geoPatient = (XGeoPatientService)XBaseGeoService.getInstance("");
 				if(query.equals(XConstants.QUERY_TYPE_WINDOW)){ // the window query to get the NW,NE,SW,SE									
-					geoPatient.doWindowStatistics(payload);					
+					result = geoPatient.doWindowStatistics(payload);					
 				}else if(query.equals(XConstants.QUERY_TYPE_RANGE)){ // the range query to get list of objects based on the location and distance
-					geoPatient.doRangeSearch(payload);
+					result = geoPatient.doRangeSearch(payload);
 					
 				}else if(query.equals(XConstants.QUERY_TYPE_KNN)){ // knn query to get k objects and its distance.
 					geoPatient.doKNNSearch(payload);				

@@ -17,7 +17,7 @@ public class XBaseGeoService extends XBaseService{
 	private static Log LOG = LogFactory.getLog(XBaseGeoService.class);
 	protected double latitude = 0.0;
 	protected double longitude = 0.0;
-	protected double distance = 0.0;
+	protected double radius = 0.0;
 	protected int k = 0;
 	protected ArrayList<String> areas = new ArrayList<String>();
 	
@@ -43,7 +43,7 @@ public class XBaseGeoService extends XBaseService{
 				// parameters for range
 				if(reqObj.has(XConstants.POST_KEY_DISTANCE)){
 					String val = reqObj.getString(XConstants.POST_KEY_DISTANCE);
-					distance = (null!=val)?Double.valueOf(val):-1;
+					radius = (null!=val)?Double.valueOf(val):-1;
 				}
 				//parameters for range
 				if(reqObj.has(XConstants.POST_KEY_LOCATION)){

@@ -1,1 +1,7 @@
 This project is for SAVI demo in July.
+
+
+libraries should be copied to HBase/lib
+hcat-analytics.jar
+hschema-hd.jar
+org.json.jar
