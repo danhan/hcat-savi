@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+<!-- In: conf/core-site.xml -->
+<property>
+  <name>hadoop.tmp.dir</name>
+  <value>/app/data/hadoop/tmp</value>
+  <description>A base for other temporary directories.</description>
+</property>
+
+<property>
+  <name>fs.default.name</name>
+  <value>hdfs://10.0.0.13:54310</value>
+  <description>The name of the default file system.  A URI whose
+  scheme and authority determine the FileSystem implementation.  The
+  uri's scheme determines the config property (fs.SCHEME.impl) naming
+  the FileSystem implementation class.  The uri's authority is used to
+  determine the host, port, etc. for a filesystem.</description>
+</property>
+
+<!-- OOZIE -->
+  <property>
+    <name>hadoop.proxyuser.ubuntu.hosts</name>
+    <value>10.0.0.13</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.ubuntu.groups</name>
+    <value>ubuntu</value>
+  </property>
+
+
+
+</configuration>
