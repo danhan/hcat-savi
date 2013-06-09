@@ -1,0 +1,25 @@
+{   "name": "patient-spatial",
+	"families":[
+	{
+	  "name":"d",
+	  "compression":"GZ",
+	  "versions":"",
+	  "min_versions":"1",
+	  "blocksize":"",
+	  "in_memory":"",
+	  "blockcache":"true",
+	  "bloomfilter":"ROWCOL",
+	  "replication_scope":""
+	}
+	],
+	"max_file_size":"",
+	"mem_store_size":"",
+      "schema":{
+                "space":"0,0,1000,1000",
+                "indexing":"2",
+                "encoding":"1",
+                "tile":"-1",
+                "subspace":"0.01"
+        },
+	"log_file_name":"patient-spatial"
+}
