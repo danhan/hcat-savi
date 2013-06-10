@@ -71,15 +71,16 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		
 		// compose the HBase RPC call
 		String[] rowRange = getWindowsScanRowRange();// getRowRange		
-		FilterList fList = getWindowsScanFilterList(rowRange);// getFilter list
+		
 		// send separate queries for each city
-		for(String region: regions){			
+		for(final String region: regions){			
 			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
 			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
 			try {
 				// create the scan 
 				//final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
 					//	new String[] { this.tableSchema.getFamilyName() }, null,-1);
+				FilterList fList = getWindowsScanFilterList(region);// getFilter list
 				final Scan scan = hbase.generateScan(null, fList,
 						new String[] { this.tableSchema.getFamilyName() }, null,-1);
 				
@@ -91,9 +92,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 
 					public RStatResult call(HCATProtocol instance)
 							throws IOException {
-						
 						final HashMap<String,Rectangle2D.Double> scopes = getQuads();
-						return instance.doWindowQuery(scan, scopes);
+						return instance.doWindowQuery(scan, region,scopes);
 					};
 				}, callback);
 
@@ -109,20 +109,25 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		// TODO callback.regions;
 		LOG.info("the returned value: "+callback.regions.toString());
 		for(String key: callback.regions.keySet()){
-			JSONObject one_region = new JSONObject();
-			TreeMap<String,Integer> treemap = new TreeMap<String,Integer>(callback.regions.get(key));
+			RStatResult result = callback.regions.get(key);
+			JSONObject regionJSON = new JSONObject();
+		//	TreeMap<String,Integer> treemap = new TreeMap<String,Integer>(result.getHashUnit());
 			try {
-				one_region.put("region", key);
+				regionJSON.put("region", key);
 				JSONArray values = new JSONArray();
-				for(Integer v:treemap.values()){
-					values.put(v);
+				for(Entry<String,Integer> entry: result.getHashUnit().entrySet()){
+					values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
 				}
-				one_region.put("values", values);
+				regionJSON.put("values", values);
+				// add the statistics of request
+				JSONObject reqStatJSON = this.buildRequestStat(result);
+				regionJSON.put("request_stat", reqStatJSON);
+				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
-			this.response.put(one_region);
+			this.response.put(regionJSON);
 		}
 		
 		return this.response;
@@ -139,9 +144,15 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		return rowRange;
 	}
 	
-	protected FilterList getWindowsScanFilterList(String[] rowRange) {
-		// TODO Auto-generated method stub
-		return null;
+	protected FilterList getWindowsScanFilterList(String region) {
+		FilterList fList = new FilterList(FilterList.Operator.MUST_PASS_ALL);
+		try{
+			Filter filter = hbase.getPrefixFilter(region+XConstants.ROW_KEY_DELIMETER);	
+			fList.addFilter(filter);
+		}catch(Exception e){
+			e.printStackTrace();
+		}		
+		return fList;
 	}
 	
 	protected HashMap<String,Rectangle2D.Double> getQuads(){
@@ -173,7 +184,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 	 *
 	 */
 	class WindowsQueryCallBack implements Batch.Callback<RStatResult> {
-		public HashMap<String, Hashtable<String,Integer>> regions = new HashMap<String,Hashtable<String,Integer>>();
+		public HashMap<String, RStatResult> regions = new HashMap<String,RStatResult>();
 		int count = 0; // the number of coprocessor
 		XGeoPatientService service = null;
 
@@ -188,12 +199,12 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 			Hashtable<String,Integer> hashUnit = result.getHashUnit();
 			System.out.println(patientRegion+"=>"+hashUnit.toString());
 			if(this.regions.containsKey(patientRegion)){
-				Hashtable<String,Integer> temp = this.regions.get(patientRegion);
+				Hashtable<String,Integer> temp = this.regions.get(patientRegion).getHashUnit();
 				for(String key:temp.keySet()){
 					temp.put(key, temp.get(key)+hashUnit.get(key));
 				}				
 			}else{
-				this.regions.put(patientRegion, result.getHashUnit());
+				this.regions.put(patientRegion, result);
 			}			
 		}
 	}	
@@ -259,21 +270,25 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 					
 		LOG.info("the returned value: "+callback.regions.toString()+";exe_time=>"+exe_time);
 		for(String key: callback.regions.keySet()){
-			HashMap<String,Double> one_region = callback.regions.get(key);
-			JSONObject one_json = new JSONObject();
-		//	TreeMap<String,Double> treemap = new TreeMap<String,Double>(callback.regions.get(key));
+			RStatResult result = callback.regions.get(key);
+			HashMap<String,Double> one_region = result.getDistances();
+			JSONObject regionJSON = new JSONObject();
 			try {
-				one_json.put("region", key);
+				regionJSON.put("region", key);
 				JSONArray values = new JSONArray();
 				for(Entry<String,Double> entry: one_region.entrySet()){
 					values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
 				}
-				one_json.put("values", values);
+				regionJSON.put("values", values);
+				
+				// add the statistics of request
+				JSONObject reqStatJSON = this.buildRequestStat(result);
+				regionJSON.put("request_stat", reqStatJSON);				
 				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}	
-			this.response.put(one_region);
+			this.response.put(regionJSON);
 		}
 		
 		return this.response;
@@ -313,7 +328,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 	
 	
 	class RangeQueryCallBack implements Batch.Callback<RStatResult> {
-		public HashMap<String, HashMap<String,Double>> regions = new HashMap<String,HashMap<String,Double>>();
+		public HashMap<String, RStatResult> regions = new HashMap<String,RStatResult>();
 		int count = 0; // the number of coprocessor
 		XGeoPatientService service = null;
 
@@ -323,20 +338,17 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 
 		@Override
 		public void update(byte[] region, byte[] row, RStatResult result) {	
-			LOG.info("windowsStatCallback: update");			
+			LOG.info("RangeQueryCallBack: update");			
 			String patientRegion = result.getRegion();
 			HashMap<String,Double> distances = result.getDistances();
 			if(this.regions.containsKey(patientRegion)){
-				HashMap<String,Double> temp = this.regions.get(patientRegion);
-				for(String key:temp.keySet()){
-					temp.put(key, temp.get(key)+distances.get(key));
-				}				
+				HashMap<String,Double> temp = this.regions.get(patientRegion).getDistances();
+				temp.putAll(distances);				
 			}else{
-				this.regions.put(patientRegion, result.getDistances());
+				this.regions.put(patientRegion, result);
 			}			
 		}
 	}
-	
 	
 	
 

@@ -9,6 +9,7 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import savi.hcat.analytics.coprocessor.RStatResult;
 import savi.hcat.common.util.XConstants;
 
 import com.hbase.service.HBaseUtil;
@@ -86,6 +87,20 @@ public class XBaseService {
 		}
 		return false;
 	}
+	
+	public JSONObject buildRequestStat(RStatResult result){
+		JSONObject reqStatJSON = new JSONObject();
+		try{
+			reqStatJSON.put(XConstants.REQUEST_STAT_EXE_TIME, result.getEnd()-result.getStart());
+			reqStatJSON.put(XConstants.REQUEST_STAT_CELLS, result.getCells());
+			reqStatJSON.put(XConstants.REQUEST_STAT_ROWS, result.getRows());
+			reqStatJSON.put(XConstants.REQUEST_CELL_SIZE, result.getKvLength());			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return reqStatJSON;		
+	}
+	
 	
 	public JSONArray getResponse() {
 		if(response==null)

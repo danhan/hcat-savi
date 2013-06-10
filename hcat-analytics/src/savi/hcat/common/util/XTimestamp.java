@@ -124,7 +124,7 @@ public class XTimestamp {
 			int start_year = start_cal.get(Calendar.YEAR);
 			int end_year = end_cal.get(Calendar.YEAR);
 			int start_month = start_cal.get(Calendar.MONTH)+1;
-			int end_month = end_cal.get(Calendar.MONTH)+1;
+			int end_month = end_cal.get(Calendar.MONTH)+1;			
 			if(start_year == end_year){
 				for(int i=start_month;i<=end_month;i++){					
 					unitSet.add(String.valueOf(start_year)+formatDigit(i));
@@ -135,15 +135,19 @@ public class XTimestamp {
 					unitSet.add(String.valueOf(start_year)+formatDigit(i));
 				}
 				// the whole months of the middle year
-				for(int i=start_year+1;i<=end_year;i++){					
-					for(int j = 1;j<=12;j++){
-						unitSet.add(String.valueOf(i)+formatDigit(j));
+				for(int i=start_year+1;i<=end_year;i++){
+					if(i==end_year){
+						// the left of the end year
+						for(int j=1;j<=end_month;j++){					
+							unitSet.add(String.valueOf(i)+formatDigit(j));
+						}
+					}else{
+						for(int j = 1;j<=12;j++){
+							unitSet.add(String.valueOf(i)+formatDigit(j));
+						}
 					}
 				}
-				// the left of the end year
-				for(int i=1;i<=end_month;i++){					
-					unitSet.add(String.valueOf(end_year)+formatDigit(i));
-				}
+
 				
 			}
 			

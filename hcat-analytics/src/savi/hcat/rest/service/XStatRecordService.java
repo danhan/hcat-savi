@@ -19,7 +19,7 @@ import savi.hcat.common.util.XConstants;
 import com.util.XTableSchema;
 
 /**
- * Time serries service
+ * Time series service
  * @author dan
  *
  */
@@ -59,14 +59,14 @@ public class XStatRecordService  extends XBaseStatService{
 	 */
 		
 	public JSONArray getPercentage(JSONObject request){		
-		LOG.info("in getPercentage: "+request.toString());
+		LOG.info("in getSummary: "+request.toString());
 		// get parameters of the query
 		boolean decomposed = this.decompose(request);
 		if(!decomposed)
 			LOG.error("decompose Error!");
 
 		//prepare the callback function
-		PercentageCallBack callback = new PercentageCallBack(this);
+		SummaryCallBack callback = new SummaryCallBack(this);
 		
 		// compose the HBase RPC call
 		String[] rowRange = getScanRowRange();// getRowRange		
@@ -123,6 +123,11 @@ public class XStatRecordService  extends XBaseStatService{
 					values.put(unitJSON);
 				}				
 				regionJSON.put("values", values);
+				regionJSON.put("total", result.getRows()); // total number of appointments because one row corresponds to one appointment
+				// add the statistics of request
+				JSONObject reqStatJSON = this.buildRequestStat(result);
+				regionJSON.put("request_stat", reqStatJSON);
+				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -133,13 +138,13 @@ public class XStatRecordService  extends XBaseStatService{
 		return this.response;
 	}
 	
-	class PercentageCallBack implements Batch.Callback<RStatResult> {
+	class SummaryCallBack implements Batch.Callback<RStatResult> {
 		public Hashtable<String, RStatResult> regions = 
 						new Hashtable<String, RStatResult>();
 		int count = 0; // the number of coprocessor
 		XBaseStatService service = null;
 
-		public PercentageCallBack(XBaseStatService s) {
+		public SummaryCallBack(XBaseStatService s) {
 			this.service = s;
 				
 		}
@@ -157,9 +162,5 @@ public class XStatRecordService  extends XBaseStatService{
 			}			
 		}
 	}
-
-	/**
-	 * Get the media statistics in the appointment
-	 */
 	
 }

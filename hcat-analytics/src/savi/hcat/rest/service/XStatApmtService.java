@@ -1,6 +1,7 @@
 package savi.hcat.rest.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.TreeMap;
@@ -9,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.coprocessor.Batch;
+import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterList;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,16 +60,17 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 		// compose the HBase RPC call
 		String[] rowRange = getScanRowRange();// getRowRange				
 		// send separate queries for each city
-		for(String region: regions){			
+		for(final String region: regions){			
 			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
 			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
-			try {
-				FilterList fList = getScanFilterList(region);// getFilter list
+			try {				
 				// create the scan 
-				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
-						new String[] { this.tableSchema.getFamilyName() }, 
-						new String[] {"0","1","2","3","4","5","6"},					
-						this.tableSchema.getMaxVersions());
+/*				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
+						new String[] { this.tableSchema.getFamilyName() }, null,this.tableSchema.getMaxVersions());*/
+				FilterList fList = getScanFilterList(region);// getFilter list
+				final Scan scan = hbase.generateScan(null, fList,
+						new String[] { this.tableSchema.getFamilyName() },
+						null,this.tableSchema.getMaxVersions());				
 				
 				LOG.info("scan: "+scan.toString());
 				//send the caller 
@@ -78,7 +81,7 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 					public RStatResult call(HCATProtocol instance)
 							throws IOException {
 						
-						return instance.getSummary(scan,condition,unit,start_time,end_time);
+						return instance.getSummary(scan,region,condition,unit,start_time,end_time);
 					};
 				}, callback);
 
@@ -91,28 +94,33 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 			}
 		}
 		// TODO callback.cities;
-		LOG.info("the returned value: "+callback.cities.toString());
-		for(String key: callback.cities.keySet()){
-			JSONObject one_city = new JSONObject();
-			TreeMap<String,Integer> treemap = new TreeMap<String,Integer>(callback.cities.get(key));
+		LOG.info("the returned value: "+callback.regions.toString());
+		for(String key: callback.regions.keySet()){
+			RStatResult result = callback.regions.get(key);
+			JSONObject regionJSON = new JSONObject();
+			TreeMap<String,Integer> treemap = new TreeMap<String,Integer>(result.getHashUnit());
 			try {
-				one_city.put("city", key);
+				regionJSON.put("region", key);
 				JSONArray values = new JSONArray();
-				for(Integer v:treemap.values()){
-					values.put(v);
-				}
-				one_city.put("values", values);
+				for(String unit: treemap.keySet() ){	
+					JSONObject unitJSON= new JSONObject();
+					unitJSON.put(unit, treemap.get(unit));
+					values.put(unitJSON);
+				}										
+				regionJSON.put("values", values);				
+				// add the statistics of request
+				JSONObject reqStatJSON = this.buildRequestStat(result);
+				regionJSON.put("request_stat", reqStatJSON);				
+				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
-			this.response.put(one_city);
+			this.response.put(regionJSON);
 		}
 		
 		return this.response;
 	}
-
-	
 
 
 	/**
@@ -122,7 +130,8 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 	 */
 
 	class SummaryCallBack implements Batch.Callback<RStatResult> {
-		public HashMap<String, Hashtable<String,Integer>> cities = new HashMap<String,Hashtable<String,Integer>>();
+		//TODO this should be improved
+		public HashMap<String, RStatResult> regions = new HashMap<String,RStatResult>();
 		int count = 0; // the number of coprocessor
 		XBaseStatService service = null;
 
@@ -134,22 +143,20 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 		@Override
 		public void update(byte[] region, byte[] row, RStatResult result) {	
 			LOG.info("SummaryCallBack: update");			
-			String city = result.getRegion();
+			String regionPatient = result.getRegion();
 			Hashtable<String,Integer> hashUnit = result.getHashUnit();
-			if(this.cities.containsKey(city)){
-				Hashtable<String,Integer> temp = this.cities.get(city);
+			if(this.regions.containsKey(regionPatient)){
+				Hashtable<String,Integer> temp = this.regions.get(regionPatient).getHashUnit();
 				for(String key:temp.keySet()){
 					temp.put(key, temp.get(key)+hashUnit.get(key));
 				}
 				
 			}else{
-				this.cities.put(city, result.getHashUnit());
+				this.regions.put(regionPatient, result);
 			}			
 		}
 	}
-	
 
-	
 
 	/**
 	 * Not decided yet

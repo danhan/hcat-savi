@@ -27,7 +27,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 	
 	
 	@Override
-	public synchronized RStatResult getSummary(Scan scan,String condition,String unit,String starttime,String endtime) throws IOException {
+	public synchronized RStatResult getSummary(Scan scan,String region, String condition,String unit,String starttime,String endtime) throws IOException {
 		
 		long sTime = System.currentTimeMillis();
 		LOG.info(sTime+": in the getSummary: "+scan.toJSON()+";"+condition+";"+unit+";"+starttime+";"+endtime);
@@ -37,11 +37,9 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
 		RStatResult results = new RStatResult().initHashUnit();
 		results = results.setHashUnit(unit, starttime, endtime); // by month/week	
-		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));
-		LOG.info("parts: XXX: "+Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER).length);
-		String r = Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER)[0];		
-		results.setRegion(r); // set city in order to aggregate in the client 
-		LOG.info("get the city "+r);
+		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));	
+		results.setRegion(region); // set city in order to aggregate in the client 
+		LOG.info("get the region "+region);
 		
 		boolean hasMoreResult = false;				
 		/**Step2: iterate the result from the scanner**/		
@@ -171,8 +169,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 	}
 
 
-
-	public RStatResult doWindowQuery(Scan scan,HashMap<String,Rectangle2D.Double> quads)throws IOException{
+	public RStatResult doWindowQuery(Scan scan,String region, HashMap<String,Rectangle2D.Double> quads)throws IOException{
 		long sTime = System.currentTimeMillis();
 		LOG.info(sTime+": in the getSummary: "+scan.toJSON()+";"+quads.toString());
 		/**Step1: get internalScanner***/
@@ -180,11 +177,9 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		
 		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
 		RStatResult results = new RStatResult().initHashUnit();		
-		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));
-		LOG.info("parts: XXX: "+Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER).length);
-		String r = Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER)[0];		
-		results.setRegion(r); // set city in order to aggregate in the client 
-		LOG.info("get the region "+r);
+		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));	
+		results.setRegion(region); // set city in order to aggregate in the client 
+		LOG.info("get the region "+region);
 		
 		boolean hasMoreResult = false;				
 		/**Step2: iterate the result from the scanner**/		

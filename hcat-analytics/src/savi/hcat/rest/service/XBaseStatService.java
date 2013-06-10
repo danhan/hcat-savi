@@ -1,6 +1,9 @@
 package savi.hcat.rest.service;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hbase.filter.ColumnPrefixFilter;
@@ -9,6 +12,7 @@ import org.apache.hadoop.hbase.filter.FilterList;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.json.JSONObject;
 
+import savi.hcat.analytics.coprocessor.RStatResult;
 import savi.hcat.common.util.XConstants;
 import savi.hcat.common.util.XTimestamp;
 
@@ -92,21 +96,18 @@ public class XBaseStatService extends XBaseService{
 		LOG.info("getScanFilterList");		
 		FilterList fAll = new FilterList(FilterList.Operator.MUST_PASS_ALL);	
 		try {
-/*			FilterList fList = new FilterList(FilterList.Operator.MUST_PASS_ONE);
-			// add timestamp filter ==> required
-			List<Long> timestamps = new ArrayList<Long>();
-			for(int i=0;i<this.tableSchema.getMaxVersions();i++)
-				timestamps.add(Long.valueOf(i));	
-			Filter timestampFilter = hbase.getTimeStampFilter(timestamps);			
-			fList.addFilter(timestampFilter);
-			fAll.addFilter(fList);*/
+
 			// add row filter ==> required
 			Filter rowFilter = hbase.getPrefixFilter(region+XConstants.ROW_KEY_DELIMETER);
 			fAll.addFilter(rowFilter);
 			// add column filter ==> optional
 			if(null != this.numberator){
 				fAll.addFilter(this.buildColumnPrefixFilter());
+			}else{
+				//fAll.addFilter(buildRangeColumnFilter());
 			}
+			//add timestamp filter			
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -131,19 +132,37 @@ public class XBaseStatService extends XBaseService{
 		return filter;
 	}	
 	
-	public String getCondition() {
-		return condition;
+	private FilterList buildTimestampsFilter(){
+		FilterList fList = null;
+		try{
+			fList = new FilterList(FilterList.Operator.MUST_PASS_ONE);
+			// add timestamp filter ==> required
+			ArrayList<Long> timestamps = new ArrayList<Long>();
+			for(int i=0;i<this.tableSchema.getMaxVersions();i++)
+				timestamps.add(Long.valueOf(i));	
+			Filter timestampFilter = hbase.getTimeStampFilter(timestamps);			
+			fList.addFilter(timestampFilter);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return fList;
 	}
 	
-	/**
-	 * @TODO
-	 * the scanned version can be 1 or all based on the conditions
-	 * e.g. the required service in an appointment only needs to get one version, but if the Incomplete/Complete/Refused/Prevented
-	 * @return
-	 */
-	private long getScanVersions(){
-		// TODO now, it is not needed. as the status should be 0/1/2/3, corresponding to Incomplete/Complete/Refused/Prevented
-		return -1;
+	private Filter buildRangeColumnFilter(){
+		Filter columnFilter = null;
+		try{
+			columnFilter = hbase.getColumnRangeFilter(Bytes.toBytes("0"),true,Bytes.toBytes("6"),true);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return columnFilter;
+	}
+
+	public String getCondition() {
+		return condition;
 	}
 	
 	

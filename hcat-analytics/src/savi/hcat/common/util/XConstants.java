@@ -1,5 +1,7 @@
 package savi.hcat.common.util;
 
+import java.util.List;
+
 public class XConstants {
 
 	
@@ -47,6 +49,11 @@ public class XConstants {
 	public static final String QUERY_TYPE_RANGE="range";
 	public static final String QUERY_TYPE_KNN="knn";
 	
+	// query statistics 
+	public static final String REQUEST_STAT_EXE_TIME="exe_time";
+	public static final String REQUEST_STAT_ROWS="num_of_rows";
+	public static final String REQUEST_STAT_CELLS="num_of_cells";
+	public static final String REQUEST_CELL_SIZE="cell_size";
 	
 	/**
 	 * HBase table
