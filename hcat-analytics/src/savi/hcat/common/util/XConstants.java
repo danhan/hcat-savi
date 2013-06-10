@@ -21,8 +21,10 @@ public class XConstants {
 	 *  specially for statistics query
 	 */
 	public static final String POST_KEY_OBJECT="object";
-	public static final String POST_KEY_STATUS="status";
+	public static final String POST_KEY_CONDITION="condition";
 	public static final String POST_KEY_UNIT="unit"; // per m/w/d ==> month/week/day
+	public static final String POST_KEY_NUMBERATOR="numerator"; // per m/w/d ==> month/week/day
+	public static final String POST_KEY_DENOMINATOR="denominator"; // per m/w/d ==> month/week/day
 	/**
 	 * specially for spatial query
 	 */
@@ -33,8 +35,10 @@ public class XConstants {
 	
 	
 	// the object value
-	public static final String POST_VALUE_APPOINTMENT="appointment";  
+	public static final String POST_VALUE_APPOINTMENT="appointment";
+	public static final String POST_VALUE_RECORD="record";  
 	public static final String POST_VALUE_SERVICE="service";
+	public static final String POST_VALUE_MEDIA="media";
 	public static final String POST_VALUE_HCA="hca";
 	public static final String POST_VALUE_PATIENT="patient";
 	

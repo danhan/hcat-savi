@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
@@ -108,6 +109,51 @@ public class XTimestamp {
 		LOG.info("formuated unit hash: "+unitHash.toString());
 		return unitHash;
 	}
+	
+	
+	public static HashSet<String> getHashSetMonth(String starttime, String endtime){	
+		LOG.info("getHashSetMonth "+ starttime+";"+endtime);
+		HashSet<String> unitSet = new HashSet<String>();
+		try {
+			Date start = dateFormat.parse(starttime);
+			Date end = dateFormat.parse(endtime);
+			Calendar start_cal = Calendar.getInstance();
+			start_cal.setTime(start);
+			Calendar end_cal = Calendar.getInstance();
+			end_cal.setTime(end);
+			int start_year = start_cal.get(Calendar.YEAR);
+			int end_year = end_cal.get(Calendar.YEAR);
+			int start_month = start_cal.get(Calendar.MONTH)+1;
+			int end_month = end_cal.get(Calendar.MONTH)+1;
+			if(start_year == end_year){
+				for(int i=start_month;i<=end_month;i++){					
+					unitSet.add(String.valueOf(start_year)+formatDigit(i));
+				}
+			}else{
+				// the left of the start year
+				for(int i=start_month;i<=12;i++){					
+					unitSet.add(String.valueOf(start_year)+formatDigit(i));
+				}
+				// the whole months of the middle year
+				for(int i=start_year+1;i<=end_year;i++){					
+					for(int j = 1;j<=12;j++){
+						unitSet.add(String.valueOf(i)+formatDigit(j));
+					}
+				}
+				// the left of the end year
+				for(int i=1;i<=end_month;i++){					
+					unitSet.add(String.valueOf(end_year)+formatDigit(i));
+				}
+				
+			}
+			
+		} catch (ParseException e) {			
+			e.printStackTrace();
+		}	
+
+		LOG.info("formuated unit hash: "+unitSet.toString());
+		return unitSet;
+	}	
 	
 	/**
 	 * 

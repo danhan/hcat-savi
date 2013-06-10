@@ -35,8 +35,8 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		InternalScanner scanner = ((RegionCoprocessorEnvironment) getEnvironment()).getRegion().getScanner(scan);		
 		
 		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
-		RStatResult results = new RStatResult();
-		results = results.setUnit(unit, starttime, endtime); // by month/week	
+		RStatResult results = new RStatResult().initHashUnit();
+		results = results.setHashUnit(unit, starttime, endtime); // by month/week	
 		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));
 		LOG.info("parts: XXX: "+Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER).length);
 		String r = Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER)[0];		
@@ -61,12 +61,12 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 						String unitKey = results.parseUnitKey(rowKey);
 						if(condition.equals("unfinished")){
 							if(Bytes.toString(kv.getValue()).equals("null"))
-								results.addOn(unitKey, 1);	
+								results.addOnHashUnit(unitKey, 1);	
 						}else if(condition.equals("finished")){
 							if(!Bytes.toString(kv.getValue()).equals("null"))
-								results.addOn(unitKey, 1);
+								results.addOnHashUnit(unitKey, 1);
 						}else{
-							results.addOn(unitKey, 1); // there is no condition, 
+							results.addOnHashUnit(unitKey, 1); // there is no condition, 
 						}											
 					}
 				}				
@@ -94,12 +94,83 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 
 	}
 
-	@Override
-	public RStatResult getAverage(Scan scan,String condition,String unit,String starttime,String endtime) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
+	
+	@Override
+	public RStatResult getPercentage(Scan scan, String condition, String unit,
+			String starttime, String endtime, String numerator)
+			throws IOException {
+		long sTime = System.currentTimeMillis();
+		LOG.info(sTime+": in getPercentage: "+scan.toJSON()+";"+condition+";"+unit+";"+starttime+";"+endtime+";numberator=>"+numerator);
+		/**Step1: get internalScanner***/
+		InternalScanner scanner = ((RegionCoprocessorEnvironment) getEnvironment()).getRegion().getScanner(scan);		
+		
+		
+		RStatResult unitHashArrayResult = new RStatResult().initHashUnitArray();
+		unitHashArrayResult = unitHashArrayResult.setHashUnitArray(unit, starttime, endtime); // by month/week	
+		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));		
+		String r = Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER)[0];		
+		unitHashArrayResult.setRegion(r); // set region in order to aggregate in the client 
+		LOG.info("get the region "+r);
+		
+					
+		/**Step2: iterate the result from the scanner**/		
+		int cell_num = 0;
+		int row_num = 0;		
+		int kvLength = 0;
+		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
+		boolean hasMoreResult = false;	
+		try {
+			do {
+				hasMoreResult = scanner.next(keyvalues);
+				if(keyvalues != null && keyvalues.size() > 0){	
+					row_num++;					
+					for(KeyValue kv:keyvalues){
+						LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
+						kvLength = (kvLength < kv.getLength())? kv.getLength():kvLength;
+						cell_num++;
+						String rowKey = Bytes.toString(kv.getRow());						
+						String unitKey = unitHashArrayResult.parseUnitKey(rowKey);
+						
+						String qualifer = Bytes.toString(kv.getQualifier());						
+						String cellValue = Bytes.toString(kv.getValue());
+						LOG.info("qualifer=>"+qualifer+";cellValue=>"+cellValue);
+						JSONTokener tokener = new JSONTokener(cellValue);
+						JSONObject desc = new JSONObject(tokener);						
+						if(numerator.equals(XConstants.POST_VALUE_SERVICE)){
+							int status = desc.getInt("status");	
+							LOG.info("unitKey=>"+unitKey+";status=>"+status);							
+							unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,status,4);	
+						}else if(numerator.equals(XConstants.POST_VALUE_MEDIA)){
+							unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,0,1);
+						}										
+					}
+				}				
+				keyvalues.clear();
+
+			} while (hasMoreResult);
+
+			long eTime = System.currentTimeMillis();
+
+			unitHashArrayResult.setStart(sTime);
+			unitHashArrayResult.setEnd(eTime);
+			unitHashArrayResult.setRows(row_num);
+			unitHashArrayResult.setCells(cell_num);
+			unitHashArrayResult.setKvLength(kvLength);
+			LOG.info("Hash Unit: "+unitHashArrayResult.getHashUnitArray().toString());	
+			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+unitHashArrayResult.getHashUnitArray().size()+
+					";cell_num=>"+cell_num+";row_num=>"+row_num);	
+
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}
+
+		return unitHashArrayResult;	
+	}
+
+
 
 	public RStatResult doWindowQuery(Scan scan,HashMap<String,Rectangle2D.Double> quads)throws IOException{
 		long sTime = System.currentTimeMillis();
@@ -108,7 +179,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		InternalScanner scanner = ((RegionCoprocessorEnvironment) getEnvironment()).getRegion().getScanner(scan);		
 		
 		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
-		RStatResult results = new RStatResult();		
+		RStatResult results = new RStatResult().initHashUnit();		
 		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));
 		LOG.info("parts: XXX: "+Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER).length);
 		String r = Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER)[0];		
@@ -139,7 +210,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 						for(String key: quads.keySet()){
 							Rectangle2D.Double rec = quads.get(key);
 							if(rec.contains(resPoint)){
-								results.addOn(key, 1);
+								results.addOnHashUnit(key, 1);
 								LOG.info("the patient belongs to "+ key);
 								break;
 							}
@@ -239,6 +310,11 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 	
 	
 	
-	
+
+	@Override
+	public RStatResult getAverage(Scan scan,String condition,String unit,String starttime,String endtime) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 
 }

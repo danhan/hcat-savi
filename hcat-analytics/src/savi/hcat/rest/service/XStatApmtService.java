@@ -1,28 +1,22 @@
 package savi.hcat.rest.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.coprocessor.Batch;
-import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import savi.hcat.analytics.coprocessor.HCATProtocol;
-import savi.hcat.analytics.coprocessor.RCopResult;
 import savi.hcat.analytics.coprocessor.RStatResult;
 import savi.hcat.common.util.XConstants;
-import savi.hcat.common.util.XTimestamp;
 
 
 import com.util.XTableSchema;
@@ -47,7 +41,9 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 			e.printStackTrace();
 		}		
 	}
-	
+	/**
+	 * get the summary of Appointment
+	 */
 	@Override
 	public JSONArray getSummary(JSONObject request){		
 		LOG.info("in getSummary");
@@ -60,13 +56,13 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 		SummaryCallBack callback = new SummaryCallBack(this);
 		
 		// compose the HBase RPC call
-		String[] rowRange = getScanRowRange();// getRowRange		
-		FilterList fList = getScanFilterList(rowRange);// getFilter list
+		String[] rowRange = getScanRowRange();// getRowRange				
 		// send separate queries for each city
-		for(String city: regions){			
-			String start = city+XConstants.ROW_KEY_DELIMETER+rowRange[0];
-			String end = city+XConstants.ROW_KEY_DELIMETER+rowRange[1];
+		for(String region: regions){			
+			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
+			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
 			try {
+				FilterList fList = getScanFilterList(region);// getFilter list
 				// create the scan 
 				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
 						new String[] { this.tableSchema.getFamilyName() }, 
@@ -81,7 +77,6 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 
 					public RStatResult call(HCATProtocol instance)
 							throws IOException {
-						final String condition = status;	
 						
 						return instance.getSummary(scan,condition,unit,start_time,end_time);
 					};
@@ -117,82 +112,8 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 		return this.response;
 	}
 
-	@Override
-	public JSONArray getAverage(JSONObject request) {
-		// get parameters of this query
-		this.decompose(request);
-		//prepare the callback function
-		AverageCallBack callback = new AverageCallBack(this);
-
-		// compose the HBase RPC call
-		String[] rowRange = getScanRowRange();// getRowRange		
-		FilterList fList = getScanFilterList(rowRange);// getFilter list 		 
-		try {
-			// create the scan 
-			final Scan scan = hbase.generateScan(rowRange, fList,
-					new String[] { this.tableSchema.getFamilyName() }, null,					
-					this.tableSchema.getMaxVersions());
-			
-			//send the caller 
-			hbase.getHTable().coprocessorExec(HCATProtocol.class,
-					scan.getStartRow(), scan.getStopRow(),
-					new Batch.Call<HCATProtocol, RCopResult>() {
-
-				public RCopResult call(HCATProtocol instance)
-						throws IOException {
-					final String condition = status;						
-					return instance.getAverage(scan,condition,unit,start_time,end_time);
-				};
-			}, callback);
-			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block			
-			e1.printStackTrace();
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return this.response;
-	}
-
-	/**
-	 * This is to get the row range based on the parameters, start-time,end-time-cities
-	 * rowkey: city-20130824-hcaid-pid, columns:0,1,2,3,4,5,6, version: 0,1,2,3, value: startminutes
-	 * start time 2013-08-28 12:22:22
-	 * end time 2013-08-28 12:22:22
-	 * 
-	 * @return
-	 */
-	protected String[] getScanRowRange(){
-		LOG.info("getScanRowRange");
-		String[] rowRange = new String[2];
-		rowRange[0] = XTimestamp.parseDate(this.start_time);
-		rowRange[1] = XTimestamp.parseDate(this.end_time)+"*"; // it means include all rows before 
-		LOG.info("row range: "+rowRange[0]+"=>"+rowRange[1]);
-		return rowRange;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */	
-	protected FilterList getScanFilterList(String[] rowRange){
-		LOG.info("getScanFilterList");		
-		FilterList fList = new FilterList(FilterList.Operator.MUST_PASS_ONE);
-		List<Long> timestamps = new ArrayList<Long>();
-		for(int i=0;i<this.tableSchema.getMaxVersions();i++)
-			timestamps.add(Long.valueOf(i));
-		try {
-			Filter timestampFilter = hbase.getTimeStampFilter(timestamps);
-			fList.addFilter(timestampFilter);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return fList;
-	}
 	
+
 
 	/**
 	 * To compute the average value
@@ -227,26 +148,15 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 		}
 	}
 	
+
+	
+
 	/**
-	 * To compute the average value
-	 * @author dan
-	 *
+	 * Not decided yet
 	 */
-	class AverageCallBack implements Batch.Callback<RCopResult> {
-		RCopResult res = new RCopResult();
-		int count = 0; // the number of coprocessor
-		XBaseStatService service = null;
-
-		public AverageCallBack(XBaseStatService s) {
-			this.service = s;
-		}
-
-		@Override
-		public void update(byte[] region, byte[] row, RCopResult result) {
-			
-		}
-	}	
-	
-	
+	@Override
+	public JSONArray getAverage(JSONObject request) {
+		return this.response;
+	}
 	
 }

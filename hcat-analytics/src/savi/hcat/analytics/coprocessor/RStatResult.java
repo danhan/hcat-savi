@@ -1,5 +1,6 @@
 package savi.hcat.analytics.coprocessor;
 
+import java.util.HashSet;
 import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
@@ -14,38 +15,157 @@ public class RStatResult extends RCopResult{
 	private static Log LOG = LogFactory.getLog(RStatResult.class);
 	
 	Hashtable<String,Integer> hashUnit = null; // per month, weekly, daily
+	
 	String region = null;
 	String unit = null;
 	
-	public RStatResult(){
-		hashUnit = new Hashtable<String,Integer>();
-	}
+	Hashtable<String, Hashtable<String,Integer>> hashHash = null; // service/media:{status/type=>number}	
+	Hashtable<String, Hashtable<String, int[]>> hashUnitArray = null; // month, service/media((status/type=>number)
 	
-	public RStatResult setUnit(String u,String starttime,String endtime){
-		this.unit =  u;
-		if(unit.equals("m")){
-			this.hashUnit = XTimestamp.getHashMonth(starttime, endtime);
-		}else if(unit.equals("w")){
-			this.hashUnit = XTimestamp.getHashWeek(starttime, endtime);
-		}
+	
+	public RStatResult initHashUnit(){
+		hashUnit = new Hashtable<String,Integer>();
 		return this;
 	}
 	
-	public void addOn(String unitKey, int count){		
-		LOG.info("addOn: "+unitKey+";"+count);
+	public RStatResult initHashHash(){
+		hashHash = new Hashtable<String, Hashtable<String,Integer>>();
+		return this;
+	}
+	
+	public RStatResult initHashUnitArray(){
+		hashUnitArray = new Hashtable<String, Hashtable<String, int[]>>();
+		return this;
+	}
+	
+	
+	public RStatResult setHashUnit(String u,String starttime,String endtime){
+		this.unit =  u;
+		if(unit.equals("m")){
+			HashSet<String> unitSet = XTimestamp.getHashSetMonth(starttime, endtime);
+			for(String unit: unitSet){
+				this.hashUnit.put(unit, 0);
+			}
+		}else if(unit.equals("w")){
+			//
+		}
+		return this;
+	}
+	/**
+	 * month=><s1=>[23,34,45,11]> at this month, service with status 0 is 23, with status 1 is 34....
+	 * month=><m0=>[23]> at this month, media with picture is 23
+	 * @param u
+	 * @param starttime
+	 * @param endtime
+	 * @return
+	 */
+	public RStatResult setHashUnitArray(String u,String starttime,String endtime){
+		this.unit =  u;
+		if(unit.equals("m")){
+			HashSet<String> unitSet = XTimestamp.getHashSetMonth(starttime, endtime);
+			for(String unit: unitSet){
+				this.hashUnitArray.put(unit,new Hashtable<String,int[]>());
+			}
+		}else if(unit.equals("w")){
+			//
+		}
+		return this;
+	}	
+	
+	public void addOnHashUnit(String unitKey, int count){		
+		LOG.info("addOnHashUnit: "+unitKey+";"+count);		
 		if(hashUnit.containsKey(unitKey)){
 			int num = this.hashUnit.get(unitKey).intValue();
 			this.hashUnit.put(unitKey, num+count);
 		}else{
 			this.hashUnit.put(unitKey, count);
 		}
-	}		
+	}	
+	
+	public void addOnHashHash(String hashKey, String pairKey, int count){		
+		LOG.info("addOnHashHash: "+hashKey+";"+pairKey+";"+count);		
+		if(this.hashHash.containsKey(hashKey)){
+			Hashtable<String, Integer> pair = this.hashHash.get(hashKey);	
+			if(pair.containsKey(pairKey)){
+				int num = pair.get(hashKey).intValue();
+				pair.put(pairKey, num+count);					
+			}else{
+				pair.put(pairKey, count);
+			}
+			this.hashHash.put(hashKey, pair);
+		}else{
+			Hashtable<String, Integer> pair = new Hashtable<String,Integer>();
+			pair.put(pairKey, count);
+			this.hashHash.put(hashKey,pair);
+		}
+	}	
+	/**
+	 * eg. unitKey=> month, typeKey => s1, index => status(0,1,2,3)
+	 * @param unitKey
+	 * @param hashKey
+	 * @param index
+	 * @param totalItems: to initialize the length of arrays, service needs 4, while media needs 1
+	 */
+	public void addOnUnitHashArray(String unitKey, String typeKey, int itemIndex,int totalItems){		
+		LOG.info("addOnUnitHashArray: "+unitKey+";"+typeKey+";"+itemIndex);		
+		if(this.hashUnitArray.containsKey(unitKey)){ // month this should have because I already set the unit, but in case. 
+			Hashtable<String, int[]> pair = this.hashUnitArray.get(unitKey);	
+			if(pair.containsKey(typeKey)){  // numerator's type
+				int[] items = pair.get(typeKey);
+				items[itemIndex]++ ;
+				pair.put(typeKey, items);					
+			}else{
+				int[] items = new int[totalItems];
+				for(int i=0;i<items.length;i++) items[i] = 0;
+				items[itemIndex]++;
+				pair.put(typeKey, items);
+			}
+			this.hashUnitArray.put(unitKey, pair);
+		}else{
+			Hashtable<String, int[]> pair = new Hashtable<String,int[]>();
+			int[] items = new int[totalItems];
+			for(int i=0;i<items.length;i++) items[i] = 0;
+			items[itemIndex]++;
+			pair.put(typeKey, items);
+			this.hashUnitArray.put(unitKey,pair);
+		}
+		LOG.info("addOnUnitHashArray:new result:  "+this.hashUnitArray.toString());
+	}	
+	
+	public void mergeUnitHashArray(Hashtable<String, Hashtable<String, int[]>> hashArray){
+		LOG.info("mergeUnitHashArray: orign=> "+this.hashUnitArray.toString()+";append=>"+hashArray.toString());
+		for(String unit: hashArray.keySet()){ // month
+			Hashtable<String, int[]> numerator = hashArray.get(unit);
+			if(this.hashUnitArray.containsKey(unit)){ // month
+				Hashtable<String, int[]> orig_numerator = this.hashUnitArray.get(unit);
+				for(String type: numerator.keySet()){ // type of numerator
+					int[] items = numerator.get(type);
+					if(orig_numerator.containsKey(type)){ // mulitple types of numerators
+						int[] orign_items = orig_numerator.get(type);
+						for(int i=0;i<orign_items.length;i++){
+							orign_items[i]+= items[i];
+						}
+					}else{ // if the type of numerator does not exist
+						orig_numerator.put(type, items);
+					}					
+				}
+				
+			}else{  // the month
+				this.hashUnitArray.put(unit, numerator);
+			}
+		}
+		
+		LOG.info("mergeUnitHashArray: new=> "+this.hashUnitArray.toString());
+		
+	}
+	
+	
 	
 	public void setRegion(String r){
 		this.region = r;
 	}	
 	/**
-	 * row key: city-20130405-hcaid-pid
+	 * row key: region-20130405-block-hcaid-pid
 	 * @param rowKey
 	 * @return
 	 */
@@ -67,6 +187,10 @@ public class RStatResult extends RCopResult{
 
 	public String getRegion() {
 		return region;
+	}
+
+	public Hashtable<String, Hashtable<String, int[]>> getHashUnitArray() {
+		return hashUnitArray;
 	}
 	
 	
