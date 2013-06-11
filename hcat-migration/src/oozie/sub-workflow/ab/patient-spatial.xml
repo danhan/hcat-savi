@@ -1,0 +1,62 @@
+<workflow-app name="ab-patient-spatial-move" xmlns="uri:oozie:workflow:0.2">
+   <start to="patient-spatial-sqoop"/> 
+
+    <action name="patient-spatial-sqoop">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+	    <prepare>
+                <delete path="${nameNode}/user/${wf:user()}/oozie/output/patient-spatial"/>
+                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+            <arg>import</arg>
+	    <arg>-libjars</arg>
+	    <arg>${abwf}/sqoop-ext.jar</arg>
+	    <arg>-D</arg>
+	    <arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.GeospatialPutTransformer</arg>
+            <arg>--options-file</arg>
+            <arg>patient-spatial.option</arg>
+           <file>patient-spatial.option</file>
+	   <file>sqoop-ext.jar</file>
+        </sqoop>
+        <ok to="patient-spatial-updatebatch"/>
+        <error to="patient-spatial-sqoop-fail"/>
+    </action>
+ 
+    <kill name="patient-spatial-sqoop-fail">
+        <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="patient-spatial-updatebatch">
+       <shell xmlns="uri:oozie:shell-action:0.1">
+          <job-tracker>${jobTracker}</job-tracker>
+          <name-node>${nameNode}</name-node>
+          <configuration>
+             <property>
+               <name>mapred.job.queue.name</name>
+               <value>${queueName}</value>
+             </property>
+         </configuration>
+         <exec>patient-spatial.script</exec>
+         <file>patient-spatial.script</file>
+         <file>patient-spatial.import</file>
+         <file>patient-spatial.option</file>
+        </shell>
+        <ok to="end"/>
+        <error to="patient-spatial-shell-fail"/>
+    </action>
+ 
+  <kill name="patient-spatial-shell-fail">
+        <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill> 
+
+  
+   <end name="end"/>
+
+ </workflow-app>
