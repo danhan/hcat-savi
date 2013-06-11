@@ -1,7 +1,7 @@
-copy sqoop-ext.jar to 
+1 copy sqoop-ext.jar 
 
 
-
+2 these libraries should be copy to HDFS share/lib
 hbase-0.94.1-security.jar
 hschema-hd.jar
 mysql-connector-java-5.1.24-bin.jar
@@ -10,3 +10,5 @@ protobuf-java-2.4.0a.jar
 sqoop-1.4.3.jar
 sqoop-ext.jar
 zookeeper-3.4.3.jar
+
+3 Check the xxx.option to make sure the region corresponds to the region name

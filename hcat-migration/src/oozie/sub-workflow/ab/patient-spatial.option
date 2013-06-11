@@ -18,7 +18,7 @@ row_key=String,sReq=String
 patient-spatial
 
 --hbase-row-key
-'{"region":"localhost","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"0,0,1000,1000","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
+'{"region":"ab","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"0,0,1000,1000","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
 
 --column-family
 '{"family"=>"d"}'

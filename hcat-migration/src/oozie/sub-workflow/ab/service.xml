@@ -1,4 +1,4 @@
-<workflow-app name="service-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="ab-service-move" xmlns="uri:oozie:workflow:0.2">
    <start to="service-sqoop"/> 
 
     <action name="service-sqoop">
