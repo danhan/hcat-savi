@@ -1,0 +1,12 @@
+copy sqoop-ext.jar to 
+
+
+
+hbase-0.94.1-security.jar
+hschema-hd.jar
+mysql-connector-java-5.1.24-bin.jar
+org.json.jar
+protobuf-java-2.4.0a.jar
+sqoop-1.4.3.jar
+sqoop-ext.jar
+zookeeper-3.4.3.jar
