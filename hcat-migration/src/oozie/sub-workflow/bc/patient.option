@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.0.0.14/hcaschedule
+jdbc:mysql://10.0.0.7/hcaschedule
 --username
 root
 --password
@@ -16,6 +16,6 @@ service
 --column-family
 d
 --target-dir
-/user/${wf:user()}/oozie/output/patient
+/user/${wf:user()}/oozie/output/bc/patient
 -m
 2

@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.0.0.14/hcaschedule
+jdbc:mysql://10.0.0.7/hcaschedule
 --username
 root
 --password

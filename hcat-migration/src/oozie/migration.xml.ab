@@ -1,5 +1,5 @@
 <workflow-app name="hcat-migration" xmlns="uri:oozie:workflow:0.2">	
-       <start to="fork-edge"/>
+       <start to="ab-edge"/>
         <fork name="fork-edge">
 	   <path start="ab-edge"/>
 	   <path start="bc-edge"/>
@@ -27,7 +27,7 @@
             </configuration>
 		</sub-workflow>
 		
-		<ok to="joining-edge" />
+		<ok to="hcat-migration-end" />
 		<error to="kill" />
 	</action>
 

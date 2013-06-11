@@ -1,5 +1,5 @@
 <workflow-app name="ab-subwf" xmlns="uri:oozie:workflow:0.2">
-   <start to="patient-spatial-move"/> 
+   <start to="fork-move"/> 
    <fork name="fork-move">
       <path start="patient-spatial-move"/>
       <path start="patient-move"/>
@@ -28,8 +28,7 @@
             </configuration>
             
          </sub-workflow>
-	<ok to="ab-edge-end"/>
-        <!-- <ok to="joining-move" /> -->
+         <ok to="joining-move" />
          <error to="kill" />
     </action>
 
