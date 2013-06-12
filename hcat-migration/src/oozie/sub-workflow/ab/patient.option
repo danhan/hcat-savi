@@ -16,6 +16,6 @@ service
 --column-family
 d
 --target-dir
-/user/${wf:user()}/oozie/output/patient
+/user/${wf:user()}/oozie/output/ab/patient
 -m
 2

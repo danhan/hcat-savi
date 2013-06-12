@@ -1,13 +1,13 @@
-<workflow-app name="bc-patient-move" xmlns="uri:oozie:workflow:0.2">
-   <start to="patient-sqoop"/> 
+<workflow-app name="ab-patient-spatial-move" xmlns="uri:oozie:workflow:0.2">
+   <start to="patient-spatial-sqoop"/> 
 
-    <action name="patient-sqoop">
+    <action name="patient-spatial-sqoop">
         <sqoop xmlns="uri:oozie:sqoop-action:0.2">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${nameNode}/user/${wf:user()}/oozie/output/patient"/>
-                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output"/>
+                <delete path="${nameNode}/user/${wf:user()}/oozie/output/bc/patient-spatial"/>
+                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output/bc"/>
             </prepare>
             <configuration>
                 <property>
@@ -16,19 +16,24 @@
                 </property>
             </configuration>
             <arg>import</arg>
+	    	<arg>-libjars</arg>
+	   	 	<arg>${subwf}/sqoop-ext.jar</arg>
+	    	<arg>-D</arg>
+	    	<arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.GeospatialPutTransformer</arg>
             <arg>--options-file</arg>
-            <arg>patient.option</arg>
-           <file>patient.option</file>
+            <arg>patient-spatial.option</arg>
+           <file>patient-spatial.option</file>
+	   	    <file>sqoop-ext.jar</file>
         </sqoop>
-        <ok to="patient-updatebatch"/>
-        <error to="patient-sqoop-fail"/>
+        <ok to="patient-spatial-updatebatch"/>
+        <error to="patient-spatial-sqoop-fail"/>
     </action>
  
-    <kill name="patient-sqoop-fail">
+    <kill name="patient-spatial-sqoop-fail">
         <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
-    <action name="patient-updatebatch">
+    <action name="patient-spatial-updatebatch">
        <shell xmlns="uri:oozie:shell-action:0.1">
           <job-tracker>${jobTracker}</job-tracker>
           <name-node>${nameNode}</name-node>
@@ -38,20 +43,20 @@
                <value>${queueName}</value>
              </property>
          </configuration>
-         <exec>patient.script</exec>
-         <file>patient.script</file>
-         <file>patient.import</file>
-         <file>patient.option</file>
+         <exec>patient-spatial.script</exec>
+         <file>patient-spatial.script</file>
+         <file>patient-spatial.import</file>
+         <file>patient-spatial.option</file>
         </shell>
         <ok to="end"/>
-        <error to="patient-shell-fail"/>
+        <error to="patient-spatial-shell-fail"/>
     </action>
  
-  <kill name="patient-shell-fail">
+  <kill name="patient-spatial-shell-fail">
         <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
   </kill> 
 
- 
+  
    <end name="end"/>
 
  </workflow-app>

@@ -6,8 +6,8 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${nameNode}/user/${wf:user()}/oozie/output/patient-spatial"/>
-                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output"/>
+                <delete path="${nameNode}/user/${wf:user()}/oozie/output/ab/patient-spatial"/>
+                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output/ab"/>
             </prepare>
             <configuration>
                 <property>
@@ -16,14 +16,14 @@
                 </property>
             </configuration>
             <arg>import</arg>
-	    <arg>-libjars</arg>
-	    <arg>${abwf}/sqoop-ext.jar</arg>
-	    <arg>-D</arg>
-	    <arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.GeospatialPutTransformer</arg>
+	    	<arg>-libjars</arg>
+	   	 	<arg>${subwf}/sqoop-ext.jar</arg>
+	    	<arg>-D</arg>
+	    	<arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.GeospatialPutTransformer</arg>
             <arg>--options-file</arg>
             <arg>patient-spatial.option</arg>
            <file>patient-spatial.option</file>
-	   <file>sqoop-ext.jar</file>
+	   	    <file>sqoop-ext.jar</file>
         </sqoop>
         <ok to="patient-spatial-updatebatch"/>
         <error to="patient-spatial-sqoop-fail"/>

@@ -24,7 +24,7 @@ patient-spatial
 '{"family"=>"d"}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/patient-spatial
+/user/${wf:user()}/oozie/output/ab/patient-spatial
 
 -m
 1

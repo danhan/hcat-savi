@@ -1,14 +1,14 @@
 <workflow-app name="bc-subwf" xmlns="uri:oozie:workflow:0.2">
-   <start to="fork-move"/> 
+   <start to="patient-move"/> 
    <fork name="fork-move">
-      <path start="patient-spatial-move"/>
-      <path start="servicerecord-move"/>
+      <path start="patient-move"/>
+      <path start="service-move"/>
    </fork>
    <join name="joining-move" to="bc-edge-end"/>
 
-    <action name="patient-spatial-move">
+    <action name="patient-move">
 	 <sub-workflow>
-             <app-path>${bcwf}/patient-spatial.xml</app-path>
+             <app-path>${bcwf}/patient.xml</app-path>
              <propagate-configuration />
 
            <configuration>
@@ -33,9 +33,9 @@
          <error to="kill" />
     </action>
 	
-    <action name="servicerecord-move">
+    <action name="service-move">
 	 <sub-workflow>
-             <app-path>${bcwf}/servicerecord.xml</app-path>
+             <app-path>${bcwf}/service.xml</app-path>
              <propagate-configuration />
            <configuration>
                 <property>

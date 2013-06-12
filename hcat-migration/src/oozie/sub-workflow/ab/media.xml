@@ -1,12 +1,12 @@
-<workflow-app name="ab-service-move" xmlns="uri:oozie:workflow:0.2">
-   <start to="service-sqoop"/> 
+<workflow-app name="ab-media-move" xmlns="uri:oozie:workflow:0.2">
+   <start to="media-sqoop"/> 
 
-    <action name="service-sqoop">
+    <action name="media-sqoop">
         <sqoop xmlns="uri:oozie:sqoop-action:0.2">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${nameNode}/user/${wf:user()}/oozie/output/ab/service"/>
+                <delete path="${nameNode}/user/${wf:user()}/oozie/output/ab/media"/>
                 <mkdir path="${nameNode}/user/${wf:user()}/oozie/output/ab"/>
             </prepare>
             <configuration>
@@ -16,19 +16,24 @@
                 </property>
             </configuration>
             <arg>import</arg>
+	    	<arg>-libjars</arg>
+	    	<arg>${subwf}/sqoop-ext.jar</arg>
+	    	<arg>-D</arg>
+	    	<arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.TimeSeriesPutTransformer</arg>
             <arg>--options-file</arg>
-            <arg>service.option</arg>
-           <file>service.option</file>
+            <arg>media.option</arg>
+           <file>media.option</file>
+	   	   <file>sqoop-ext.jar</file>
         </sqoop>
-        <ok to="service-updatebatch"/>
-        <error to="service-sqoop-fail"/>
+        <ok to="media-updatebatch"/>
+        <error to="media-sqoop-fail"/>
     </action>
  
-    <kill name="service-sqoop-fail">
+    <kill name="media-sqoop-fail">
         <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
-    <action name="service-updatebatch">
+    <action name="media-updatebatch">
        <shell xmlns="uri:oozie:shell-action:0.1">
           <job-tracker>${jobTracker}</job-tracker>
           <name-node>${nameNode}</name-node>
@@ -38,18 +43,20 @@
                <value>${queueName}</value>
              </property>
          </configuration>
-         <exec>service.script</exec>
-         <file>service.script</file>
-         <file>service.import</file>
-         <file>service.option</file>
+         <exec>media.script</exec>
+         <file>media.script</file>
+         <file>media.import</file>
+         <file>media.option</file>
         </shell>
         <ok to="end"/>
-        <error to="service-shell-fail"/>
+        <error to="media-shell-fail"/>
     </action>
  
-  <kill name="service-shell-fail">
+  <kill name="media-shell-fail">
         <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
   </kill> 
+
+  
    <end name="end"/>
 
  </workflow-app>
