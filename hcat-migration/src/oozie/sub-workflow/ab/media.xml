@@ -23,7 +23,7 @@
             <arg>--options-file</arg>
             <arg>media.option</arg>
            <file>media.option</file>
-	   	   <file>../sqoop-ext.jar</file>
+	   	   <file>${subwf}/sqoop-ext.jar</file>
         </sqoop>
         <ok to="media-updatebatch"/>
         <error to="media-sqoop-fail"/>
