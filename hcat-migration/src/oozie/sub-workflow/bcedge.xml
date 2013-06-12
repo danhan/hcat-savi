@@ -26,10 +26,8 @@
                 </property>
             </configuration>
 
-         </sub-workflow>
-
-	 <ok to="bc-edge-end"/>
-         <!--<ok to="joining-move" /> -->
+         </sub-workflow>	 
+         <ok to="joining-move" />
          <error to="kill" />
     </action>
 	
