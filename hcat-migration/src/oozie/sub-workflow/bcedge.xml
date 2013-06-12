@@ -4,7 +4,7 @@
       <path start="patient-spatial-move"/>
       <path start="servicerecord-move"/>
    </fork>
-   <join name="joining-move" to="bc-edge-end"/>
+   <join name="joining-move" to="bc-subwf-end"/>
 
     <action name="patient-spatial-move">
 	 <sub-workflow>
@@ -60,5 +60,5 @@
         <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
   </kill> 
 
-   <end name="bc-edge-end"/>
+   <end name="bc-subwf-end"/>
  </workflow-app>

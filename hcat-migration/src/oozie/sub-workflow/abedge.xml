@@ -2,10 +2,10 @@
    <start to="fork-move"/> 
    <fork name="fork-move">
       <path start="patient-spatial-move"/>
-      <path start="record-move"/>
+      <path start="servicerecord-move"/>
       <path start="service-move"/>
    </fork>
-   <join name="joining-move" to="ab-edge-end"/>
+   <join name="joining-move" to="ab-subwf-end"/>
 
 
     <action name="patient-spatial-move">
@@ -87,6 +87,6 @@
   </kill> 
 
   
-   <end name="ab-edge-end"/>
+   <end name="ab-subwf-end"/>
 
  </workflow-app>
