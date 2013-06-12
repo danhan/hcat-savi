@@ -1,4 +1,4 @@
-<workflow-app name="ab-patient-spatial-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="bc-patient-spatial-move" xmlns="uri:oozie:workflow:0.2">
    <start to="patient-spatial-sqoop"/> 
 
     <action name="patient-spatial-sqoop">
@@ -23,7 +23,7 @@
             <arg>--options-file</arg>
             <arg>patient-spatial.option</arg>
            <file>patient-spatial.option</file>
-	   	    <file>sqoop-ext.jar</file>
+	   	    <file>../sqoop-ext.jar</file>
         </sqoop>
         <ok to="patient-spatial-updatebatch"/>
         <error to="patient-spatial-sqoop-fail"/>

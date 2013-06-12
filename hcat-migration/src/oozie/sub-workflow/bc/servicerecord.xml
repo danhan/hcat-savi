@@ -1,4 +1,4 @@
-<workflow-app name="ab-servicerecord-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="bc-servicerecord-move" xmlns="uri:oozie:workflow:0.2">
    <start to="servicerecord-sqoop"/> 
 
     <action name="servicerecord-sqoop">
@@ -23,7 +23,7 @@
             <arg>--options-file</arg>
             <arg>servicerecord.option</arg>
            <file>servicerecord.option</file>
-	   	   <file>sqoop-ext.jar</file>
+	   	   <file>../sqoop-ext.jar</file>
         </sqoop>
         <ok to="servicerecord-updatebatch"/>
         <error to="servicerecord-sqoop-fail"/>
