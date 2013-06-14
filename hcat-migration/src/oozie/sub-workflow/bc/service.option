@@ -1,21 +1,25 @@
 --connect
-jdbc:mysql://10.0.0.7/hcaschedule
+jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
 --username
 root
 --password
 zhu88jie
 --verbose
 --query
-'SELECT Service$PersistentID, des, d, nm from (SELECT Service$PersistentID, Service$description as des, Service$duration as d, Service$NAME as nm FROM Service where Service$PersistentID >= 1 and Service$PersistentID <=5 ) as changedService where $CONDITIONS'
+'SELECT Service$PersistentID, des, d, nm from (SELECT Service$PersistentID, Service$description as des, Service$duration as d, Service$NAME as nm FROM Service where Service$PersistentID >= 1 and Service$PersistentID <= 10000000 ) as changedService where $CONDITIONS'
+
 --split-by
 'Service$PersistentID'
---hbase-tbcle 
+
+--hbase-table 
 service
+
 --hbase-row-key
 'Service$PersistentID'
+
 --column-family
 d
 --target-dir
-/user/${wf:user()}/oozie/output/service
+/user/${wf:user()}/oozie/output/bc/service
 -m
-2
+4

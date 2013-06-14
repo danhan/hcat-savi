@@ -1,4 +1,4 @@
-<workflow-app name="service-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="bc-service-move" xmlns="uri:oozie:workflow:0.2">
    <start to="service-sqoop"/> 
 
     <action name="service-sqoop">
@@ -6,8 +6,8 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${nameNode}/user/${wf:user()}/oozie/output/service"/>
-                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output"/>
+                <delete path="${nameNode}/user/${wf:user()}/oozie/output/bc/service"/>
+                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output/bc"/>
             </prepare>
             <configuration>
                 <property>

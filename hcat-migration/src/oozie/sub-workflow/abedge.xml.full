@@ -1,11 +1,11 @@
 <workflow-app name="ab-subwf" xmlns="uri:oozie:workflow:0.2">
-   <start to="patient-spatial-move"/> 
+   <start to="fork-move"/> 
    <fork name="fork-move">
       <path start="patient-spatial-move"/>
-      <path start="patient-move"/>
+      <path start="servicerecord-move"/>
       <path start="service-move"/>
    </fork>
-   <join name="joining-move" to="ab-edge-end"/>
+   <join name="joining-move" to="ab-subwf-end"/>
 
 
     <action name="patient-spatial-move">
@@ -27,16 +27,15 @@
                 </property>
             </configuration>
             
-         </sub-workflow>
-	<ok to="ab-edge-end"/>
-        <!-- <ok to="joining-move" /> -->
+         </sub-workflow>	
+        <ok to="joining-move" />
          <error to="kill" />
     </action>
 
 
-    <action name="patient-move">
+    <action name="servicerecord-move">
 	 <sub-workflow>
-             <app-path>${abwf}/patient.xml</app-path>
+             <app-path>${abwf}/servicerecord.xml</app-path>
              <propagate-configuration />
             <configuration>
                 <property>
@@ -88,6 +87,6 @@
   </kill> 
 
   
-   <end name="ab-edge-end"/>
+   <end name="ab-subwf-end"/>
 
  </workflow-app>

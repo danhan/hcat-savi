@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.0.0.7/hcaschedule
+jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
 --username
 root
 --password
@@ -18,7 +18,7 @@ row_key=String,sReq=String
 patient-spatial
 
 --hbase-row-key
-'{"region":"ab","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"0,0,1000,1000","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
+'{"region":"myria","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"0,0,1000,1000","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
 
 --column-family
 '{"family"=>"d"}'
