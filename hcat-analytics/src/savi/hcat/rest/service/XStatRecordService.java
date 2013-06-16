@@ -72,13 +72,13 @@ public class XStatRecordService  extends XBaseStatService{
 		String[] rowRange = getScanRowRange();// getRowRange		
 
 		// send separate queries for each city
-		for(String region: regions){			
-			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
-			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
+		for(final String region: regions){			
+		//	String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
+		//	String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
 			try {
-				FilterList fList = getScanFilterList(region);// getFilter list
+				FilterList fList = getScanFilterList(rowRange,region);// getFilter list
 				// create the scan 
-				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
+				final Scan scan = hbase.generateScan(null, fList,
 						new String[] { this.tableSchema.getFamilyName() }, null,this.tableSchema.getMaxVersions());
 				
 				LOG.info("scan: "+scan.toString());
@@ -90,7 +90,7 @@ public class XStatRecordService  extends XBaseStatService{
 					public RStatResult call(HCATProtocol instance)
 							throws IOException {						
 						
-						return instance.getPercentage(scan,condition,unit,start_time,end_time,numberator);
+						return instance.getPercentage(scan,region,condition,unit,start_time,end_time,numberator);
 					};
 				}, callback);
 

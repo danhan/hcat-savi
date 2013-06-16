@@ -92,7 +92,7 @@ public class XBaseStatService extends XBaseService{
 	 * 
 	 * @return
 	 */	
-	protected FilterList getScanFilterList(String region){
+	protected FilterList getScanFilterList(String[] rowRange, String region){
 		LOG.info("getScanFilterList");		
 		FilterList fAll = new FilterList(FilterList.Operator.MUST_PASS_ALL);	
 		try {
@@ -100,13 +100,15 @@ public class XBaseStatService extends XBaseService{
 			// add row filter ==> required
 			Filter rowFilter = hbase.getPrefixFilter(region+XConstants.ROW_KEY_DELIMETER);
 			fAll.addFilter(rowFilter);
+			Filter rowTopFilter = hbase.getBinaryFilter(">=", region+XConstants.ROW_KEY_DELIMETER+rowRange[0]);
+			Filter rowDownFilter = hbase.getBinaryFilter("<=", region+XConstants.ROW_KEY_DELIMETER+rowRange[1]);			
+			fAll.addFilter(rowTopFilter);
+			fAll.addFilter(rowDownFilter);			
+			
 			// add column filter ==> optional
 			if(null != this.numberator){
 				fAll.addFilter(this.buildColumnPrefixFilter());
-			}else{
-				//fAll.addFilter(buildRangeColumnFilter());
-			}
-			//add timestamp filter			
+			}				
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

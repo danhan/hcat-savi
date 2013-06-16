@@ -61,13 +61,9 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 		String[] rowRange = getScanRowRange();// getRowRange				
 		// send separate queries for each city
 		for(final String region: regions){			
-			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
-			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
 			try {				
 				// create the scan 
-/*				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
-						new String[] { this.tableSchema.getFamilyName() }, null,this.tableSchema.getMaxVersions());*/
-				FilterList fList = getScanFilterList(region);// getFilter list
+				FilterList fList = getScanFilterList(rowRange,region);// getFilter list
 				final Scan scan = hbase.generateScan(null, fList,
 						new String[] { this.tableSchema.getFamilyName() },
 						null,this.tableSchema.getMaxVersions());				

@@ -74,12 +74,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		
 		// send separate queries for each city
 		for(final String region: regions){			
-/*			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
-			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];*/
 			try {
 				// create the scan 
-				//final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
-					//	new String[] { this.tableSchema.getFamilyName() }, null,-1);
 				FilterList fList = getWindowsScanFilterList(rowRange, region);// getFilter list
 				final Scan scan = hbase.generateScan(null, fList,
 						new String[] { this.tableSchema.getFamilyName() }, null,-1);
@@ -138,7 +134,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		LOG.info("getScanRowRange");
 		String[] rowRange = new String[2];
 		// this means the search would be in the entire data
-		rowRange[0] = "0";
+		rowRange[0] = "0"; // this is required
 		rowRange[1] = "9"; // it means include all rows before 
 		LOG.info("row range: "+rowRange[0]+"=>"+rowRange[1]);
 		return rowRange;
@@ -233,17 +229,14 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		// compose the HBase RPC call
 		final double x = Math.abs(this.latitude);
 		final double y = Math.abs(this.longitude);
-		Hashtable<String, XBox[]> matched = this.hybrid.match(x,y, this.radius);
-		String[] rowRange = getRangeScanRowRange(matched);// getRowRange		
+		Hashtable<String, XBox[]> matched = this.hybrid.match(x,y, this.radius);	
 
 		// send separate queries for each city
-		for(String region: regions){			
-			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
-			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
+		for(final String region: regions){			
 			try {
 				// create the scan 
 				FilterList fList = getRangeScanFilterList(region,matched);// getFilter list
-				final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
+				final Scan scan = hbase.generateScan(null, fList,
 						new String[] { this.tableSchema.getFamilyName() }, null,-1);
 				
 				LOG.info("scan: "+scan.toString());
@@ -255,7 +248,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 					public RStatResult call(HCATProtocol instance)
 							throws IOException {
 												
-						return instance.doRangeQuery(scan, latitude, longitude,radius);
+						return instance.doRangeQuery(scan,region, latitude, longitude,radius);
 					};
 				}, callback);	
 				
@@ -299,7 +292,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		return this.response;
 	}
 	
-	protected String[] getRangeScanRowRange(Hashtable<String, XBox[]> matched) {
+	private String[] getRangeScanRowRange(Hashtable<String, XBox[]> matched) {
 		LOG.info("getRangeScanRowRange");
 		String[] rowRange = new String[2];
 		LOG.info("match result from HGrid: "+matched.toString());
@@ -316,11 +309,9 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 			Filter columnFilter = hbase.getColumnRangeFilter((matched.get("")[0].getColumn()+"-").getBytes(),true,					
 					(XCommon.IncFormatString(matched.get("")[1].getColumn())+"-").getBytes(),true);	
 			fList.addFilter(columnFilter);
-			String top = region+"-"+ matched.get("")[0].getRow();
-			String down = region+"-"+ matched.get("")[1].getRow();
-			LOG.info("top row=>"+top+";down=>"+down);
-			Filter rowTopFilter = hbase.getBinaryFilter(">=", top);
-			Filter rowDownFilter = hbase.getBinaryFilter("<=", down);			
+			String[] rowRange = getRangeScanRowRange(matched);					
+			Filter rowTopFilter = hbase.getBinaryFilter(">=", region+XConstants.ROW_KEY_DELIMETER+rowRange[0]);
+			Filter rowDownFilter = hbase.getBinaryFilter("<=", region+XConstants.ROW_KEY_DELIMETER+rowRange[1]);				
 			fList.addFilter(rowTopFilter);
 			fList.addFilter(rowDownFilter);
 			

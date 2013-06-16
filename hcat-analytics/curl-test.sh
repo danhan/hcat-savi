@@ -2,11 +2,22 @@
 
 
 echo "===The result of Range==="
-curl -H "Content-Type: application/json" -X POST -d '{ "start-time":"2012-01-01 01:00:00", "regions":"ab", "end-time":"2013-01-01 01:00:00", "location":"40,40", "distance":1000 }' http://core1:9999/analytics/spatial/range
+curl -H "Content-Type: application/json" -X POST -d '{ "start-time":"2012-01-01 01:00:00", "regions":"localhost", "end-time":"2013-01-01 01:00:00", "location":"40,40", "distance":1000 }' http://localhost:9999/analytics/spatial/range
 
 echo ""
 echo "===The result of Window==="
 
-curl -H "Content-Type: application/json" -X POST -d '{ "start-time":"2012-01-01 01:00:00", "end-time":"2013-01-01 01:00:00", "regions":"ab", "areas":["NW","NE","SW","SE"] }' http://core1:9999/analytics/spatial/window
+curl -H "Content-Type: application/json" -X POST -d '{ "start-time":"2012-01-01 01:00:00", "end-time":"2013-01-01 01:00:00", "regions":"localhost", "areas":["NW","NE","SW","SE"] }' http://localhost:9999/analytics/spatial/window
 
 echo ""
+echo "===The result of ServicePercentage==="
+
+curl -H "Content-Type: application/json" -X POST -d '{ "numerator": "service", "object": "record", "condition":"", "start-time":"2013-01-01 01:00:00", "end-time":"2014-01-01 01:00:00", "unit":"m", "regions":"localhost" }' http://localhost:9999/analytics/statistics/pct
+
+
+
+echo ""
+echo "===The result of Media Percentage==="
+
+curl -H "Content-Type: application/json" -X POST -d '{ "numerator": "media", "object": "record", "condition":"", "start-time":"2013-01-01 01:00:00", "end-time":"2014-01-01 01:00:00", "unit":"m", "regions":"localhost" }' http://localhost:9999/analytics/statistics/pct
+

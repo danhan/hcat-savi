@@ -95,7 +95,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 	
 	
 	@Override
-	public RStatResult getPercentage(Scan scan, String condition, String unit,
+	public RStatResult getPercentage(Scan scan, String region, String condition, String unit,
 			String starttime, String endtime, String numerator)
 			throws IOException {
 		long sTime = System.currentTimeMillis();
@@ -105,11 +105,9 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		
 		
 		RStatResult unitHashArrayResult = new RStatResult().initHashUnitArray();
-		unitHashArrayResult = unitHashArrayResult.setHashUnitArray(unit, starttime, endtime); // by month/week	
-		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));		
-		String r = Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER)[0];		
-		unitHashArrayResult.setRegion(r); // set region in order to aggregate in the client 
-		LOG.info("get the region "+r);
+		unitHashArrayResult = unitHashArrayResult.setHashUnitArray(unit, starttime, endtime); // by month/week			
+		unitHashArrayResult.setRegion(region); // set region in order to aggregate in the client 
+		LOG.info("get the region "+region);
 		
 					
 		/**Step2: iterate the result from the scanner**/		
@@ -240,7 +238,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 	}
 
 	@Override
-	public RStatResult doRangeQuery(Scan scan, double latitude, double longitude, double radius) throws IOException {
+	public RStatResult doRangeQuery(Scan scan, String region, double latitude, double longitude, double radius) throws IOException {
 		long sTime = System.currentTimeMillis();
 		LOG.info(sTime+": in the getSummary: "+scan.toJSON()+"; latitude=>"+latitude+";longitude=>"+longitude+";distance=>"+radius);
 		/**Step1: get internalScanner***/
@@ -248,11 +246,8 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		
 		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
 		RStatResult results = new RStatResult();		
-		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));
-		LOG.info("parts: XXX: "+Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER).length);
-		String r = Bytes.toString(scan.getStartRow()).split(XConstants.ROW_KEY_DELIMETER)[0];		
-		results.setRegion(r); // set city in order to aggregate in the client 
-		LOG.info("get the region "+r);
+		results.setRegion(region); // set city in order to aggregate in the client 
+		LOG.info("get the region "+region);
 		
 		boolean hasMoreResult = false;				
 		/**Step2: iterate the result from the scanner**/		
