@@ -61,6 +61,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 	@Override
 	public JSONArray doWindowStatistics(JSONObject request) {
 		LOG.info("in getSummary");
+		long s_time = System.currentTimeMillis();
 		// get parameters of the query
 		boolean decomposed = this.decompose(request);
 		if(!decomposed)
@@ -101,13 +102,15 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				e.printStackTrace();
 			}
 		}
+		long cop_end = System.currentTimeMillis();
+		
+		long exe_time = cop_end - s_time;
 		
 		// TODO callback.regions;
 		LOG.info("the returned value: "+callback.regions.toString());
 		for(String key: callback.regions.keySet()){
 			RStatResult result = callback.regions.get(key);
 			JSONObject regionJSON = new JSONObject();
-		//	TreeMap<String,Integer> treemap = new TreeMap<String,Integer>(result.getHashUnit());
 			try {
 				regionJSON.put("region", key);
 				JSONArray values = new JSONArray();
@@ -117,7 +120,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				regionJSON.put("values", values);
 				// add the statistics of request
 				JSONObject reqStatJSON = this.buildRequestStat(result);
-				regionJSON.put("request_stat", reqStatJSON);
+				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
+				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);				
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -281,7 +285,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				
 				// add the statistics of request
 				JSONObject reqStatJSON = this.buildRequestStat(result);
-				regionJSON.put("request_stat", reqStatJSON);				
+				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
+				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);	
 				
 			} catch (JSONException e) {
 				e.printStackTrace();

@@ -60,6 +60,7 @@ public class XStatRecordService  extends XBaseStatService{
 		
 	public JSONArray getPercentage(JSONObject request){		
 		LOG.info("in getSummary: "+request.toString());
+		long s_time = System.currentTimeMillis();
 		// get parameters of the query
 		boolean decomposed = this.decompose(request);
 		if(!decomposed)
@@ -102,7 +103,8 @@ public class XStatRecordService  extends XBaseStatService{
 				e.printStackTrace();
 			}
 		}
-		
+		long cop_end = System.currentTimeMillis();		
+		long exe_time = cop_end - s_time;		
 		// prepare the returned
 		LOG.info("the returned value: "+callback.regions.toString());
 		for(String key: callback.regions.keySet()){
@@ -126,7 +128,8 @@ public class XStatRecordService  extends XBaseStatService{
 				regionJSON.put("total", result.getRows()); // total number of appointments because one row corresponds to one appointment
 				// add the statistics of request
 				JSONObject reqStatJSON = this.buildRequestStat(result);
-				regionJSON.put("request_stat", reqStatJSON);
+				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
+				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);	
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

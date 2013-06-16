@@ -49,6 +49,7 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 	@Override
 	public JSONArray getSummary(JSONObject request){		
 		LOG.info("in getSummary");
+		long s_time = System.currentTimeMillis();
 		// get parameters of the query
 		boolean decomposed = this.decompose(request);
 		if(!decomposed)
@@ -89,6 +90,8 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 				e.printStackTrace();
 			}
 		}
+		long cop_end = System.currentTimeMillis();		
+		long exe_time = cop_end - s_time;
 		// TODO callback.cities;
 		LOG.info("the returned value: "+callback.regions.toString());
 		for(String key: callback.regions.keySet()){
@@ -106,7 +109,8 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 				regionJSON.put("values", values);				
 				// add the statistics of request
 				JSONObject reqStatJSON = this.buildRequestStat(result);
-				regionJSON.put("request_stat", reqStatJSON);				
+				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
+				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);				
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

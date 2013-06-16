@@ -91,7 +91,7 @@ public class XBaseService {
 	public JSONObject buildRequestStat(RStatResult result){
 		JSONObject reqStatJSON = new JSONObject();
 		try{
-			reqStatJSON.put(XConstants.REQUEST_STAT_EXE_TIME, result.getEnd()-result.getStart());
+			reqStatJSON.put(XConstants.REQUEST_STAT_COP_EXE_TIME, result.getEnd()-result.getStart());
 			reqStatJSON.put(XConstants.REQUEST_STAT_CELLS, result.getCells());
 			reqStatJSON.put(XConstants.REQUEST_STAT_ROWS, result.getRows());
 			reqStatJSON.put(XConstants.REQUEST_CELL_SIZE, result.getKvLength());			

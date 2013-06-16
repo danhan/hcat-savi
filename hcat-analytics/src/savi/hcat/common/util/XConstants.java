@@ -50,10 +50,12 @@ public class XConstants {
 	public static final String QUERY_TYPE_KNN="knn";
 	
 	// query statistics 
-	public static final String REQUEST_STAT_EXE_TIME="exe_time";
+	public static final String REQUEST_STAT="request_stat";
+	public static final String REQUEST_STAT_COP_EXE_TIME="cop_time";
 	public static final String REQUEST_STAT_ROWS="num_of_rows";
 	public static final String REQUEST_STAT_CELLS="num_of_cells";
 	public static final String REQUEST_CELL_SIZE="cell_size";
+	public static final String REQUEST_STAT_RESPONSE_TIME="response_time";
 	
 	/**
 	 * HBase table
