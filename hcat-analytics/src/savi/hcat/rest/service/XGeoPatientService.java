@@ -74,13 +74,13 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		
 		// send separate queries for each city
 		for(final String region: regions){			
-			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
-			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
+/*			String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
+			String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];*/
 			try {
 				// create the scan 
 				//final Scan scan = hbase.generateScan(new String[]{start,end}, fList,
 					//	new String[] { this.tableSchema.getFamilyName() }, null,-1);
-				FilterList fList = getWindowsScanFilterList(region);// getFilter list
+				FilterList fList = getWindowsScanFilterList(rowRange, region);// getFilter list
 				final Scan scan = hbase.generateScan(null, fList,
 						new String[] { this.tableSchema.getFamilyName() }, null,-1);
 				
@@ -138,17 +138,22 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		LOG.info("getScanRowRange");
 		String[] rowRange = new String[2];
 		// this means the search would be in the entire data
-		rowRange[0] = "";
-		rowRange[1] = "*"; // it means include all rows before 
+		rowRange[0] = "0";
+		rowRange[1] = "9"; // it means include all rows before 
 		LOG.info("row range: "+rowRange[0]+"=>"+rowRange[1]);
 		return rowRange;
 	}
 	
-	protected FilterList getWindowsScanFilterList(String region) {
+	protected FilterList getWindowsScanFilterList(String[] rowRange, String region) {
 		FilterList fList = new FilterList(FilterList.Operator.MUST_PASS_ALL);
 		try{
 			Filter filter = hbase.getPrefixFilter(region+XConstants.ROW_KEY_DELIMETER);	
 			fList.addFilter(filter);
+			Filter rowTopFilter = hbase.getBinaryFilter(">=", region+XConstants.ROW_KEY_DELIMETER+rowRange[0]);
+			Filter rowDownFilter = hbase.getBinaryFilter("<=", region+XConstants.ROW_KEY_DELIMETER+rowRange[1]);			
+			fList.addFilter(rowTopFilter);
+			fList.addFilter(rowDownFilter);
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}		

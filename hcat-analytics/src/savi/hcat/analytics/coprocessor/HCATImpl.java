@@ -176,7 +176,11 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		InternalScanner scanner = ((RegionCoprocessorEnvironment) getEnvironment()).getRegion().getScanner(scan);		
 		
 		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
-		RStatResult results = new RStatResult().initHashUnit();		
+		RStatResult results = new RStatResult().initHashUnit();	
+		results.hashUnit.put("NW", 0);
+		results.hashUnit.put("NE", 0);
+		results.hashUnit.put("SW", 0);
+		results.hashUnit.put("SE", 0);
 		LOG.info("the scan start row "+Bytes.toString(scan.getStartRow()) + "; end-row: "+Bytes.toString(scan.getStopRow()));	
 		results.setRegion(region); // set city in order to aggregate in the client 
 		LOG.info("get the region "+region);
