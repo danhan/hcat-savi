@@ -1,28 +1,27 @@
 --connect
-jdbc:mysql://10.0.0.12/hcaschedule
+jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
 --username
 root
 --password
 zhu88jie
 --verbose
 --query
-'select ID, ts, pid, hid, block, type, mime, note,urgent, uri from (select MediaMessage$PersistentID as ID, MediaMessage$timestamp as ts, MediaMessage$mimetype as mime, MediaMessage$note as note, MediaMessage$type as type,  MediaMessage$urgent as urgent, MediaMessage$uri as uri, mm.R_HCA as hid, Appointment$block as block, R_Patient as pid from MediaMessage mm left join Appointment app on mm.R_Appointment = app.Appointment$PersistentID where MediaMessage$PersistentID >= 1 and MediaMessage$PersistentID <= 10) as short where $CONDITIONS'
-
+'select sweek,hid,pid,wday, block,startMin,ID from( select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, Appointment$WEEKDAY AS wday,Appointment$block AS block, Appointment$startMinute AS startMin,Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID and Appointment$PersistentID between 1 and 1000) as short  where $CONDITIONS'
 
 --split-by
 ID
 
 --hbase-table
-record
+appointment
 
 --hbase-row-key
-'{"region":"ab","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
+'{"region":"myria","combined":"pid,hid","timestamp":{"field":"sweek","format":"yyyy-MM-dd","version":{"field":"block"}}}'
 
 --column-family
-'{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'
+'{"family"=>"d","columns"=>[{"field"=>"wday","prefix"=>"w"}]}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/ab/media
+/user/${wf:user()}/oozie/output/app
 
 -m
 2
