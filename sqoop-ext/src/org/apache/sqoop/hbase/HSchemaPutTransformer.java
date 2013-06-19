@@ -237,21 +237,24 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * @param fields
 	 * @return
 	 */
-	protected String buildTimestampToRowKey(Map<String, Object> fields,boolean remove){
+	protected String buildTimestampToRowKey(Map<String, Object> fields){
 		System.out.println("Entry: buildTimestampToRowKey()");
 		String rowKey = "";
 		if(this.rowkeyColumns.size() > 0){			
 			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_TIMESTAMP)){
 				JSONObject timestampJSON = (JSONObject)this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_TIMESTAMP);
 				XSchemaTimestamp tsObject = new XSchemaTimestamp(timestampJSON);
+				// the version is in timestamp object
 				this.version = tsObject.getVersion();				
 				String tsValue = this.getFieldValue(fields, tsObject.getField());
 				if(null == tsValue) 
 					System.out.println("the value : "+tsObject.getField() + " is Null");	
 				else{
 					rowKey += tsObject.getTimestampValue(tsValue);
-					if(remove)
+					if(this.version.isStandalone()){
 						fields.remove(tsObject.getField());
+					}					
+						
 				}			
 			}				
 		}
@@ -349,15 +352,27 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * @param fields
 	 * @return
 	 */
-	public String buildRowKeyValue(Map<String, Object> fields, boolean removeTS){
+	public String buildRowKeyValue(Map<String, Object> fields){
 		String rowKey = "";
-		rowKey += this.buildRegionToRowKey(fields);		
-		rowKey += XConstants.DELIMETER_ROW_KEY;
-		rowKey += this.buildTimestampToRowKey(fields,removeTS);		
-		rowKey += XConstants.DELIMETER_ROW_KEY;
-		rowKey += this.buildIdentifierToRowKey(fields);		
-		rowKey += XConstants.DELIMETER_ROW_KEY;
-		rowKey += this.buildCombinedToRowKey(fields);
+		String region = this.buildRegionToRowKey(fields);	
+		if(!region.isEmpty()){
+			rowKey += region;	
+			rowKey += XConstants.DELIMETER_ROW_KEY;
+		}
+		String timestamp =this.buildTimestampToRowKey(fields);
+		if(!timestamp.isEmpty()){
+			rowKey += timestamp;		
+			rowKey += XConstants.DELIMETER_ROW_KEY;	
+		}
+		String identifier = this.buildIdentifierToRowKey(fields);	
+		if(!identifier.isEmpty()){
+			rowKey += identifier;	
+			rowKey += XConstants.DELIMETER_ROW_KEY;
+		}
+		String combined = this.buildCombinedToRowKey(fields);
+		if(!combined.isEmpty()){
+			rowKey += combined;	
+		}		 
 		return rowKey;
 	}	
 	

@@ -19,9 +19,10 @@ public class XSchemaVersion implements Serializable{
 	private String tsformat = "EEE MMM d HH:mm:ss z yyyy";
 	private String unit = XConstants.EXT_VERSION_UNIT_SECOND;
 
-	private String period = XConstants.EXT_TIMESTAMP_PERIOD_BLOCK;
+	private String period = XConstants.EXT_TIMESTAMP_PERIOD_BLOCK; // Period stands for the coarsed granualrity of timestamp, unit means the finest granularity of timestmap 
 	private int interval = 1;
 	DateFormat dateFormat = null;
+	boolean standalone = false; // this means whether the version dimension comes from the same field with timestamp or not
 	
 	/**
 	 * {"field":"ts","interval":"1","unit":"min","period":"hour"}”
@@ -45,8 +46,9 @@ public class XSchemaVersion implements Serializable{
 			if(obj.has(XConstants.EXT_TIMESTAMP_FORMAT)){
 				this.tsformat = obj.getString(XConstants.EXT_TIMESTAMP_FORMAT);				
 			}			
-			if(obj.has(XConstants.EXT_KEY_FIELD)){
-				this.tsField = obj.getString(XConstants.EXT_KEY_FIELD);				
+			if(obj.has(XConstants.EXT_KEY_FIELD)){ // if there is field in version object, it means it is standalone
+				this.tsField = obj.getString(XConstants.EXT_KEY_FIELD);	
+				this.standalone = true; 
 			}	
 			
 			dateFormat = new SimpleDateFormat(this.tsformat);
@@ -167,6 +169,12 @@ public class XSchemaVersion implements Serializable{
 	}
 	public void setTsField(String tsField) {
 		this.tsField = tsField;
+	}
+	public boolean isStandalone() {
+		return standalone;
+	}
+	public void setStandalone(boolean standalone) {
+		this.standalone = standalone;
 	}
 	
 	

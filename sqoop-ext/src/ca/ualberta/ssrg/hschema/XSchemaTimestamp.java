@@ -17,8 +17,8 @@ public class XSchemaTimestamp {
 	private String field = null;
 	private String format = "EEE MMM d HH:mm:ss z yyyy";	
 	
-	private String period = XConstants.EXT_TIMESTAMP_PERIOD_BLOCK;
-	private int interval = 1;
+	private String period = null;
+	private int interval = 1; // this would be used as the coarsed timestamp, but in this case, it is no use.
 	DateFormat dateFormat = new SimpleDateFormat(this.format);
 	XSchemaVersion version = null;
 
@@ -34,7 +34,8 @@ public class XSchemaTimestamp {
 			if(obj.has(XConstants.EXT_TIMESTAMP_FORMAT)){
 				this.format = obj.getString(XConstants.EXT_TIMESTAMP_FORMAT);
 				dateFormat = new SimpleDateFormat(this.format);
-			}			
+			}
+			// version dimension has some common setting
 			if(obj.has(XConstants.EXT_VERSION)){
 				version = new XSchemaVersion(obj.getJSONObject(XConstants.EXT_VERSION),this.field,this.period,this.format);
 			}						
@@ -52,7 +53,18 @@ public class XSchemaTimestamp {
 		String ts = "";
 		try{
 			if(null != tsValue){
-				if(this.period.equals(XConstants.EXT_TIMESTAMP_PERIOD_BLOCK)){ // the base is day
+				if(null == this.period){ // use the value of field directly
+					Date date = this.dateFormat.parse(tsValue);
+					//TODO to deal with time zone
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date);
+					int year = cal.get(Calendar.YEAR);
+					int month = cal.get(Calendar.MONTH);
+					int day = cal.get(Calendar.DAY_OF_MONTH);
+					ts += year;
+					ts += formatDigit(month);
+					ts += formatDigit(day);
+				}else if(this.period.equals(XConstants.EXT_TIMESTAMP_PERIOD_BLOCK)){ // the base is day
 					Date date = this.dateFormat.parse(tsValue);
 					//TODO to deal with time zone
 					Calendar cal = Calendar.getInstance();
@@ -63,7 +75,7 @@ public class XSchemaTimestamp {
 					ts += year;
 					ts += formatDigit(month);
 					ts += formatDigit(day);						
-				}else if(this.period.equals(XConstants.EXT_TIMESTAMP_PERIOD_BLOCK)){
+				}else if(this.period.equals(XConstants.EXT_TIMESTAMP_PERIOD_HOUR)){
 					//TODO this is to deal with the hour
 				}
 			}

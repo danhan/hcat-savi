@@ -41,7 +41,7 @@ public class TimeSeriesPutTransformer extends HSchemaPutTransformer{
 		String colFamily = getColumnFamily();
 		byte [] colFamilyBytes = Bytes.toBytes(colFamily);
 		
-		String rowKey = buildRowKeyValue(fields,false); // build the row key value
+		String rowKey = buildRowKeyValue(fields); // build the row key value
 		
 		if (null == rowKey) {
 			// If the row-key column is null, we don't insert this row.
@@ -56,8 +56,12 @@ public class TimeSeriesPutTransformer extends HSchemaPutTransformer{
 		try{			
 			// the value of the column name is designed to be qualifer
 			String qualifer = this.getColumnValue(fields);	
-			String tsValue = this.getFieldValue(fields, this.version.getTsField());			
-			String version = this.version.getVersionValue(tsValue);
+			String tsValue = this.getFieldValue(fields, this.version.getTsField());	
+			System.out.println("[DEBUG]: ts Value: "+this.version.getTsField()+"=>"+tsValue);
+			String version = tsValue;
+			if(!this.version.isStandalone()){ // this identifies whether the version dimension comes from analysis of timestamp or from individual column
+				version = this.version.getVersionValue(tsValue);	
+			}			
 			fields.remove(this.version.getTsField());
 			if(null == qualifer || null == colFamily || null == version){
 				throw new IOException("family=>"+this.getColumnFamily()+"; qualifer=>"+qualifer+";version=>"+version);
