@@ -1,0 +1,24 @@
+--connect
+jdbc:mysql://localhost/hcaschedule
+--username
+root
+--password
+passw0rd
+--verbose
+--query
+'select sweek,hid,pid,wday, block,startMin,ID from( select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, Appointment$WEEKDAY AS wday,Appointment$block AS block, Appointment$startMinute AS startMin,Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID and a.Appointment$PersistentID between 1 and 100 and a.Appointment$block between 0 and 2) as short  where $CONDITIONS'
+
+--split-by
+ID
+
+--hbase-table
+appointment
+
+--hbase-row-key
+'{"region":"localhost","combined":"pid,hid","timestamp":{"field":"sweek","format":"yyyy-MM-dd","version":{"field":"block"}}}'
+
+--column-family
+'{"family"=>"d","columns"=>[{"field"=>"wday","prefix"=>"w"}]}'
+
+--target-dir
+/home/dan/data/sqoop-hcat
