@@ -59,7 +59,7 @@ public class XSchemaTimestamp {
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(date);
 					int year = cal.get(Calendar.YEAR);
-					int month = cal.get(Calendar.MONTH);
+					int month = cal.get(Calendar.MONTH)+1;
 					int day = cal.get(Calendar.DAY_OF_MONTH);
 					ts += year;
 					ts += formatDigit(month);
@@ -70,7 +70,7 @@ public class XSchemaTimestamp {
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(date);
 					int year = cal.get(Calendar.YEAR);
-					int month = cal.get(Calendar.MONTH);
+					int month = cal.get(Calendar.MONTH)+1;
 					int day = cal.get(Calendar.DAY_OF_MONTH);
 					ts += year;
 					ts += formatDigit(month);
