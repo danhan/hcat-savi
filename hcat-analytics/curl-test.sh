@@ -21,3 +21,11 @@ echo "===The result of Media Percentage==="
 
 curl -H "Content-Type: application/json" -X POST -d '{ "numerator": "media", "object": "record", "condition":"", "start-time":"2013-01-01 01:00:00", "end-time":"2014-01-01 01:00:00", "unit":"m", "regions":"localhost" }' http://localhost:9999/analytics/statistics/pct
 
+
+
+echo ""
+echo "===The result of Appointment==="
+
+curl -H "Content-Type: application/json" -X POST -d '{ "object":"appointment", "condition":"", "start-time":"2010-01-01 01:00:00", "end-time":"2012-12-31 01:00:00", "unit":"m", "regions":"localhost" }' http://localhost:9999/analytics/statistics/sum
+
+

@@ -108,7 +108,9 @@ public class XBaseStatService extends XBaseService{
 			// add column filter ==> optional
 			if(null != this.numberator){
 				fAll.addFilter(this.buildColumnPrefixFilter());
-			}				
+			}else{ // temporary for appointment, this should be improved sometime
+				fAll.addFilter(new ColumnPrefixFilter(Bytes.toBytes("w")));
+			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
