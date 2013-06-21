@@ -1,43 +1,17 @@
-<workflow-app name="ab-subwf" xmlns="uri:oozie:workflow:0.2">
-   <start to="fork-move"/> 
+<workflow-app name="bc-subwf" xmlns="uri:oozie:workflow:0.2">
+   <start to="service-move"/> 
    <fork name="fork-move">
-      <path start="patient-spatial-move"/>
-      <path start="servicerecord-move"/>
+      <path start="patient-move"/>
       <path start="service-move"/>
    </fork>
-   <join name="joining-move" to="ab-subwf-end"/>
-
-
-    <action name="patient-spatial-move">
-         <sub-workflow>
-             <app-path>${abwf}/patient-spatial.xml</app-path>
-             <propagate-configuration />
-            <configuration>
-                <property>
-                    <name>jobTracker</name>
-                    <value>${jobTracker}</value>
-                </property>
-                <property>
-                    <name>nameNode</name>
-                    <value>${nameNode}</value>
-                </property>
-                <property>
-                    <name>queueName</name>
-                    <value>${queueName}</value>
-                </property>
-            </configuration>
-            
-         </sub-workflow>	
-        <ok to="joining-move" />
-         <error to="kill" />
-    </action>
-
+   <join name="joining-move" to="bc-edge-end"/>
 
     <action name="servicerecord-move">
 	 <sub-workflow>
-             <app-path>${abwf}/servicerecord.xml</app-path>
+             <app-path>${bcwf}/servicerecord.xml</app-path>
              <propagate-configuration />
-            <configuration>
+
+           <configuration>
                 <property>
                     <name>jobTracker</name>
                     <value>${jobTracker}</value>
@@ -53,15 +27,17 @@
             </configuration>
 
          </sub-workflow>
-         <ok to="joining-move" />
+
+	 <ok to="bc-edge-end"/>
+         <!--<ok to="joining-move" /> -->
          <error to="kill" />
     </action>
 	
     <action name="service-move">
 	 <sub-workflow>
-             <app-path>${abwf}/service.xml</app-path>
+             <app-path>${bcwf}/service.xml</app-path>
              <propagate-configuration />
-            <configuration>
+           <configuration>
                 <property>
                     <name>jobTracker</name>
                     <value>${jobTracker}</value>
@@ -77,7 +53,8 @@
             </configuration>
 
          </sub-workflow>
-         <ok to="joining-move" />
+         <ok to="bc-edge-end" />
+       <!-- <ok to="joining-move" /> -->
          <error to="kill" />
     </action>
 	
@@ -86,7 +63,5 @@
         <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
   </kill> 
 
-  
-   <end name="ab-subwf-end"/>
-
+   <end name="bc-edge-end"/>
  </workflow-app>
