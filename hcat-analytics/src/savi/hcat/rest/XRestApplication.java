@@ -22,7 +22,7 @@ public class XRestApplication extends Application{
         router.attach("/spatial/{query}", XGeoSpatialResource.class);
         
         // Patient resource
-        router.attach("/report/{kpi}", XOverviewResource.class);
+        router.attach("/mysql/{kpi}", XMySQLResource.class);
         
         // 
         //router.attach("/edges/{edgeId}", XEdgesResource.class);
