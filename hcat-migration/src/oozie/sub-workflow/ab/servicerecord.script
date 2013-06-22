@@ -9,21 +9,21 @@ indexField="ServiceRecord\$PersistentID"
 . $importFile
 
 # find the where condition in option file
-oldStartIndex=`expr $startIndex - $chunkSize`
-oldEndIndex=`expr $startIndex - 1`
+oldStartIndex=`expr $startIndex_sr_ab - $chunkSize`
+oldEndIndex=`expr $startIndex_sr_ab - 1`
 oldWhere="$indexField >= "$oldStartIndex" and $indexField <= "$oldEndIndex
 echo "the old WHERE clause should be $oldWhere"
 
 #calculate the new index
-newStartIndex=`expr $chunkSize + $startIndex`
+newStartIndex=`expr $chunkSize + $startIndex_sr_ab`
 newEndIndex=`expr $newStartIndex - 1`
 newStartIndexStr=startIndex=$newStartIndex
 
-oldStartIndexStr=startIndex=$startIndex
+oldStartIndexStr=startIndex=$startIndex_sr_ab
 chunkSizeStr=chunkSize=$chunkSize
 
 # build the new WHERE clause
-newWhere="$indexField >= "$startIndex" and $indexField <= "$newEndIndex
+newWhere="$indexField >= "$startIndex_sr_ab" and $indexField <= "$newEndIndex
 echo "the new WHERE clause would be $newWhere"
 
 echo "Updating old option file: $optionFile"

@@ -6,7 +6,7 @@ root
 zhu88jie
 --verbose
 --query
-'select sweek,hid,pid,wday, block,startMin,ID from( select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, Appointment$WEEKDAY AS wday,Appointment$block AS block, Appointment$startMinute AS startMin,Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID and Appointment$PersistentID between 1 and 100000) as short  where $CONDITIONS'
+'select sweek,hid,pid,wday, block,startMin,ID from( select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, Appointment$WEEKDAY AS wday,Appointment$block AS block, Appointment$startMinute AS startMin,Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID and Appointment$PersistentID between 1 and 100) as short  where $CONDITIONS'
 
 --split-by
 ID
@@ -21,7 +21,7 @@ appointment
 '{"family"=>"d","columns"=>[{"field"=>"wday","prefix"=>"w"}]}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/app
+/user/${wf:user()}/oozie/output/ab/app
 
 -m
 2
