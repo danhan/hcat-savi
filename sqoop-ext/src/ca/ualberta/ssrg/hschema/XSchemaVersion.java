@@ -16,7 +16,7 @@ public class XSchemaVersion implements Serializable{
 	private static final Log LOG = LogFactory.getLog(XSchemaVersion.class);
 		
 	private String tsField = null;
-	private String tsformat = "EEE MMM d HH:mm:ss z yyyy";
+	private String tsformat = "yyyy-MM-dd HH:mm:ss";
 	private String unit = XConstants.EXT_VERSION_UNIT_SECOND;
 
 	private String period = XConstants.EXT_TIMESTAMP_PERIOD_BLOCK; // Period stands for the coarsed granualrity of timestamp, unit means the finest granularity of timestmap 

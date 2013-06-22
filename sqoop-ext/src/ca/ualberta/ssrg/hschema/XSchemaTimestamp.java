@@ -15,7 +15,7 @@ import org.json.JSONObject;
 public class XSchemaTimestamp {
 
 	private String field = null;
-	private String format = "EEE MMM d HH:mm:ss z yyyy";	
+	private String format = "yyyy-MM-dd HH:mm:ss";//"EEE MMM d HH:mm:ss z yyyy";	
 	
 	private String period = null;
 	private int interval = 1; // this would be used as the coarsed timestamp, but in this case, it is no use.

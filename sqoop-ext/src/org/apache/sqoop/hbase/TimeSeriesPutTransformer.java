@@ -57,7 +57,7 @@ public class TimeSeriesPutTransformer extends HSchemaPutTransformer{
 			// the value of the column name is designed to be qualifer
 			String qualifer = this.getColumnValue(fields);	
 			String tsValue = this.getFieldValue(fields, this.version.getTsField());	
-			System.out.println("[DEBUG]: ts Value: "+this.version.getTsField()+"=>"+tsValue);
+			//System.out.println("[DEBUG]: ts Value: "+this.version.getTsField()+"=>"+tsValue);
 			String version = tsValue;
 			if(!this.version.isStandalone()){ // this identifies whether the version dimension comes from analysis of timestamp or from individual column
 				version = this.version.getVersionValue(tsValue);	
@@ -102,7 +102,7 @@ public class TimeSeriesPutTransformer extends HSchemaPutTransformer{
 	 * @throws Exception
 	 */
 	private String getColumnValue(Map<String, Object> fields) throws Exception{
-		System.out.println("in getColumnValue()"+fields.toString());
+		//System.out.println("in getColumnValue()"+fields.toString());
 		String result = null;
 		if(null != this.columnNames && this.columnNames.size()>0){
 			for(String key: this.columnNames.keySet()){
@@ -110,12 +110,12 @@ public class TimeSeriesPutTransformer extends HSchemaPutTransformer{
 					String value = getFieldValue(fields,key);
 					result = this.columnNames.get(key)+value;									
 					fields.remove(key); // remove this filed because it is not needed to store into the cell value
-					System.out.println("columns=>"+key + "; value=>"+result);
+					//System.out.println("columns=>"+key + "; value=>"+result);
 					break;
 				}
 			}
 		}else{
-			System.out.println("the column name is null or empty");
+			//System.out.println("the column name is null or empty");
 			throw new Exception("the column name is null or empty");
 		}
 		return result;

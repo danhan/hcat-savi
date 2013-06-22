@@ -1,7 +1,6 @@
 package org.apache.sqoop.hbase;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,11 @@ import ca.ualberta.ssrg.hschema.XSchemaTimestamp;
 import ca.ualberta.ssrg.hschema.XSchemaVersion;
 import ca.ualberta.ssrg.hschema.XUtil;
 
-
+/**
+ * the log should be improved anyway
+ * @author dan
+ *
+ */
 public abstract class HSchemaPutTransformer extends PutTransformer{
 
 	public static final Log LOG = LogFactory.getLog(HSchemaPutTransformer.class.getName());
@@ -52,19 +55,18 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	
 	@Override
 	public void setColumnFamily(String colFamily) {		
-		System.out.println("setColumnFamily(): "+colFamily);
+		//System.out.println("setColumnFamily(): "+colFamily);
 		try{
 			if(colFamily != null){
-				colFamily = colFamily.replace("=>", ":");
-				System.out.println("after replacing: "+colFamily);
+				colFamily = colFamily.replace("=>", ":");				
 				JSONTokener tokener = new JSONTokener(colFamily);				
 				JSONObject obj =  new JSONObject(tokener);
-				System.out.println("JSONObject: "+ obj.toString());
+				//System.out.println("JSONObject: "+ obj.toString());
 				
 				// for family
 				if(obj.has(XConstants.EXT_FAMILY)){
 					this.columnFamily = obj.getString(XConstants.EXT_FAMILY);
-					System.out.println("colum Family "+ columnFamily);					
+					//System.out.println("colum Family "+ columnFamily);					
 				}
 				//for columns
 				if(obj.has(XConstants.EXT_COLUMNS)){
@@ -74,7 +76,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 						JSONObject one_column = columns.getJSONObject(i);
 						this.columnNames.put(one_column.getString(XConstants.EXT_KEY_FIELD), 
 								one_column.getString(XConstants.EXT_COLUMNS_PREFIX));					
-						System.out.println("columnNames "+ this.columnNames.toString());
+						//System.out.println("columnNames "+ this.columnNames.toString());
 					} 
 				}
 				
@@ -96,7 +98,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 */
 	@Override
 	public void setRowKeyColumn(String rowKeyCol) {		
-		System.out.println("setRowKeyColumn(): "+rowKeyCol);
+		//System.out.println("setRowKeyColumn(): "+rowKeyCol);
 		try{
 			if(rowKeyCol != null){
 				JSONTokener tokener = new JSONTokener(rowKeyCol);				
@@ -204,7 +206,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * @return
 	 */
 	protected String buildCombinedToRowKey(Map<String, Object> fields){
-		System.out.println("buildCombinedToRowKey: " );
+		//System.out.println("buildCombinedToRowKey: " );
 		String rowKey = "";
 		if(this.rowkeyColumns.size() > 0){
 			// many columns in MYSQL to be added in the row key
@@ -226,7 +228,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 				}			
 			}
 		}
-		System.out.println("the commbined key: "+rowKey );
+		//System.out.println("the commbined key: "+rowKey );
 		return rowKey;
 	}	
 
@@ -238,7 +240,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * @return
 	 */
 	protected String buildTimestampToRowKey(Map<String, Object> fields){
-		System.out.println("Entry: buildTimestampToRowKey()");
+		//System.out.println("Entry: buildTimestampToRowKey()");
 		String rowKey = "";
 		if(this.rowkeyColumns.size() > 0){			
 			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_TIMESTAMP)){
@@ -258,7 +260,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 				}			
 			}				
 		}
-		System.out.println("the formated timestamp: "+rowKey);
+		//System.out.println("the formated timestamp: "+rowKey);
 		return rowKey;
 	}	
 
@@ -288,7 +290,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * @return
 	 */
 	protected String[] getSpatialField(){
-		System.out.println("in getSpatialFiled()");
+		//System.out.println("in getSpatialFiled()");
 		String[] location = null;
 		if(this.rowkeyColumns.size() > 0){	
 			try{
@@ -308,7 +310,7 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 				e.printStackTrace();
 			}				
 		}
-		System.out.println("the spatial Filed is : "+ location[0]+","+location[1]);
+		//System.out.println("the spatial Filed is : "+ location[0]+","+location[1]);
 		return location;
 	}
 	
@@ -326,9 +328,9 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 				// spatial index
 				if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_SPATIAL)){
 					String spatial = String.valueOf(this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_SPATIAL));
-					System.out.println("spatial string: "+spatial);
+					//System.out.println("spatial string: "+spatial);
 					JSONObject object = new JSONObject(spatial);
-					System.out.println("spatial object: "+object.toString());
+					//System.out.println("spatial object: "+object.toString());
 					if(object.has(XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA)){
 						String schemaStr = object.getString(XConstants.EXT_ROW_KEY_SPATIAL_SCHEMA);
 						if(null != schemaStr && !schemaStr.isEmpty()){								
