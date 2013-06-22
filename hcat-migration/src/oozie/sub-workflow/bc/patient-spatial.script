@@ -3,7 +3,7 @@
 
 importFile=patient-spatial.import
 optionFile=patient-spatial.option
-hdfsJobFolder=/user/ubuntu/oozie/sub-workflow/ab
+hdfsJobFolder=/user/ubuntu/oozie/sub-workflow/bc
 indexField="Patient\$PersistentID"
 
 . $importFile

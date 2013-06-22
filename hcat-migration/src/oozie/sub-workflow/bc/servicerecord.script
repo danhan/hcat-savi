@@ -3,7 +3,7 @@
 
 importFile=servicerecord.import
 optionFile=servicerecord.option
-hdfsJobFolder=/user/ubuntu/oozie/sub-workflow/ab
+hdfsJobFolder=/user/ubuntu/oozie/sub-workflow/bc
 indexField="ServiceRecord\$PersistentID"
 
 . $importFile
