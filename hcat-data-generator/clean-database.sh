@@ -3,27 +3,23 @@
 username=root
 password=zhu88jie
 
+"delete all data from all tables"
+tablenames="
+Service
+Appointment
+Schedule
+MediaMessage
+ServiceRecord
+Patient
+PersistentAddress
+HCA
+"
+export tablenames
 
-tablename=Service
+for t in tablenames
+do
+echo "delete from $t"
 mysql -u$username -p$password hcaschedule -e "delete from $tablename"
+done
 
-tablename=Appointment
-mysql -u$username -p$password hcaschedule -e "delete from $tablename"
-
-tablename=Schedule
-mysql -u$username -p$password hcaschedule -e "delete from $tablename"
-
-tablename=MediaMessage
-mysql -u$username -p$password hcaschedule -e "delete from $tablename"
-
-tablename=ServiceRecord
-mysql -u$username -p$password hcaschedule -e "delete from $tablename"
-
-tablename=Patient
-mysql -u$username -p$password hcaschedule -e "delete from $tablename"
-
-tablename=PersistentAddress
-mysql -u$username -p$password hcaschedule -e "delete from $tablename"
-
-tablename=HCA
-mysql -u$username -p$password hcaschedule -e "delete from $tablename"
+echo "Finished"
