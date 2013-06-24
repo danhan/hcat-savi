@@ -1,4 +1,23 @@
-How the data set is generated
+1 Where is the original data?
+* The data now is stored in Nebula Cloud. The total size is about 600GB
+
+2 Where should the data go?
+* First, it should be uploaded into MySQL in each edge
+* Second, it will be migrated from MySQL in each edge to HBase in the core
+
+3 How to get the original data
+* The source is kept in fetch-data.sh
+
+4 What is the step to upload into MySQL
+* First, fetch-data.sh to local
+* Second, batch-upload.sh to MySQL
+This is not an optimized choice, as the data is large. Considering the limited space, 
+you need to monitor the uploading status and delete the files. Or you just uncomment the 
+command in batch-upload.sh.
+
+
+
+5 How the data set is generated
 
 schedule: 156
 appointment:== Sqawer 0.2.0
