@@ -52,7 +52,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 				if(keyvalues != null && keyvalues.size() > 0){	
 					row_num++;					
 					for(KeyValue kv:keyvalues){
-						LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
+						//LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
 						kvLength = (kvLength < kv.getLength())? kv.getLength():kvLength;
 						cell_num++;
 						String rowKey = Bytes.toString(kv.getRow());						
@@ -79,7 +79,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			results.setRows(row_num);
 			results.setCells(cell_num);
 			results.setKvLength(kvLength);
-			LOG.info("Hash Unit: "+results.getHashUnit().toString());	
+			//LOG.info("Hash Unit: "+results.getHashUnit().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getHashUnit().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
 		} catch(Exception e){
@@ -122,7 +122,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 				if(keyvalues != null && keyvalues.size() > 0){	
 					row_num++;					
 					for(KeyValue kv:keyvalues){
-						LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
+						//LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
 						kvLength = (kvLength < kv.getLength())? kv.getLength():kvLength;
 						cell_num++;
 						String rowKey = Bytes.toString(kv.getRow());						
@@ -130,12 +130,12 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 						
 						String qualifer = Bytes.toString(kv.getQualifier());						
 						String cellValue = Bytes.toString(kv.getValue());
-						LOG.info("qualifer=>"+qualifer+";cellValue=>"+cellValue);
+						//LOG.info("qualifer=>"+qualifer+";cellValue=>"+cellValue);
 						JSONTokener tokener = new JSONTokener(cellValue);
 						JSONObject desc = new JSONObject(tokener);						
 						if(numerator.equals(XConstants.POST_VALUE_SERVICE)){
 							int status = desc.getInt("status");	
-							LOG.info("unitKey=>"+unitKey+";status=>"+status);							
+							//LOG.info("unitKey=>"+unitKey+";status=>"+status);							
 							unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,status,4);	
 						}else if(numerator.equals(XConstants.POST_VALUE_MEDIA)){
 							unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,0,1);
@@ -153,7 +153,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			unitHashArrayResult.setRows(row_num);
 			unitHashArrayResult.setCells(cell_num);
 			unitHashArrayResult.setKvLength(kvLength);
-			LOG.info("Hash Unit: "+unitHashArrayResult.getHashUnitArray().toString());	
+			//LOG.info("Hash Unit: "+unitHashArrayResult.getHashUnitArray().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+unitHashArrayResult.getHashUnitArray().size()+
 					";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
@@ -225,7 +225,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			results.setRows(row_num);
 			results.setCells(cell_num);
 			results.setKvLength(kvLength);
-			LOG.info("Hash Unit: "+results.getHashUnit().toString());	
+			//LOG.info("Hash Unit: "+results.getHashUnit().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getHashUnit().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
 		} catch(Exception e){
