@@ -1,2 +1,2 @@
-startIndex=101
-chunkSize=100
+startIndex=1000001
+chunkSize=1000000
