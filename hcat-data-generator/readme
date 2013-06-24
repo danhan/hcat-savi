@@ -54,11 +54,22 @@ media: -- Spawner0.2.0
 3-year
 
 =============================
-patient: 100,000 
+patient: 100,000 Patient Address
+Province Ontario: left point: 52.802761,-95.141602, top point: 56.909002,-88.879395, 
+         right point:51.672555,-79.453125,  bottom point: 41.771312,-82.792969
+The scope: x:[-95,141602,-79.453125]; y: [41.771312,56.909002]
+Normalized scope x:[-95,14,-79.45],y:[41.77,56.9]
+Inflection point: [48.166085,-90.791016] ==> valid: x>-90.791016&y>48.166085
 
 
+Province BC: left top point: 59.998986,-138.955078
+	right bottom point: 49.009051,-117.026367
+The scope: x:[-138.955078,-117.026367]; y: [49.009051,59.998986]	
+Normalized scope: x:[-138.95,-117.02], y:[49.00,59.99]
+Inflection point: [54.826008,-130.429687] ==> valid: x>130.429687&y>54.826008
 
-=================================
+
+==============To be considered===================
 servicerecord: -- Spawner0.2.0
 2,112,000 * 10(5picture,5 notes) = 21,120,000
 1 month: 21,120,000   ID(1, 2112000),         appointment(1     -  2112000), timestmap(01-01-2010,31-01-2010, incrementing, yyyy-mm-dd)

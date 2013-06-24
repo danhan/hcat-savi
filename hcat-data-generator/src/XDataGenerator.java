@@ -1,3 +1,4 @@
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -7,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+
+import org.apache.commons.math3.random.RandomDataImpl;
 
 
 public class XDataGenerator {
@@ -25,9 +28,9 @@ public class XDataGenerator {
 	}
 	
 	public void generateSchedule(){
-		String startTime = this.prop.getProperty("start_time");
-		String endTime = this.prop.getProperty("end_time");
-		String format = this.prop.getProperty("format");		
+		String startTime = this.prop.getProperty("schedule.start_time");
+		String endTime = this.prop.getProperty("schedule.end_time");
+		String format = this.prop.getProperty("schedule.format");		
 		DateFormat formatter = new SimpleDateFormat(format);
 		
 		try{
@@ -68,9 +71,99 @@ public class XDataGenerator {
 	}
 	
 	
+	public void generateLocation(){
+
+		
+		int num = Integer.valueOf(this.prop.getProperty("patient.num"));
+		
+		try{
+			//gernerate the data for ontario
+			double xmin = Double.valueOf(this.prop.getProperty("patient.x.min.on"));
+			double xmax = Double.valueOf(this.prop.getProperty("patient.x.max.on"));
+			double ymin = Double.valueOf(this.prop.getProperty("patient.y.min.on"));
+			double ymax = Double.valueOf(this.prop.getProperty("patient.y.max.on"));
+			String inflection = this.prop.getProperty("patient.inflection.point.on");
+			String[] items = inflection.split(",");
+			Point2D.Double point = new Point2D.Double(Double.valueOf(items[0]),Double.valueOf(items[1]));
+						
+			String onData = generate(num,xmin,xmax,ymin,ymax,point,"ontario-location.csv");
+			System.out.println(onData + " is ready");
+			
+			//gernerate the data for ontario
+			xmin = Double.valueOf(this.prop.getProperty("patient.x.min.bc"));
+			xmax = Double.valueOf(this.prop.getProperty("patient.x.max.bc"));
+			ymin = Double.valueOf(this.prop.getProperty("patient.y.min.bc"));
+			ymax = Double.valueOf(this.prop.getProperty("patient.y.max.bc"));
+			inflection = this.prop.getProperty("patient.inflection.point.bc");
+			items = inflection.split(",");
+			point = new Point2D.Double(Double.valueOf(items[0]),Double.valueOf(items[1]));
+								
+			String bcData = generate(num,xmin,xmax,ymin,ymax,point,"bc-location.csv");
+			System.out.println(bcData + " is ready");
+			 
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private String generate(int number,double xmin, double xmax, double ymin, double ymax,Point2D.Double inflection,String filename){	
+		
+		double x[] = new double[number];
+		double y[] = new double[number];
+					
+		int total = 0;
+	
+		RandomDataImpl randomData1 = new RandomDataImpl(); 
+		RandomDataImpl randomData2 = new RandomDataImpl();	
+		randomData2.reSeed(10);
+		randomData1.reSeed(1);
+		for(int i=0;i<number;i++){										
+			double xtmp = randomData1.nextUniform(xmin,xmax);
+			double ytmp = randomData2.nextUniform(ymin,ymax);
+			if(xtmp<inflection.x && ytmp < inflection.y)
+				continue;
+			x[total] = xtmp; 
+			y[total] = ytmp;							
+			
+			total++;																
+		}
+		
+		System.out.println(total);
+		// normailze the value into the given value range
+		System.out.println("===normalized==and start to write=");
+		FileWriter fw = null;
+		try{
+			fw = new FileWriter(filename);
+			for(int i=0;i<total;i++){
+				fw.write(x[i] + ","+y[i]+"\n");
+				
+			}
+			fw.close();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return filename;
+	}	
+		
+	
+	
+	
 	public static void main(String[] args){
 		XDataGenerator generator = new XDataGenerator();
-		generator.generateSchedule();
+		
+		if(args.length < 1){
+			System.out.println("0 => schedule; 1 => patient");
+			System.exit(0);
+		}
+		if(args[0].equals("0")){
+			generator.generateSchedule();
+		}else if(args[0].equals("1")){
+			generator.generateLocation();	
+		}
+		
 		
 	}
 	
