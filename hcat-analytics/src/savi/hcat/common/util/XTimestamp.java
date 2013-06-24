@@ -18,7 +18,7 @@ public class XTimestamp {
 	 
 	public static String parseDate(String timestamp){
 		
-		LOG.debug("in parseDate(): "+timestamp);
+		//LOG.debug("in parseDate(): "+timestamp);
 		String result = "";
 		try {
 			Date time = dateFormat.parse(timestamp);
@@ -33,7 +33,7 @@ public class XTimestamp {
 		} catch (ParseException e) {			
 			e.printStackTrace();
 		}
-		LOG.debug("result: "+result);
+		//LOG.debug("result: "+result);
 		return result;
 	}
 	
@@ -67,7 +67,7 @@ public class XTimestamp {
 	 * @return: [{201308,?},{201309,?}]
 	 */
 	public static Hashtable<String,Integer> getHashMonth(String starttime, String endtime){	
-		LOG.info("getHashMonth "+ starttime+";"+endtime);
+		//LOG.info("getHashMonth "+ starttime+";"+endtime);
 		Hashtable<String, Integer> unitHash = new Hashtable<String,Integer>();
 		try {
 			Date start = dateFormat.parse(starttime);
@@ -106,13 +106,13 @@ public class XTimestamp {
 			e.printStackTrace();
 		}	
 
-		LOG.info("formuated unit hash: "+unitHash.toString());
+		//LOG.info("formuated unit hash: "+unitHash.toString());
 		return unitHash;
 	}
 	
 	
 	public static HashSet<String> getHashSetMonth(String starttime, String endtime){	
-		LOG.info("getHashSetMonth "+ starttime+";"+endtime);
+		//LOG.info("getHashSetMonth "+ starttime+";"+endtime);
 		HashSet<String> unitSet = new HashSet<String>();
 		try {
 			Date start = dateFormat.parse(starttime);
@@ -155,7 +155,7 @@ public class XTimestamp {
 			e.printStackTrace();
 		}	
 
-		LOG.info("formuated unit hash: "+unitSet.toString());
+		//LOG.info("formuated unit hash: "+unitSet.toString());
 		return unitSet;
 	}	
 	

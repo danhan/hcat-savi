@@ -73,7 +73,7 @@ public class RStatResult extends RCopResult{
 	}	
 	
 	public void addOnHashUnit(String unitKey, int count){		
-		LOG.info("addOnHashUnit: "+unitKey+";"+count);		
+		//LOG.info("addOnHashUnit: "+unitKey+";"+count);		
 		if(hashUnit.containsKey(unitKey)){
 			int num = this.hashUnit.get(unitKey).intValue();
 			this.hashUnit.put(unitKey, num+count);
@@ -83,7 +83,7 @@ public class RStatResult extends RCopResult{
 	}	
 	
 	public void addOnHashHash(String hashKey, String pairKey, int count){		
-		LOG.info("addOnHashHash: "+hashKey+";"+pairKey+";"+count);		
+		//LOG.info("addOnHashHash: "+hashKey+";"+pairKey+";"+count);		
 		if(this.hashHash.containsKey(hashKey)){
 			Hashtable<String, Integer> pair = this.hashHash.get(hashKey);	
 			if(pair.containsKey(pairKey)){
@@ -107,7 +107,7 @@ public class RStatResult extends RCopResult{
 	 * @param totalItems: to initialize the length of arrays, service needs 4, while media needs 1
 	 */
 	public void addOnUnitHashArray(String unitKey, String typeKey, int itemIndex,int totalItems){		
-		LOG.info("addOnUnitHashArray: "+unitKey+";"+typeKey+";"+itemIndex);		
+		//LOG.info("addOnUnitHashArray: "+unitKey+";"+typeKey+";"+itemIndex);		
 		if(this.hashUnitArray.containsKey(unitKey)){ // month this should have because I already set the unit, but in case. 
 			Hashtable<String, int[]> pair = this.hashUnitArray.get(unitKey);	
 			if(pair.containsKey(typeKey)){  // numerator's type
@@ -129,11 +129,11 @@ public class RStatResult extends RCopResult{
 			pair.put(typeKey, items);
 			this.hashUnitArray.put(unitKey,pair);
 		}
-		LOG.info("addOnUnitHashArray:new result:  "+this.hashUnitArray.toString());
+		//LOG.info("addOnUnitHashArray:new result:  "+this.hashUnitArray.toString());
 	}	
 	
 	public void mergeUnitHashArray(Hashtable<String, Hashtable<String, int[]>> hashArray){
-		LOG.info("mergeUnitHashArray: orign=> "+this.hashUnitArray.toString()+";append=>"+hashArray.toString());
+		//LOG.info("mergeUnitHashArray: orign=> "+this.hashUnitArray.toString()+";append=>"+hashArray.toString());
 		for(String unit: hashArray.keySet()){ // month
 			Hashtable<String, int[]> numerator = hashArray.get(unit);
 			if(this.hashUnitArray.containsKey(unit)){ // month
@@ -155,7 +155,7 @@ public class RStatResult extends RCopResult{
 			}
 		}
 		
-		LOG.info("mergeUnitHashArray: new=> "+this.hashUnitArray.toString());
+		//LOG.info("mergeUnitHashArray: new=> "+this.hashUnitArray.toString());
 		
 	}
 	
@@ -170,14 +170,14 @@ public class RStatResult extends RCopResult{
 	 * @return
 	 */
 	public String parseUnitKey(String rowKey){
-		LOG.info("parseUnitKey: rowkey: " + rowKey);
+		//LOG.info("parseUnitKey: rowkey: " + rowKey);
 		String result = null;
 		if(this.unit.equals("m")){
 			result = rowKey.split(XConstants.ROW_KEY_DELIMETER)[1].substring(0, 6);
 		}else if(this.unit.equals("w")){
 			result = rowKey.split(XConstants.ROW_KEY_DELIMETER)[1];
 		}
-		LOG.info("the parsed unit key : "+ result);
+		//LOG.info("the parsed unit key : "+ result);
 		return result;
 	}
 
