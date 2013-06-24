@@ -1,4 +1,4 @@
-1 copy sqoop-ext.jar 
+1 copy sqoop-ext.jar to src/oozie/subworkflow 
 
 
 2 these libraries should be copy to HDFS share/lib

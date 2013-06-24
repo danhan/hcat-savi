@@ -36,7 +36,7 @@ servicerecord: -- Sqawner0.2.0
 12month: 506,880,000 
 
 =================================
-servicerecord: -- Sqawner0.2.0
+media: -- Spawner0.2.0
 2,112,000 * 20(10 picture,10 notes) 42,240,000 ==> 12.6 GB
 1 month: 42,240,000   ID(1,42240000),         appointment(1     -  2112000), timestmap(01-01-2010,31-01-2010, incrementing, yyyy-mm-dd)
 2 month: 84,480,000   ID(422400001,84480000), appointment(2112001- 4224000), timestmap(01-02-2010,28-02-2010, incrementing, yyyy-mm-dd)  
@@ -59,7 +59,7 @@ patient: 100,000
 
 
 =================================
-servicerecord: -- Sqawner0.2.0
+servicerecord: -- Spawner0.2.0
 2,112,000 * 10(5picture,5 notes) = 21,120,000
 1 month: 21,120,000   ID(1, 2112000),         appointment(1     -  2112000), timestmap(01-01-2010,31-01-2010, incrementing, yyyy-mm-dd)
 2 month: 42,240,000   ID(422400001,84480000), appointment(2112001- 4224000), timestmap(01-02-2010,28-02-2010, incrementing, yyyy-mm-dd) 
