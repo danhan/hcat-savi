@@ -12,7 +12,8 @@ if [ -z "$1" ]; then
 fi
 
 
-${PWD}/../lib/commons-math3-3.0.jar
+MYLIB=${PWD}/lib/commons-math3-3.0.jar:\
+${PWD}/bin/hcat-generator.jar
 #MYCONF=${PWD}/../conf/
 
 # jar file which is used to preprocess the files

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="hcat-generator" default="main" basedir="../">
+
+	<property environment="env" />		
+	
+	<property name="src.root" location="../" />
+	
+	<property name="hcat-generator.src" location="${src.root}/hcat-data-generator"/>
+	
+	<property name="java.home" value="${env.JAVA_HOME}" />
+	<property name="ant.home" value="${env.ANT_HOME}" />
+	<property name="bin.home" value="${hcat-generator.src}/bin" />	
+	<property name="lib.home" value="${hcat-generator.src}/lib" />
+	<property name="src.home" value="${hcat-generator.src}/src" />
+
+	
+	<path id="classpath">
+		<fileset dir="${lib.home}">
+			<include name="commons-math3-3.0.jar"/>		
+		</fileset>
+	</path>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="${bin.home}" />
+		<javac srcdir="${src.home}" destdir="${bin.home}/">						
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+	
+	<!--create hcat-generator.jar -->
+	<target name="main" depends="compile">		
+		<jar jarfile="${bin.home}/hcat-generator.jar" basedir="${bin.home}" />
+	</target>
+	
+	<target name="clean">
+		<description>clean the jar file last time</description>		
+		<delete dir="${bin.home}" />	
+	</target>	
+	
+	
+</project>
