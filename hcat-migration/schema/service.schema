@@ -3,7 +3,7 @@
 	{
 	  "name":"d",
 	  "compression":"GZ",
-	  "versions":"6",
+	  "versions":"",
 	  "min_versions":"1",
 	  "blocksize":"",
 	  "in_memory":"",
