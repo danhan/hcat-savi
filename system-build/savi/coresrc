@@ -1,5 +1,5 @@
 export OS_AUTH_URL=http://iam.savitestbed.ca:5000/v2.0/
-export OS_REGION_NAME=EDGE-TR-1
+export OS_REGION_NAME=CORE
 export OS_TENANT_NAME=yorku
 export OS_USERNAME=danhan
 export OS_PASSWORD=bhgf6Th
