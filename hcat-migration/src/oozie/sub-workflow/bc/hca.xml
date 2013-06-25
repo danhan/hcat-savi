@@ -1,4 +1,4 @@
-<workflow-app name="on-hca-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="bc-hca-move" xmlns="uri:oozie:workflow:0.2">
    <start to="hca-sqoop"/> 
 
     <action name="hca-sqoop">
@@ -6,8 +6,8 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${onOutput}/hca"/>
-                <mkdir path="${onOutput}"/>
+                <delete path="${bcOutput}/hca"/>
+                <mkdir path="${bcOutput}"/>
             </prepare>
             <configuration>
                 <property>

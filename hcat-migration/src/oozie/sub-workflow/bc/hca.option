@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
+jdbc:mysql://10.0.0.7/hcaschedule
 --username
 root
 --password
@@ -17,12 +17,12 @@ zhu88jie
 hca
 
 --hbase-row-key
-'{"region":"onedge","identifier":"username","combined":"ID"}'
+'{"region":"bcedge","identifier":"username","combined":"ID"}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"cID"},{"field"=>"cNumber"},{"field"=>"firstName"},{"field"=>"hasVehicle"},{"field"=>"lat"},{"field"=>"lon"},{"field"=>"hNumber"},{"field"=>"lastName"},{"field"=>"passwd"},{"field"=>"voided"}]}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/on/hca
+/user/${wf:user()}/oozie/output/bc/hca
 -m
 2
