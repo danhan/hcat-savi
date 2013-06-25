@@ -1,4 +1,4 @@
-{   "name": "service",
+{   "name": "hca",
 	"families":[
 	{
 	  "name":"d",
@@ -14,5 +14,5 @@
 	],
 	"max_file_size":"",
 	"mem_store_size":"",
-	"log_file_name":"service"
+	"log_file_name":"hca"
 }

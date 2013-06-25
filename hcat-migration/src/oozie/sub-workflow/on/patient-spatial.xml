@@ -1,4 +1,4 @@
-<workflow-app name="ab-patient-spatial-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="on-patient-spatial-move" xmlns="uri:oozie:workflow:0.2">
    <start to="patient-spatial-sqoop"/> 
 
     <action name="patient-spatial-sqoop">

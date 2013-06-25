@@ -1,4 +1,4 @@
-<workflow-app name="ab-subwf" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="on-subwf" xmlns="uri:oozie:workflow:0.2">
    <start to="fork-move"/> 
    <fork name="fork-move">
       <path start="hca-move"/>	
@@ -10,11 +10,11 @@
       <path start="media-move"/>
       -->
    </fork>
-   <join name="joining-move" to="ab-subwf-end"/>
+   <join name="joining-move" to="on-subwf-end"/>
 
     <action name="appointment-move">
          <sub-workflow>
-             <app-path>${abwf}/appointment.xml</app-path>
+             <app-path>${onwf}/appointment.xml</app-path>
              <propagate-configuration />
             <configuration>
                 <property>
@@ -38,7 +38,7 @@
  
     <action name="servicerecord-move">
 	 	<sub-workflow>
-             <app-path>${abwf}/servicerecord.xml</app-path>
+             <app-path>${onwf}/servicerecord.xml</app-path>
              <propagate-configuration />
             <configuration>
                 <property>
@@ -62,7 +62,7 @@
     
     <action name="media-move">
 	 <sub-workflow>
-             <app-path>${abwf}/media.xml</app-path>
+             <app-path>${onwf}/media.xml</app-path>
              <propagate-configuration />
             <configuration>
                 <property>
@@ -86,7 +86,7 @@
   
     <action name="patient-spatial-move">
          <sub-workflow>
-             <app-path>${abwf}/patient-spatial.xml</app-path>
+             <app-path>${onwf}/patient-spatial.xml</app-path>
              <propagate-configuration />
             <configuration>
                 <property>
@@ -110,7 +110,7 @@
 	
     <action name="service-move">
 	 	<sub-workflow>
-             <app-path>${abwf}/service.xml</app-path>
+             <app-path>${onwf}/service.xml</app-path>
              <propagate-configuration />
             <configuration>
                 <property>
@@ -134,7 +134,7 @@
     
     <action name="hca-move">
 	 <sub-workflow>
-             <app-path>${abwf}/hca.xml</app-path>
+             <app-path>${onwf}/hca.xml</app-path>
              <propagate-configuration />
             <configuration>
                 <property>
@@ -162,6 +162,6 @@
   </kill> 
 
   
-   <end name="ab-subwf-end"/>
+   <end name="on-subwf-end"/>
 
  </workflow-app>
