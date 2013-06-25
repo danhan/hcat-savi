@@ -6,8 +6,8 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${nameNode}/user/${wf:user()}/oozie/output/bc/patient-spatial"/>
-                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output/bc"/>
+                <delete path="${bcOutput}/patient-spatial"/>
+                <mkdir path="${bcOutput}"/>
             </prepare>
             <configuration>
                 <property>
@@ -25,14 +25,14 @@
            <file>patient-spatial.option</file>
 	   	    <file>../sqoop-ext.jar</file>
         </sqoop>
-        <ok to="patient-spatial-updatebatch"/>
+        <ok to="end"/>
         <error to="patient-spatial-sqoop-fail"/>
     </action>
  
     <kill name="patient-spatial-sqoop-fail">
         <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
-
+<!-- 
     <action name="patient-spatial-updatebatch">
        <shell xmlns="uri:oozie:shell-action:0.1">
           <job-tracker>${jobTracker}</job-tracker>
@@ -55,7 +55,7 @@
   <kill name="patient-spatial-shell-fail">
         <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
   </kill> 
-
+ -->
   
    <end name="end"/>
 

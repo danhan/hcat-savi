@@ -6,8 +6,8 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${nameNode}/user/${wf:user()}/oozie/output/bc/service"/>
-                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output/bc"/>
+                <delete path="${bcOutput}/service"/>
+                <mkdir path="${bcOutput}"/>
             </prepare>
             <configuration>
                 <property>
@@ -20,7 +20,7 @@
             <arg>service.option</arg>
            <file>service.option</file>
         </sqoop>
-        <ok to="service-updatebatch"/>
+        <ok to="end"/>
         <error to="service-sqoop-fail"/>
     </action>
  
@@ -28,6 +28,7 @@
         <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
+<!-- 
     <action name="service-updatebatch">
        <shell xmlns="uri:oozie:shell-action:0.1">
           <job-tracker>${jobTracker}</job-tracker>
@@ -50,7 +51,7 @@
   <kill name="service-shell-fail">
         <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
   </kill> 
-
+ -->
   
    <end name="end"/>
 

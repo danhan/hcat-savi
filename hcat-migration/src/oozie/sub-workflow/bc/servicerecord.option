@@ -28,4 +28,4 @@ record
 /user/${wf:user()}/oozie/output/bc/servicerecord
 
 -m
-2
+4

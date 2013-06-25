@@ -21,7 +21,7 @@ appointment
 '{"family"=>"d","columns"=>[{"field"=>"wday","prefix"=>"w"}]}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/app
+/user/${wf:user()}/oozie/output/bc/app
 
 -m
-2
+4

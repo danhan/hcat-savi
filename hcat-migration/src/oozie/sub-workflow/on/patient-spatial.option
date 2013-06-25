@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
+jdbc:mysql://10.0.0.12/hcaschedule
 --username
 root
 --password
@@ -11,7 +11,6 @@ zhu88jie
 
 --split-by
 ID
-
 --map-column-java
 row_key=String
 
@@ -20,13 +19,13 @@ row_key=String
 patient-spatial
 
 --hbase-row-key
-'{"region":"bcedge","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"0,0,1000,1000","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
+'{"region":"onedge","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"0,0,1000,1000","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
 
 --column-family
 '{"family"=>"d"}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/bc/patient-spatial
+/user/${wf:user()}/oozie/output/on/patient-spatial
 
 -m
 2

@@ -1,10 +1,10 @@
 #!/bin/sh
 
 
-importFile=patient-spatial.import
-optionFile=patient-spatial.option
-hdfsJobFolder=/user/ubuntu/oozie/sub-workflow/bc
-indexField="Patient\$PersistentID"
+importFile=media.import
+optionFile=media.option
+hdfsJobFolder=/user/ubuntu/oozie/sub-workflow/on
+indexField="MediaMessage\$PersistentID"
 
 . $importFile
 
@@ -12,7 +12,7 @@ indexField="Patient\$PersistentID"
 oldStartIndex=`expr $startIndex - $chunkSize`
 oldEndIndex=`expr $startIndex - 1`
 oldWhere="$indexField >= "$oldStartIndex" and $indexField <= "$oldEndIndex
-echo "the old WHERE clause is $oldWhere"
+echo "the old WHERE clause should be $oldWhere"
 
 #calculate the new index
 newStartIndex=`expr $chunkSize + $startIndex`
@@ -30,17 +30,17 @@ echo "Updating old option file: $optionFile"
 # update the option file(replace the oldwhere with the new where and put it in a new file)
 sed -e "s|$oldWhere|$newWhere|g" < $optionFile > "$optionFile.new"
 mv "$optionFile.new" $optionFile
-echo "====the new option File are ======="
+echo "DEBUG====option File======="
 cat $optionFile
-echo "=========="
+echo "DEBUG=========="
 
 
 echo "Updating old import file: $importFile"
 #update the import properties file
 sed -i "s|$oldStartIndexStr|$newStartIndexStr|g" $importFile
-echo "======the new ImportFile======"
+echo "DEBUG=========ImportFile======"
 cat $importFile
-echo "=========="
+echo "DEBUG=========="
 
 
 echo "Removing HDFS import file and option file "

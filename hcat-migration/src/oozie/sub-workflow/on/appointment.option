@@ -15,13 +15,13 @@ ID
 appointment
 
 --hbase-row-key
-'{"region":"myria","combined":"pid,hid","timestamp":{"field":"sweek","format":"yyyy-MM-dd","version":{"field":"block"}}}'
+'{"region":"onedge","combined":"pid,hid","timestamp":{"field":"sweek","format":"yyyy-MM-dd","version":{"field":"block"}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"wday","prefix"=>"w"}]}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/ab/app
+/user/${wf:user()}/oozie/output/on/app
 
 -m
 4

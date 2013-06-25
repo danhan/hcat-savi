@@ -1,4 +1,4 @@
-<workflow-app name="ab-appointment-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="on-appointment-move" xmlns="uri:oozie:workflow:0.2">
    <start to="appointment-sqoop"/> 
 
     <action name="appointment-sqoop">
@@ -6,8 +6,8 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${nameNode}/user/${wf:user()}/oozie/output/ab/appointment"/>
-                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output/ab"/>
+                <delete path="${onOutput}/appointment"/>
+                <mkdir path="${onOutput}"/>
             </prepare>
             <configuration>
                 <property>

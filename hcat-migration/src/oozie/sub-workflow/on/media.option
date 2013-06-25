@@ -16,13 +16,13 @@ ID
 record
 
 --hbase-row-key
-'{"region":"ab","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
+'{"region":"onedge","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/ab/media
+/user/${wf:user()}/oozie/output/on/media
 
 -m
 2

@@ -6,8 +6,8 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${nameNode}/user/${wf:user()}/oozie/output/bc/appointment"/>
-                <mkdir path="${nameNode}/user/${wf:user()}/oozie/output/bc"/>
+                <delete path="${bcOutput}/appointment"/>
+                <mkdir path="${bcOutput}"/>
             </prepare>
             <configuration>
                 <property>
