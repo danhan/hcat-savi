@@ -231,8 +231,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		RangeQueryCallBack callback = new RangeQueryCallBack(this);
 		
 		// compose the HBase RPC call
-		final double x = Math.abs(this.latitude);
-		final double y = Math.abs(this.longitude);
+		final double x = this.latitude;//Math.abs(this.latitude);
+		final double y = this.longitude;//Math.abs(this.longitude);
 		Hashtable<String, XBox[]> matched = this.hybrid.match(x,y, this.radius);	
 
 		// send separate queries for each city
@@ -271,26 +271,28 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		long exe_time = cop_end - s_time;
 					
 		LOG.info("the returned value: "+callback.regions.toString()+";exe_time=>"+exe_time);
+		
 		for(String key: callback.regions.keySet()){
 			RStatResult result = callback.regions.get(key);
-			HashMap<String,Double> one_region = result.getDistances();
+			HashMap<String,Double> one_region = result.getDistances();			
 			JSONObject regionJSON = new JSONObject();
 			try {
 				regionJSON.put("region", key);
-				JSONArray values = new JSONArray();
-				for(Entry<String,Double> entry: one_region.entrySet()){
-					values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
-				}
-				regionJSON.put("values", values);
-				
+				JSONArray values = new JSONArray();				
+				if(null != one_region){
+					for(Entry<String,Double> entry: one_region.entrySet()){
+						values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
+					}					
+				}				
+				regionJSON.put("values", values);				
 				// add the statistics of request
 				JSONObject reqStatJSON = this.buildRequestStat(result);
 				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
-				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);	
-				
+				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);					
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}	
+			
 			this.response.put(regionJSON);
 		}
 		
@@ -311,6 +313,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 	protected FilterList getRangeScanFilterList(String region,Hashtable<String, XBox[]> matched) {
 		FilterList fList = new FilterList();
 		try{
+			if(matched == null)
+				LOG.error("there is no matched range for the query");
 			Filter columnFilter = hbase.getColumnRangeFilter((matched.get("")[0].getColumn()+"-").getBytes(),true,					
 					(XCommon.IncFormatString(matched.get("")[1].getColumn())+"-").getBytes(),true);	
 			fList.addFilter(columnFilter);
@@ -341,7 +345,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		public void update(byte[] region, byte[] row, RStatResult result) {	
 			LOG.info("RangeQueryCallBack: update");			
 			String patientRegion = result.getRegion();
-			HashMap<String,Double> distances = result.getDistances();
+			HashMap<String,Double> distances = result.getDistances();			
 			if(this.regions.containsKey(patientRegion)){
 				HashMap<String,Double> temp = this.regions.get(patientRegion).getDistances();
 				temp.putAll(distances);				
