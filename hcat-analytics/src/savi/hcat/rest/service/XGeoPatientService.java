@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -80,7 +79,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				FilterList fList = getWindowsScanFilterList(rowRange, region);// getFilter list
 				final Scan scan = hbase.generateScan(null, fList,
 						new String[] { this.tableSchema.getFamilyName() }, null,-1);
-				
+				final Rectangle2D.Double regionArea = this.areas.get(region);
 				LOG.info("scan: "+scan.toString());
 				//send the caller 
 				hbase.getHTable().coprocessorExec(HCATProtocol.class,
@@ -89,7 +88,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 
 					public RStatResult call(HCATProtocol instance)
 							throws IOException {
-						final HashMap<String,Rectangle2D.Double> scopes = getQuads();
+						final HashMap<String,Rectangle2D.Double> scopes = getQuads(regionArea);
 						return instance.doWindowQuery(scan, region,scopes);
 					};
 				}, callback);
@@ -160,22 +159,25 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		return fList;
 	}
 	
-	protected HashMap<String,Rectangle2D.Double> getQuads(){
+	protected HashMap<String,Rectangle2D.Double> getQuads(Rectangle2D.Double rect){
 		HashMap<String,Rectangle2D.Double> quads = new HashMap<String,Rectangle2D.Double>();
-		//NW
-		Rectangle2D.Double entireSpace = this.tableSchema.getEntireSpace();
-		quads.put("NW",new Rectangle2D.Double(entireSpace.getMinX(),entireSpace.getMinY(),
-												entireSpace.width/2,entireSpace.height/2));
+		//NW		
+		quads.put("SW",new Rectangle2D.Double(rect.getMinX(),rect.getMinY(),
+											rect.width/2,rect.height/2));
 		//NE
-		quads.put("NE",new Rectangle2D.Double(entireSpace.getCenterX(),entireSpace.getMinY(),
-												entireSpace.width/2,entireSpace.height/2));
+		quads.put("NW",new Rectangle2D.Double(rect.getCenterX(),rect.getMinY(),
+											rect.width/2,rect.height/2));
 		//SW
-		quads.put("SW",new Rectangle2D.Double(entireSpace.getMinX(),entireSpace.getCenterY(),
-												entireSpace.width/2,entireSpace.height/2));
+		quads.put("SE",new Rectangle2D.Double(rect.getMinX(),rect.getCenterY(),
+											rect.width/2,rect.height/2));
 		//SE		
-		quads.put("SE",new Rectangle2D.Double(entireSpace.getCenterX(),entireSpace.getCenterY(),
-												entireSpace.width/2,entireSpace.height/2));
+		quads.put("NE",new Rectangle2D.Double(rect.getCenterX(),rect.getCenterY(),
+											rect.width/2,rect.height/2));
 		
+		System.out.println(quads.get("SW").toString());
+		System.out.println(quads.get("NW").toString());
+		System.out.println(quads.get("SE").toString());
+		System.out.println(quads.get("NE").toString());
 		return quads;
 	}
 	
