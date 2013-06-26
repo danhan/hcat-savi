@@ -174,10 +174,6 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		quads.put("NE",new Rectangle2D.Double(rect.getCenterX(),rect.getCenterY(),
 											rect.width/2,rect.height/2));
 		
-		System.out.println(quads.get("SW").toString());
-		System.out.println(quads.get("NW").toString());
-		System.out.println(quads.get("SE").toString());
-		System.out.println(quads.get("NE").toString());
 		return quads;
 	}
 	
