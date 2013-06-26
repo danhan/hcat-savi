@@ -5,3 +5,18 @@ libraries should be copied to HBase/lib
 hcat-analytics.jar
 hschema-hd.jar
 org.json.jar
+
+
+Schema is very important because the data will be queried based on the schema
+especially for spatial schema.
+
+This schema works only in the engine, and there is no need to put it into HBase server side.
+For the spatial data, we design the HGrid schema like this:
+	"schema":{		
+		"space": "-138.95,41.77,60,19",		
+		"indexing":"2",
+		"encoding":"1",
+		"tile":"-1",
+		"subspace":"0.01"
+	},
+0.01 is based on the density of the data points. keep each columns having around 1000 points.  
