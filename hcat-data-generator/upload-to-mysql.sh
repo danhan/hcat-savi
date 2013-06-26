@@ -9,6 +9,7 @@ hca
 patient
 patientaddress
 service
+appointment
 "
 
 echo "********************Upload the load**********************************************"
