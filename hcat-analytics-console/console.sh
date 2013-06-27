@@ -22,7 +22,7 @@ function send_request(){
     printf "*************************************************\n"
 }
 
-USAGE="<the table schema desc file, e.g. xx.schema> <hbase configuration file or directory>"
+USAGE="<1: range query; 2: windows query, 3: statistics(sum) for appointment; 4: statistics(percentage): servicerecord; 5: statistics(percentage): media>"
 if [ -z "$1" ] && [ -z "$2" ]; then
     echo "$USAGE"
 fi
@@ -47,4 +47,8 @@ service_record="{ 'numerator': 'service', 'object': 'record', 'condition':'', 's
 stat_pct_url=$url"/statistics/pct"
 send_request "$service_record" $stat_pct_url
 
+elif [ "$1" == "5" ]; then
+service_record="{ 'numerator': 'media', 'object': 'record', 'condition':'', 'start-time':'$query_start_time', 'end-time':'$query_end_time', 'unit':'m', 'regions':'$query_regions'}"
+stat_pct_url=$url"/statistics/pct"
+send_request "$service_record" $stat_pct_url
 fi
