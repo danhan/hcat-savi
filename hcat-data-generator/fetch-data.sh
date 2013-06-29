@@ -24,7 +24,7 @@ printf "\n ======Fetch the small data first=======\n"
 for f in $folders;do
     file=$datasource/$f
     printf "\n[folder][start] $file"
-    printf "scp -i $keypair -r $file  $dest_dir \n"
+    printf "\nscp -i $keypair -r $file  $dest_dir \n"
     scp  -r $file  $dest_dir
     printf "\n[folder][end] $file\n"
 done
@@ -49,6 +49,7 @@ printf "============fetch the large data ============\n"
 for f in $months; do
     file=$datasource/$f
     printf "\n[folder][start] $file"
+    printf "\n scp -r $file $dest_dir \n"
     scp -r $file $dest_dir
     printf "\n[folder][end] $file\n"
 done
