@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -80,7 +79,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				FilterList fList = getWindowsScanFilterList(rowRange, region);// getFilter list
 				final Scan scan = hbase.generateScan(null, fList,
 						new String[] { this.tableSchema.getFamilyName() }, null,-1);
-				
+				final Rectangle2D.Double regionArea = this.areas.get(region);
 				LOG.info("scan: "+scan.toString());
 				//send the caller 
 				hbase.getHTable().coprocessorExec(HCATProtocol.class,
@@ -89,7 +88,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 
 					public RStatResult call(HCATProtocol instance)
 							throws IOException {
-						final HashMap<String,Rectangle2D.Double> scopes = getQuads();
+						final HashMap<String,Rectangle2D.Double> scopes = getQuads(regionArea);
 						return instance.doWindowQuery(scan, region,scopes);
 					};
 				}, callback);
@@ -160,21 +159,20 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		return fList;
 	}
 	
-	protected HashMap<String,Rectangle2D.Double> getQuads(){
+	protected HashMap<String,Rectangle2D.Double> getQuads(Rectangle2D.Double rect){
 		HashMap<String,Rectangle2D.Double> quads = new HashMap<String,Rectangle2D.Double>();
-		//NW
-		Rectangle2D.Double entireSpace = this.tableSchema.getEntireSpace();
-		quads.put("NW",new Rectangle2D.Double(entireSpace.getMinX(),entireSpace.getMinY(),
-												entireSpace.width/2,entireSpace.height/2));
+		//NW		
+		quads.put("SW",new Rectangle2D.Double(rect.getMinX(),rect.getMinY(),
+											rect.width/2,rect.height/2));
 		//NE
-		quads.put("NE",new Rectangle2D.Double(entireSpace.getCenterX(),entireSpace.getMinY(),
-												entireSpace.width/2,entireSpace.height/2));
+		quads.put("NW",new Rectangle2D.Double(rect.getCenterX(),rect.getMinY(),
+											rect.width/2,rect.height/2));
 		//SW
-		quads.put("SW",new Rectangle2D.Double(entireSpace.getMinX(),entireSpace.getCenterY(),
-												entireSpace.width/2,entireSpace.height/2));
+		quads.put("SE",new Rectangle2D.Double(rect.getMinX(),rect.getCenterY(),
+											rect.width/2,rect.height/2));
 		//SE		
-		quads.put("SE",new Rectangle2D.Double(entireSpace.getCenterX(),entireSpace.getCenterY(),
-												entireSpace.width/2,entireSpace.height/2));
+		quads.put("NE",new Rectangle2D.Double(rect.getCenterX(),rect.getCenterY(),
+											rect.width/2,rect.height/2));
 		
 		return quads;
 	}
@@ -231,8 +229,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		RangeQueryCallBack callback = new RangeQueryCallBack(this);
 		
 		// compose the HBase RPC call
-		final double x = Math.abs(this.latitude);
-		final double y = Math.abs(this.longitude);
+		final double x = this.latitude;//Math.abs(this.latitude);
+		final double y = this.longitude;//Math.abs(this.longitude);
 		Hashtable<String, XBox[]> matched = this.hybrid.match(x,y, this.radius);	
 
 		// send separate queries for each city
@@ -271,26 +269,28 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		long exe_time = cop_end - s_time;
 					
 		LOG.info("the returned value: "+callback.regions.toString()+";exe_time=>"+exe_time);
+		
 		for(String key: callback.regions.keySet()){
 			RStatResult result = callback.regions.get(key);
-			HashMap<String,Double> one_region = result.getDistances();
+			HashMap<String,Double> one_region = result.getDistances();			
 			JSONObject regionJSON = new JSONObject();
 			try {
 				regionJSON.put("region", key);
-				JSONArray values = new JSONArray();
-				for(Entry<String,Double> entry: one_region.entrySet()){
-					values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
-				}
-				regionJSON.put("values", values);
-				
+				JSONArray values = new JSONArray();				
+				if(null != one_region){
+					for(Entry<String,Double> entry: one_region.entrySet()){
+						values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
+					}					
+				}				
+				regionJSON.put("values", values);				
 				// add the statistics of request
 				JSONObject reqStatJSON = this.buildRequestStat(result);
 				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
-				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);	
-				
+				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);					
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}	
+			
 			this.response.put(regionJSON);
 		}
 		
@@ -311,6 +311,8 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 	protected FilterList getRangeScanFilterList(String region,Hashtable<String, XBox[]> matched) {
 		FilterList fList = new FilterList();
 		try{
+			if(matched == null)
+				LOG.error("there is no matched range for the query");
 			Filter columnFilter = hbase.getColumnRangeFilter((matched.get("")[0].getColumn()+"-").getBytes(),true,					
 					(XCommon.IncFormatString(matched.get("")[1].getColumn())+"-").getBytes(),true);	
 			fList.addFilter(columnFilter);
@@ -341,7 +343,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 		public void update(byte[] region, byte[] row, RStatResult result) {	
 			LOG.info("RangeQueryCallBack: update");			
 			String patientRegion = result.getRegion();
-			HashMap<String,Double> distances = result.getDistances();
+			HashMap<String,Double> distances = result.getDistances();			
 			if(this.regions.containsKey(patientRegion)){
 				HashMap<String,Double> temp = this.regions.get(patientRegion).getDistances();
 				temp.putAll(distances);				

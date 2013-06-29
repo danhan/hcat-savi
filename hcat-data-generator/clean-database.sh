@@ -3,7 +3,7 @@
 username=root
 password=zhu88jie
 
-"delete all data from all tables"
+#"delete all data from all tables"
 tablenames="
 Service
 Appointment
@@ -16,10 +16,10 @@ HCA
 "
 export tablenames
 
-for t in tablenames
+for t in $tablenames
 do
 echo "delete from $t"
-mysql -u$username -p$password hcaschedule -e "delete from $tablename"
+mysql -u$username -p$password hcaschedule -e "delete from $t"
 done
 
 echo "Finished"

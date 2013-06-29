@@ -1,0 +1,3 @@
+install Python, because the output is formatted with python -mjson.tool
+
+use nodejs to trigger http request

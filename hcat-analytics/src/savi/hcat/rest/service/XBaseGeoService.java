@@ -1,6 +1,10 @@
 package savi.hcat.rest.service;
 
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +23,7 @@ public class XBaseGeoService extends XBaseService{
 	protected double longitude = 0.0;
 	protected double radius = 0.0;
 	protected int k = 0;
-	protected ArrayList<String> areas = new ArrayList<String>();
+	protected HashMap<String,Rectangle2D.Double> areas = new HashMap<String,Rectangle2D.Double>();
 	
 	protected XHybridIndex hybrid = null;
 	
@@ -43,15 +47,15 @@ public class XBaseGeoService extends XBaseService{
 				// parameters for range
 				if(reqObj.has(XConstants.POST_KEY_DISTANCE)){
 					String val = reqObj.getString(XConstants.POST_KEY_DISTANCE);
-					radius = (null!=val)?Double.valueOf(val):-1;
+					radius = (null!=val)?java.lang.Double.valueOf(val):-1;
 				}
 				//parameters for range
 				if(reqObj.has(XConstants.POST_KEY_LOCATION)){
 					String val = reqObj.getString(XConstants.POST_KEY_LOCATION);
 					if(null != val){
 						String items[] = val.split(",");
-						latitude = (null != items[0])? Double.valueOf(items[0]) : -1;
-						longitude =  (null != items[1])? Double.valueOf(items[1]) : -1;
+						latitude = (null != items[0])? java.lang.Double.valueOf(items[0]) : -1;
+						longitude =  (null != items[1])? java.lang.Double.valueOf(items[1]) : -1;
 					}
 				}
 				// for knn
@@ -59,12 +63,23 @@ public class XBaseGeoService extends XBaseService{
 					String val = reqObj.getString(XConstants.POST_KEY_K);
 					k = (null!=val)?Integer.valueOf(val):-1;
 				}
-				// for windows query
+				// for windows query [x-min,y-min,width,height]
 				if(reqObj.has(XConstants.POST_KEY_AREAS)){
-					JSONArray val = reqObj.getJSONArray(XConstants.POST_KEY_AREAS);
-					if(null != val){						
-						for(int i=0;i<val.length();i++){
-							this.areas.add(val.getString(i));
+					JSONObject val = reqObj.getJSONObject(XConstants.POST_KEY_AREAS);
+					if(null != val){
+						Iterator<String> iter = val.keys();
+						while(iter.hasNext()){
+							String key = iter.next();
+							String value = val.getString(key);							
+							if(null!=value){
+								String[] items = value.split(",");
+								Rectangle2D.Double rect = new Rectangle2D.Double(
+														java.lang.Double.valueOf(items[0]),
+														java.lang.Double.valueOf(items[1]),
+														java.lang.Double.valueOf(items[2]),
+														java.lang.Double.valueOf(items[3]));
+								this.areas.put(key, rect);
+							}	
 						}
 					}
 				}				

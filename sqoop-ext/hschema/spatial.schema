@@ -1,9 +1,0 @@
-{
-      "schema":{
-                "space":"0,0,100,100",
-                "indexing":"2",
-                "encoding":"1",
-                "tile":"-1",
-                "subspace":"0.01"
-        }
-}

@@ -3,7 +3,7 @@
 	{
 	  "name":"d",
 	  "compression":"GZ",
-	  "versions":"10",
+	  "versions":"",
 	  "min_versions":"1",
 	  "blocksize":"",
 	  "in_memory":"",
@@ -13,12 +13,12 @@
 	}
 	],
 	
-	"schema":{
-		"space":"0,0,1000,1000",
+	"schema":{		
+		"space": "-138.95,41.77,60,19",		
 		"indexing":"2",
 		"encoding":"1",
 		"tile":"-1",
 		"subspace":"0.01"
 	},
-	"num_of_points":10000000,
+	"num_of_points":1000000,
 }

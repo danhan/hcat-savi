@@ -12,3 +12,10 @@ sqoop-ext.jar
 zookeeper-3.4.3.jar
 
 3 Check the xxx.option to make sure the region corresponds to the region name
+
+4 The schema file here is to table schema which will be created in Hbase. It is just about the table attributes.
+So there is no need for the spatial/time-series schema.  
+
+
+5 TODO List
+* Dynamically create the subworkflow for each edge
