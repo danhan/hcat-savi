@@ -28,7 +28,8 @@ function upload_one_folder(){
         if [ "$(ls -A $dir)" ]; then
             printf "\n[Folder]: $dir \n"
             for csv in "$dir"/*; do
-               printf "\n[File]:[Start] $csv \n"
+	      current_time=$(date "+%Y.%m.%d-%H.%M.%S")
+               printf "\n[File][Start][$current_time] $csv \n"
                # mysql
 	       mysql --local-infile -u$username -p$password hcaschedule -e "LOAD DATA LOCAL INFILE '"$csv"' INTO TABLE $2 FIELDS TERMINATED BY ','"
                printf "[File]:[end] $csv \n"
@@ -79,7 +80,8 @@ for f in $months;do
     if [ "$(ls -A $dir)" ]; then
 	printf "\n[Folder]: $dir \n"
         for csv in "$dir"/*; do
-       	    printf "\n[File]:[Start] $csv \n"
+	   current_time=$(date "+%Y.%m.%d-%H.%M.%S")
+       	    printf "\n[File]:[Start][$current_time] $csv \n"
             # mysql
 	    if echo $csv | grep "media" ; then
 		mysql --local-infile -u$username -p$password hcaschedule -e "LOAD DATA LOCAL INFILE '"$csv"' INTO TABLE "MediaMessage" FIELDS TERMINATED BY ','"
