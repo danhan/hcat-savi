@@ -15,6 +15,7 @@ patient
 patientaddress
 service
 appointment
+schedule
 "
 echo "*************************************************"
 echo "** Fetch data from $datasource **"
