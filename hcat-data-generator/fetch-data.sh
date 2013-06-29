@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # whether you want to fetch data from nebula cloud, or just load them remotely
-dest_dir=/home/ubuntu/Downloads/
+# the instance internal ip: 10.0.0.38
+dest_dir=/home/ubuntu/test-data/
 datasource=ubuntu@136.159.94.246:/home/ubuntu/hcat-data
 keypair=mykeypair.pem
 
@@ -22,6 +23,7 @@ printf "\n ======Fetch the small data first=======\n"
 for f in $folders;do
     file=$datasource/$f
     printf "\n[folder][start] $file"
+    printf "scp -i $keypair -r $file  $dest_dir \n"
     scp -i $keypair -r $file  $dest_dir
     printf "\n[folder][end] $file\n"
 done
