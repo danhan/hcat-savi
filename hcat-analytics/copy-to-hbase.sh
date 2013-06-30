@@ -1,5 +1,6 @@
 #!/bin/bash
 
 # There are someting ERROR
-rm /usr/local/hbase/lib/hcat-analytics.jar
-cp ./bin/hcat-analytics.jar /urs/local/hbase/lib
+sudo rm /usr/local/hbase/lib/hcat-analytics.jar
+sudo cp ./bin/hcat-analytics.jar /usr/local/hbase/lib
+ls -l /usr/local/hbase/lib/hcat-analytics.jar

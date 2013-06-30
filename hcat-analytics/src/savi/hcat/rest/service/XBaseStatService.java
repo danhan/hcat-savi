@@ -38,8 +38,6 @@ public class XBaseStatService extends XBaseService{
 	public static XBaseStatService getInstance(String objName){		
 		if(objName.equals(XConstants.POST_VALUE_APPOINTMENT)){				
 			return new XStatApmtService(); 
-		}else if(objName.equals(XConstants.POST_VALUE_SERVICE)){						
-			return new XStatPatientService();
 		}else if(objName.equals(XConstants.POST_VALUE_RECORD)){
 			return new XStatRecordService();
 		}

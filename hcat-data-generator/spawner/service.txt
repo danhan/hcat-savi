@@ -1,0 +1,5 @@
+Service$PersistentID,Numbers,Sequence,1|0|1
+Service$description,Text,Fixed Number of Words,40|40
+Service$duration,Numbers,Integer,10|30
+Service$name,Text,Fixed-length String,15|15|-1|0|0|0
+Service$voided,Set,From Fixed List,0|1

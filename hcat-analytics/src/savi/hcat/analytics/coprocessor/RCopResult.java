@@ -1,47 +1,18 @@
 package savi.hcat.analytics.coprocessor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class RCopResult implements Serializable{	
 	
 	private static final long serialVersionUID = 1L;
 	
 	long start = 0;
-	long end = 0;
-	List<String> res = null;
+	long end = 0;	
 	int rows = 0; // the number of row scanned
 	int cells = 0;
 	String parameter = null;
-	int kvLength = 0;
-	HashMap<String,Double> distances = null;	
+	int kvLength = 0;	
 	
-	public RCopResult(){
-		this.res = new ArrayList<String>();			
-	}
-
-	/**
-	 * This is used in KNN query
-	 * @param dist
-	 * @param id
-	 */
-	public void addDistance(double dist,String id){
-		if(this.distances == null)
-			this.distances = new HashMap<String,Double>();		
-		this.distances.put(id,dist);
-	}
-	
-
-
-	public HashMap<String, Double> getDistances() {
-		return distances;
-	}
-
-	public List<String> getRes() {
-		return res;
-	}
 
 	public long getStart() {
 		return start;
@@ -91,7 +62,5 @@ public class RCopResult implements Serializable{
 		this.kvLength = kvLength;
 	}
 
-	
-	
 
 }

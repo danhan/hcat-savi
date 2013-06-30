@@ -2,6 +2,7 @@ package savi.hcat.rest.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,6 +10,7 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import savi.hcat.analytics.coprocessor.RCopResult;
 import savi.hcat.analytics.coprocessor.RStatResult;
 import savi.hcat.common.util.XConstants;
 
@@ -88,17 +90,26 @@ public class XBaseService {
 		return false;
 	}
 	
-	public JSONObject buildRequestStat(RStatResult result){
+	private JSONObject buildOneCopStat(RCopResult one_cop){
 		JSONObject reqStatJSON = new JSONObject();
 		try{
-			reqStatJSON.put(XConstants.REQUEST_STAT_COP_EXE_TIME, result.getEnd()-result.getStart());
-			reqStatJSON.put(XConstants.REQUEST_STAT_CELLS, result.getCells());
-			reqStatJSON.put(XConstants.REQUEST_STAT_ROWS, result.getRows());
-			reqStatJSON.put(XConstants.REQUEST_CELL_SIZE, result.getKvLength());			
+			reqStatJSON.put(XConstants.REQUEST_STAT_COP_EXE_TIME, one_cop.getEnd()-one_cop.getStart());
+			reqStatJSON.put(XConstants.REQUEST_STAT_CELLS, one_cop.getCells());
+			reqStatJSON.put(XConstants.REQUEST_STAT_ROWS, one_cop.getRows());
+			reqStatJSON.put(XConstants.REQUEST_CELL_SIZE, one_cop.getKvLength());			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return reqStatJSON;		
+	}
+	
+	public JSONArray buildCopStat(List<RCopResult> cops){
+		JSONArray cop_array = new JSONArray();
+		for(RCopResult one_cop: cops){
+			JSONObject oneJSON = buildOneCopStat(one_cop);
+			cop_array.put(oneJSON);
+		}
+		return cop_array;
 	}
 	
 	

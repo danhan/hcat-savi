@@ -50,7 +50,7 @@ public class XConstants {
 	public static final String QUERY_TYPE_KNN="knn";
 	
 	// query statistics 
-	public static final String REQUEST_STAT="request_stat";
+	public static final String REQUEST_COPS_STAT="cops_stat";
 	public static final String REQUEST_STAT_COP_EXE_TIME="cop_time";
 	public static final String REQUEST_STAT_ROWS="num_of_rows";
 	public static final String REQUEST_STAT_CELLS="num_of_cells";

@@ -1,0 +1,7 @@
+Appointment$PersistentID,Numbers,Sequence,1|0|1
+Appointment$block,Set,From Fixed List,0|1|2|3
+Appointment$startMinute,Numbers,Integer,5|20
+Appointment$weekDay,Set,From Fixed List,0|1|2|3|4|5|6
+R_Patient,Numbers,Integer,1|100000
+R_Schedule,Numbers,Integer,1|156
+R_HCA,Numbers,Integer,1|22000

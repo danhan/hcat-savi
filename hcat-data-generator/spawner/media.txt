@@ -1,0 +1,11 @@
+MediaMessage$PersistentID,Numbers,Sequence,1|0|1
+MediaMessage$created,Numbers,Integer,0|1000000000
+MediaMessage$mimetype,Text,Fixed-length String,10|10|-1|0|0|0
+MediaMessage$note,Text,Fixed Number of Words,40|40
+MediaMessage$timestamp,Time,Date/Time,40179.3333333333|40209.7083333333|2|0|yyyy-mm-dd|hh:nn:ss
+MediaMessage$type,Set,From Fixed List,1|2
+MediaMessage$urgent,Set,From Fixed List,0|1
+MediaMessage$uri,Text,Fixed-length String,40|40|-1|-1|0|0
+MediaMessage$voided,Set,From Fixed List,0|1
+R_Appointment,Numbers,Integer,1|21120000
+R_HCA,Numbers,Integer,1|22000

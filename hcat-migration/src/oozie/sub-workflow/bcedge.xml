@@ -4,11 +4,9 @@
       <path start="hca-move"/>
       <path start="patient-spatial-move"/>     
       <path start="service-move"/>   
-  	  <path start="appointment-move"/>
-      <!--      
+      <path start="appointment-move"/>
       <path start="servicerecord-move"/>
       <path start="media-move"/>
-      -->
    </fork>
    <join name="joining-move" to="bc-subwf-end"/>
 

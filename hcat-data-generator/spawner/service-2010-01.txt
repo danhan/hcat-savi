@@ -1,0 +1,5 @@
+ServiceRecord$PersistentID,Numbers,Sequence,1|0|1
+ServiceRecord$status,Set,From Fixed List,1|2|3
+R_Service,Numbers,Integer,1|100
+R_Appointment,Numbers,Integer,1|2112000
+ServiceRecord$timestamp,Time,Date/Time,40179.3333333333|40209.7083333333|1|0|yyyy-mm-dd|hh:nn:ss
