@@ -1,3 +1,5 @@
 install Python, because the output is formatted with python -mjson.tool
 
-use nodejs to trigger http request
+console.sh is the only one you need
+
+#use nodejs to trigger http request
