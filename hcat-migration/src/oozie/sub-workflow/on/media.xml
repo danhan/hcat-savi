@@ -1,4 +1,4 @@
-<workflow-app name="ab-media-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="on-media-move" xmlns="uri:oozie:workflow:0.2">
    <start to="media-sqoop"/> 
 
     <action name="media-sqoop">

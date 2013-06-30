@@ -27,4 +27,4 @@ record
 /user/${wf:user()}/oozie/output/on/servicerecord
 
 -m
-4
+2
