@@ -1,0 +1,13 @@
+HCA$PersistentID,Numbers,Sequence,1|0|1
+HCA$calendarID,Numbers,Integer,1|52
+HCA$cellNumber,Text,Fixed-length String,8|8|0|-1|0|0
+HCA$emailAddress,Text,Fixed-length String,25|25|-1|-1|0|0
+HCA$firstName,Text,Fixed-length String,8|8|-1|0|0|0
+HCA$hasVehicle,Set,From Fixed List,0|1
+HCA$homeNumber,Text,Fixed-length String,8|8|0|-1|0|0
+HCA$lastName,Text,Fixed-length String,8|8|-1|0|0|0
+HCA$lat,Numbers,Real,-180|180|4
+HCA$lon,Numbers,Real,-180|180|4
+HCA$password,Text,Fixed-length String,8|8|-1|-1|0|0
+HCA$userName,Text,Fixed-length String,8|8|-1|-1|0|0
+HCA$voided,Set,From Fixed List,0|1
