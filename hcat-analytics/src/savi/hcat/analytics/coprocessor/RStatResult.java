@@ -1,7 +1,11 @@
 package savi.hcat.analytics.coprocessor;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,18 +13,51 @@ import org.apache.commons.logging.LogFactory;
 import savi.hcat.common.util.XConstants;
 import savi.hcat.common.util.XTimestamp;
 
-public class RStatResult extends RCopResult{
+public class RStatResult implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private static Log LOG = LogFactory.getLog(RStatResult.class);
 	
-	Hashtable<String,Integer> hashUnit = null; // per month, weekly, daily
+	RCopResult copStat = new RCopResult();// to store the statistics of coprocessor running time
 	
 	String region = null;
 	String unit = null;
 	
+	// To store the result
+	Hashtable<String,Integer> hashUnit = null; // per month, weekly, daily
 	Hashtable<String, Hashtable<String,Integer>> hashHash = null; // service/media:{status/type=>number}	
 	Hashtable<String, Hashtable<String, int[]>> hashUnitArray = null; // month, service/media((status/type=>number)
+	// the previous format to store the result
+	List<String> res = null;
+	HashMap<String,Double> distances = null;
+	
+	
+	
+	public RCopResult getCopStat() {
+		return copStat;
+	}
+
+	public HashMap<String, Double> getDistances() {
+		return distances;
+	}
+
+	public List<String> getRes() {
+		if(null == this.res)
+			this.res = new ArrayList<String>();
+		return res;
+	}
+	
+	/**
+	 * This is used in KNN query
+	 * @param dist
+	 * @param id
+	 */
+	public void addDistance(double dist,String id){
+		if(this.distances == null)
+			this.distances = new HashMap<String,Double>();		
+		this.distances.put(id,dist);
+	}
+	
 	
 	
 	public RStatResult initHashUnit(){
@@ -100,7 +137,7 @@ public class RStatResult extends RCopResult{
 		}
 	}	
 	/**
-	 * eg. unitKey=> month, typeKey => s1, index => status(0,1,2,3)
+	 * eg. unitKey=> month, typeKey => s1, itemIndex => status(0,1,2,3) or media ("m2":[2],"m3":[1],"m0":[1])
 	 * @param unitKey
 	 * @param hashKey
 	 * @param index

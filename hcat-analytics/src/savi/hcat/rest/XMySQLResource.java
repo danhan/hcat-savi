@@ -17,7 +17,6 @@ import savi.hcat.rest.service.XBaseGeoService;
 import savi.hcat.rest.service.XBaseStatService;
 import savi.hcat.rest.service.XGeoPatientService;
 import savi.hcat.rest.service.XStatApmtService;
-import savi.hcat.rest.service.XStatPatientService;
 import savi.hcat.rest.service.XStatRecordService;
 import savi.hcat.rest.service.mysql.XMySQLService;
 

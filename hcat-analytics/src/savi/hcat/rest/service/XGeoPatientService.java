@@ -3,8 +3,10 @@ package savi.hcat.rest.service;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
@@ -18,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import savi.hcat.analytics.coprocessor.HCATProtocol;
+import savi.hcat.analytics.coprocessor.RCopResult;
 import savi.hcat.analytics.coprocessor.RStatResult;
 import savi.hcat.common.util.XConstants;
 
@@ -117,11 +120,14 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 					values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
 				}
 				regionJSON.put("values", values);
+				// get all coprocessors of this region request
+				List<RCopResult> coprocessors = callback.coprocesses.get(key);
 				// add the statistics of request
-				JSONObject reqStatJSON = this.buildRequestStat(result);
+				JSONObject reqStatJSON = new JSONObject();
+				JSONArray copStatJSON = this.buildCopStat(coprocessors);
 				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
-				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);				
-				
+				regionJSON.put(XConstants.REQUEST_COPS_STAT, copStatJSON);
+
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -188,6 +194,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 	 */
 	class WindowsQueryCallBack implements Batch.Callback<RStatResult> {
 		public HashMap<String, RStatResult> regions = new HashMap<String,RStatResult>();
+		public Hashtable<String, List<RCopResult>> coprocesses = new Hashtable<String,List<RCopResult>>();
 		int count = 0; // the number of coprocessor
 		XGeoPatientService service = null;
 
@@ -205,9 +212,14 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				Hashtable<String,Integer> temp = this.regions.get(patientRegion).getHashUnit();
 				for(String key:temp.keySet()){
 					temp.put(key, temp.get(key)+hashUnit.get(key));
-				}				
+				}
+				List<RCopResult> cops = coprocesses.get(patientRegion);
+				cops.add(result.getCopStat());	
 			}else{
 				this.regions.put(patientRegion, result);
+				List<RCopResult> cops = new ArrayList<RCopResult>();
+				cops.add(result.getCopStat());
+				this.coprocesses.put(patientRegion, cops);
 			}			
 		}
 	}	
@@ -282,11 +294,15 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 						values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
 					}					
 				}				
-				regionJSON.put("values", values);				
+				regionJSON.put("values", values);								
+				// get all coprocessors of this region request
+				List<RCopResult> coprocessors = callback.coprocesses.get(key);
 				// add the statistics of request
-				JSONObject reqStatJSON = this.buildRequestStat(result);
+				JSONObject reqStatJSON = new JSONObject();
+				JSONArray copStatJSON = this.buildCopStat(coprocessors);
 				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
-				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);					
+				regionJSON.put(XConstants.REQUEST_COPS_STAT, copStatJSON);				
+				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}	
@@ -332,6 +348,7 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 	
 	class RangeQueryCallBack implements Batch.Callback<RStatResult> {
 		public HashMap<String, RStatResult> regions = new HashMap<String,RStatResult>();
+		public Hashtable<String, List<RCopResult>> coprocesses = new Hashtable<String,List<RCopResult>>();
 		int count = 0; // the number of coprocessor
 		XGeoPatientService service = null;
 
@@ -346,10 +363,15 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 			HashMap<String,Double> distances = result.getDistances();			
 			if(this.regions.containsKey(patientRegion)){
 				HashMap<String,Double> temp = this.regions.get(patientRegion).getDistances();
-				temp.putAll(distances);				
+				temp.putAll(distances);
+				List<RCopResult> cops = coprocesses.get(patientRegion);
+				cops.add(result.getCopStat());	
 			}else{
 				this.regions.put(patientRegion, result);
-			}			
+				List<RCopResult> cops = new ArrayList<RCopResult>();
+				cops.add(result.getCopStat());
+				this.coprocesses.put(patientRegion, cops);
+			}						
 		}
 	}
 	

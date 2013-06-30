@@ -74,11 +74,11 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 
 			long eTime = System.currentTimeMillis();
 
-			results.setStart(sTime);
-			results.setEnd(eTime);
-			results.setRows(row_num);
-			results.setCells(cell_num);
-			results.setKvLength(kvLength);
+			results.getCopStat().setStart(sTime);
+			results.getCopStat().setEnd(eTime);
+			results.getCopStat().setRows(row_num);
+			results.getCopStat().setCells(cell_num);
+			results.getCopStat().setKvLength(kvLength);
 			//LOG.info("Hash Unit: "+results.getHashUnit().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getHashUnit().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
@@ -135,10 +135,24 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 						JSONObject desc = new JSONObject(tokener);						
 						if(numerator.equals(XConstants.POST_VALUE_SERVICE)){
 							int status = desc.getInt("status");	
-							//LOG.info("unitKey=>"+unitKey+";status=>"+status);							
-							unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,status,4);	
-						}else if(numerator.equals(XConstants.POST_VALUE_MEDIA)){
-							unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,0,1);
+							//LOG.info("unitKey=>"+unitKey+";status=>"+status);	
+							if(null!=condition && !condition.isEmpty()){// the defined status
+								int cond = Integer.valueOf(condition);
+								if (status == cond){ // qualifer is the service name
+									unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,0,1);
+								}
+							}else{  // all status of the services
+								unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,status,4);	
+							}
+								
+						}else if(numerator.equals(XConstants.POST_VALUE_MEDIA)){  // qualifer is the media type: m1/m2/m3/m4
+							if(null != condition && !condition.isEmpty()){  // the defined media type: 1/2/3/4
+								if(qualifer.equals("m"+condition)){
+									unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,0,1);
+								}
+							}else{ // all media types
+								unitHashArrayResult.addOnUnitHashArray(unitKey,qualifer,0,1);	
+							}							
 						}										
 					}
 				}				
@@ -148,11 +162,11 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 
 			long eTime = System.currentTimeMillis();
 
-			unitHashArrayResult.setStart(sTime);
-			unitHashArrayResult.setEnd(eTime);
-			unitHashArrayResult.setRows(row_num);
-			unitHashArrayResult.setCells(cell_num);
-			unitHashArrayResult.setKvLength(kvLength);
+			unitHashArrayResult.getCopStat().setStart(sTime);
+			unitHashArrayResult.getCopStat().setEnd(eTime);
+			unitHashArrayResult.getCopStat().setRows(row_num);
+			unitHashArrayResult.getCopStat().setCells(cell_num);
+			unitHashArrayResult.getCopStat().setKvLength(kvLength);
 			//LOG.info("Hash Unit: "+unitHashArrayResult.getHashUnitArray().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+unitHashArrayResult.getHashUnitArray().size()+
 					";cell_num=>"+cell_num+";row_num=>"+row_num);	
@@ -220,11 +234,11 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 
 			long eTime = System.currentTimeMillis();
 
-			results.setStart(sTime);
-			results.setEnd(eTime);
-			results.setRows(row_num);
-			results.setCells(cell_num);
-			results.setKvLength(kvLength);
+			results.getCopStat().setStart(sTime);
+			results.getCopStat().setEnd(eTime);
+			results.getCopStat().setRows(row_num);
+			results.getCopStat().setCells(cell_num);
+			results.getCopStat().setKvLength(kvLength);
 			//LOG.info("Hash Unit: "+results.getHashUnit().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getHashUnit().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
@@ -285,11 +299,11 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 
 			long eTime = System.currentTimeMillis();
 
-			results.setStart(sTime);
-			results.setEnd(eTime);
-			results.setRows(row_num);
-			results.setCells(cell_num);
-			results.setKvLength(kvLength);
+			results.getCopStat().setStart(sTime);
+			results.getCopStat().setEnd(eTime);
+			results.getCopStat().setRows(row_num);
+			results.getCopStat().setCells(cell_num);
+			results.getCopStat().setKvLength(kvLength);
 			LOG.info("points in the radius: "+results.getRes().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getRes().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 

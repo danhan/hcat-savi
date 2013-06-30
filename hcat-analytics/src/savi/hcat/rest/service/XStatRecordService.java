@@ -1,7 +1,9 @@
 package savi.hcat.rest.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import savi.hcat.analytics.coprocessor.HCATProtocol;
+import savi.hcat.analytics.coprocessor.RCopResult;
 import savi.hcat.analytics.coprocessor.RStatResult;
 import savi.hcat.common.util.XConstants;
 
@@ -50,13 +53,13 @@ public class XStatRecordService  extends XBaseStatService{
 	{
  “numerator”: “service”
  “object”:  “appointment”
-  "condition":"unfinished",
+  "condition":"0/1/2/3",incomplete, complete, refused,prevented
   "start-time":"2012-01-01 01:00:00",
   "end-time":"2012-01-01 01:00:00",
   "unit":"m",
   "regions":"bc,ab"
-}
-	 */
+}	 */
+
 		
 	public JSONArray getPercentage(JSONObject request){		
 		LOG.info("in getSummary: "+request.toString());
@@ -73,9 +76,7 @@ public class XStatRecordService  extends XBaseStatService{
 		String[] rowRange = getScanRowRange();// getRowRange		
 
 		// send separate queries for each city
-		for(final String region: regions){			
-		//	String start = region+XConstants.ROW_KEY_DELIMETER+rowRange[0];
-		//	String end = region+XConstants.ROW_KEY_DELIMETER+rowRange[1];
+		for(final String region: regions){	
 			try {
 				FilterList fList = getScanFilterList(rowRange,region);// getFilter list
 				// create the scan 
@@ -125,11 +126,18 @@ public class XStatRecordService  extends XBaseStatService{
 					values.put(unitJSON);
 				}				
 				regionJSON.put("values", values);
-				regionJSON.put("total", result.getRows()); // total number of appointments because one row corresponds to one appointment
+				// get all coprocessors of this region request
+				List<RCopResult> coprocessors = callback.coprocesses.get(key);
+				int total = 0;
+				for(RCopResult one_cop: coprocessors){					
+					total+= one_cop.getRows();					
+				}
+				regionJSON.put("total", total); // total number of appointments because one row corresponds to one appointment
 				// add the statistics of request
-				JSONObject reqStatJSON = this.buildRequestStat(result);
+				JSONObject reqStatJSON = new JSONObject();
+				JSONArray copStatJSON = this.buildCopStat(coprocessors);
 				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
-				regionJSON.put(XConstants.REQUEST_STAT, reqStatJSON);	
+				regionJSON.put(XConstants.REQUEST_COPS_STAT, copStatJSON);	
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -144,6 +152,7 @@ public class XStatRecordService  extends XBaseStatService{
 	class SummaryCallBack implements Batch.Callback<RStatResult> {
 		public Hashtable<String, RStatResult> regions = 
 						new Hashtable<String, RStatResult>();
+		public Hashtable<String, List<RCopResult>> coprocesses = new Hashtable<String,List<RCopResult>>();
 		int count = 0; // the number of coprocessor
 		XBaseStatService service = null;
 
@@ -159,9 +168,13 @@ public class XStatRecordService  extends XBaseStatService{
 			if(this.regions.containsKey(regionPatient)){
 				RStatResult one_stat = this.regions.get(regionPatient);
 				one_stat.mergeUnitHashArray(result.getHashUnitArray());
-				
+				List<RCopResult> cops = coprocesses.get(regionPatient);
+				cops.add(result.getCopStat());				
 			}else{
 				this.regions.put(regionPatient, result);
+				List<RCopResult> cops = new ArrayList<RCopResult>();
+				cops.add(result.getCopStat());
+				this.coprocesses.put(regionPatient, cops);
 			}			
 		}
 	}

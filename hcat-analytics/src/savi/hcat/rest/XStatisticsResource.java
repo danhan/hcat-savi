@@ -14,7 +14,6 @@ import org.restlet.resource.Post;
 
 import savi.hcat.common.util.XConstants;
 import savi.hcat.rest.service.XStatApmtService;
-import savi.hcat.rest.service.XStatPatientService;
 import savi.hcat.rest.service.XBaseStatService;
 import savi.hcat.rest.service.XStatRecordService;
 
@@ -62,17 +61,6 @@ public class XStatisticsResource extends XBaseResource{
 					if(kpi.equals("pct")){
 						result = record_service.getPercentage(payload);
 					}
-				}
-				
-				else if(object.equals(XConstants.POST_VALUE_PATIENT)){ // service statistics
-					XStatPatientService stat_service = (XStatPatientService)XBaseStatService.getInstance(XConstants.POST_VALUE_PATIENT);					
-					LOG.info("after connecting hbase ");
-					if(kpi.equals("sum")){
-						stat_service.getSummary(payload);	
-					}else if(kpi.equals("avg")){
-						stat_service.getAverage(payload);
-					}													
-					LOG.info("after kpi "+kpi);					
 				}											
 			}
 

@@ -3,7 +3,7 @@
 engine="localhost"
 url="http://"$engine":9999/analytics"
 query_start_time="2010-01-01 01:00:00"
-query_end_time="2012-12-31 01:00:00"
+query_end_time="2013-12-31 18:00:00"
 query_one_region='bc'
 query_regions='localhost,bc'
 
@@ -43,12 +43,12 @@ stat_sum_url=$url"/statistics/sum"
 send_request "$appointment" $stat_sum_url
 
 elif [ "$1" == "4" ]; then
-service_record="{ 'numerator': 'service', 'object': 'record', 'condition':'', 'start-time':'$query_start_time', 'end-time':'$query_end_time', 'unit':'m', 'regions':'$query_regions'}"
+service_record="{ 'numerator': 'service', 'object': 'record', 'condition':'1', 'start-time':'$query_start_time', 'end-time':'$query_end_time', 'unit':'m', 'regions':'$query_regions'}"
 stat_pct_url=$url"/statistics/pct"
 send_request "$service_record" $stat_pct_url
 
 elif [ "$1" == "5" ]; then
-service_record="{ 'numerator': 'media', 'object': 'record', 'condition':'', 'start-time':'$query_start_time', 'end-time':'$query_end_time', 'unit':'m', 'regions':'$query_regions'}"
+media="{ 'numerator': 'media', 'object': 'record', 'condition':'0', 'start-time':'$query_start_time', 'end-time':'$query_end_time', 'unit':'m', 'regions':'$query_regions'}"
 stat_pct_url=$url"/statistics/pct"
-send_request "$service_record" $stat_pct_url
+send_request "$media" $stat_pct_url
 fi
