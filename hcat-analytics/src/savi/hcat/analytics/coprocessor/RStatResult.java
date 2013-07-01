@@ -202,7 +202,7 @@ public class RStatResult implements Serializable{
 		this.region = r;
 	}	
 	/**
-	 * row key: region-20130405-block-hcaid-pid
+	 * row key: region-m-20130405-block-hcaid-pid
 	 * @param rowKey
 	 * @return
 	 */
@@ -210,9 +210,9 @@ public class RStatResult implements Serializable{
 		//LOG.info("parseUnitKey: rowkey: " + rowKey);
 		String result = null;
 		if(this.unit.equals("m")){
-			result = rowKey.split(XConstants.ROW_KEY_DELIMETER)[1].substring(0, 6);
+			result = rowKey.split(XConstants.ROW_KEY_DELIMETER)[2].substring(0, 6);
 		}else if(this.unit.equals("w")){
-			result = rowKey.split(XConstants.ROW_KEY_DELIMETER)[1];
+			result = rowKey.split(XConstants.ROW_KEY_DELIMETER)[2].substring(0,6); // problems
 		}
 		//LOG.info("the parsed unit key : "+ result);
 		return result;

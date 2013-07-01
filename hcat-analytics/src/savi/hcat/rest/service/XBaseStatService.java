@@ -106,6 +106,7 @@ public class XBaseStatService extends XBaseService{
 			if(null != identifier){
 				prefix += identifier+XConstants.ROW_KEY_DELIMETER;
 			}
+			LOG.info("getScanFilterList: prefix: "+prefix+";identifier=>"+identifier+";numerator=>"+this.numberator);	
 			// add row filter ==> required
 			Filter rowFilter = hbase.getPrefixFilter(prefix);
 			fAll.addFilter(rowFilter);

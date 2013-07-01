@@ -12,6 +12,8 @@ public class RCopResult implements Serializable{
 	int cells = 0;
 	String parameter = null;
 	int kvLength = 0;	
+	String startRow = null;
+	String endRow = null;
 	
 
 	public long getStart() {
@@ -60,6 +62,22 @@ public class RCopResult implements Serializable{
 
 	public void setKvLength(int kvLength) {
 		this.kvLength = kvLength;
+	}
+
+	public String getStartRow() {
+		return startRow;
+	}
+
+	public void setStartRow(String startRow) {
+		this.startRow = startRow;
+	}
+
+	public String getEndRow() {
+		return endRow;
+	}
+
+	public void setEndRow(String endRow) {
+		this.endRow = endRow;
 	}
 
 

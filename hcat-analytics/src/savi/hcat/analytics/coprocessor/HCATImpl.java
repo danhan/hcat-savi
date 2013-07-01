@@ -45,17 +45,21 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		/**Step2: iterate the result from the scanner**/		
 		int cell_num = 0;
 		int row_num = 0;		
-		int kvLength = 0;		
+		int kvLength = 0;
+		String startRow = null;
+		String endRow = null;
 		try {
 			do {
 				hasMoreResult = scanner.next(keyvalues);
 				if(keyvalues != null && keyvalues.size() > 0){	
-					row_num++;					
+					row_num++;							
 					for(KeyValue kv:keyvalues){
 						//LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
 						kvLength = (kvLength < kv.getLength())? kv.getLength():kvLength;
 						cell_num++;
-						String rowKey = Bytes.toString(kv.getRow());						
+						String rowKey = Bytes.toString(kv.getRow());
+						if(null == startRow) startRow = rowKey;
+						endRow = rowKey;
 						String unitKey = results.parseUnitKey(rowKey);
 						if(condition.equals("unfinished")){
 							if(Bytes.toString(kv.getValue()).equals("null"))
@@ -79,6 +83,8 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			results.getCopStat().setRows(row_num);
 			results.getCopStat().setCells(cell_num);
 			results.getCopStat().setKvLength(kvLength);
+			results.getCopStat().setStartRow(startRow);
+			results.getCopStat().setStartRow(endRow);
 			//LOG.info("Hash Unit: "+results.getHashUnit().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getHashUnit().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
@@ -114,6 +120,8 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		int cell_num = 0;
 		int row_num = 0;		
 		int kvLength = 0;
+		String startRow = null;
+		String endRow = null;
 		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
 		boolean hasMoreResult = false;	
 		try {
@@ -127,7 +135,8 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 						cell_num++;
 						String rowKey = Bytes.toString(kv.getRow());						
 						String unitKey = unitHashArrayResult.parseUnitKey(rowKey);
-						
+						if(null == startRow) startRow = rowKey;
+						endRow = rowKey;
 						String qualifer = Bytes.toString(kv.getQualifier());						
 						String cellValue = Bytes.toString(kv.getValue());
 						//LOG.info("qualifer=>"+qualifer+";cellValue=>"+cellValue);
@@ -167,6 +176,8 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			unitHashArrayResult.getCopStat().setRows(row_num);
 			unitHashArrayResult.getCopStat().setCells(cell_num);
 			unitHashArrayResult.getCopStat().setKvLength(kvLength);
+			unitHashArrayResult.getCopStat().setStartRow(startRow);
+			unitHashArrayResult.getCopStat().setStartRow(endRow);
 			//LOG.info("Hash Unit: "+unitHashArrayResult.getHashUnitArray().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+unitHashArrayResult.getHashUnitArray().size()+
 					";cell_num=>"+cell_num+";row_num=>"+row_num);	
@@ -201,14 +212,19 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 		/**Step2: iterate the result from the scanner**/		
 		int cell_num = 0;
 		int row_num = 0;		
-		int kvLength = 0;		
+		int kvLength = 0;	
+		String startRow = null;
+		String endRow = null;
 		try {
 			do {
 				hasMoreResult = scanner.next(keyvalues);
 				if(keyvalues != null && keyvalues.size() > 0){	
 					row_num++;					
 					for(KeyValue kv:keyvalues){
-						LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
+						//LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
+						String rowkey = Bytes.toString(kv.getRow());
+						if(null == startRow) startRow = rowkey;
+						endRow = rowkey;
 						kvLength = (kvLength < kv.getLength())? kv.getLength():kvLength;
 						cell_num++;											
 						String value = Bytes.toString(kv.getValue());						
@@ -239,6 +255,8 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			results.getCopStat().setRows(row_num);
 			results.getCopStat().setCells(cell_num);
 			results.getCopStat().setKvLength(kvLength);
+			results.getCopStat().setStartRow(startRow);
+			results.getCopStat().setStartRow(endRow);
 			//LOG.info("Hash Unit: "+results.getHashUnit().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getHashUnit().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
@@ -274,7 +292,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 				if(keyvalues != null && keyvalues.size() > 0){	
 					row_num++;					
 					for(KeyValue kv:keyvalues){
-						LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
+						//LOG.info(Bytes.toString(kv.getRow())+"=>"+Bytes.toString(kv.getValue()));
 						kvLength = (kvLength < kv.getLength())? kv.getLength():kvLength;
 						cell_num++;											
 						String value = Bytes.toString(kv.getValue());						
@@ -285,11 +303,11 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 								desc.getDouble(XConstants.FIELD_NAME_LONGITUDE));
 																		
 						double distance = resPoint.distance(new Point2D.Double(latitude,longitude));
-						LOG.info("the patient location: "+ resPoint.toString()+";distance=>"+distance);
+						//LOG.info("the patient location: "+ resPoint.toString()+";distance=>"+distance);
 						if(distance <= radius){
 							results.addDistance(distance, Bytes.toString(kv.getQualifier()));
 						}						
-						LOG.info("the patient location: "+ resPoint.toString());
+						//LOG.info("the patient location: "+ resPoint.toString());
 						
 					}
 				}				
@@ -304,7 +322,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			results.getCopStat().setRows(row_num);
 			results.getCopStat().setCells(cell_num);
 			results.getCopStat().setKvLength(kvLength);
-			LOG.info("points in the radius: "+results.getRes().toString());	
+			//LOG.info("points in the radius: "+results.getRes().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getRes().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
 		} catch(Exception e){
