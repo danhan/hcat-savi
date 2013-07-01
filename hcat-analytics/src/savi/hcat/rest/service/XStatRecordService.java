@@ -79,14 +79,22 @@ public class XStatRecordService  extends XBaseStatService{
 		Hashtable<String,String> timeslots = XTimestamp.splitTime(this.start_time,this.end_time,this.split_num);
 		for(Entry<String,String> pair: timeslots.entrySet()){
 			String[] rowRange = getScanRowRange(pair.getKey(),pair.getValue());// getRowRange		
-
+			
+			String familyname=this.tableSchema.getFamilyName();
+			if(null != this.numberator){
+				if(this.numberator.equals(XConstants.POST_VALUE_SERVICE)){
+					familyname="s";
+				}else if(this.numberator.equals(XConstants.POST_VALUE_MEDIA)){
+					familyname="m";
+				}
+			}
 			// send separate queries for each city
 			for(final String region: regions){	
 				try {
 					FilterList fList = getScanFilterList(rowRange,region);// getFilter list
 					// create the scan 
 					final Scan scan = hbase.generateScan(null, fList,
-							new String[] { this.tableSchema.getFamilyName() }, null,this.tableSchema.getMaxVersions());
+							new String[] {familyname}, null,this.tableSchema.getMaxVersions());
 					
 					LOG.info("scan: "+scan.toString());
 					//send the caller 

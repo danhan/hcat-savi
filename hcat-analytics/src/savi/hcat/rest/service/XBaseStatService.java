@@ -94,19 +94,19 @@ public class XBaseStatService extends XBaseService{
 		LOG.info("getScanFilterList");		
 		FilterList fAll = new FilterList(FilterList.Operator.MUST_PASS_ALL);	
 		try {
-			String identifier = null;
+			String prefix = region+XConstants.ROW_KEY_DELIMETER;
+/*			String identifier = null;
 			if(null != this.numberator){
 				if(this.numberator.equals(XConstants.POST_VALUE_SERVICE)){
 					identifier="s";
 				}else if(this.numberator.equals(XConstants.POST_VALUE_MEDIA)){
 					identifier="m";
 				}
-			}
-			String prefix = region+XConstants.ROW_KEY_DELIMETER;
+			}			
 			if(null != identifier){
 				prefix += identifier+XConstants.ROW_KEY_DELIMETER;
-			}
-			LOG.info("getScanFilterList: prefix: "+prefix+";identifier=>"+identifier+";numerator=>"+this.numberator);	
+			}*/
+			LOG.info("getScanFilterList: prefix: "+prefix+";identifier=>"+";numerator=>"+this.numberator);	
 			// add row filter ==> required
 			Filter rowFilter = hbase.getPrefixFilter(prefix);
 			fAll.addFilter(rowFilter);
