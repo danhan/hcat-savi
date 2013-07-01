@@ -16,7 +16,7 @@ ID
 record
 
 --hbase-row-key
-'{"region":"bcedge","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
+'{"region":"bc","identifier":"m","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'

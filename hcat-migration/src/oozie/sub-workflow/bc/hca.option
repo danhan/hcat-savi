@@ -17,7 +17,7 @@ zhu88jie
 hca
 
 --hbase-row-key
-'{"region":"bcedge","identifier":"username","combined":"ID"}'
+'{"region":"bc","identifier":"username","combined":"ID"}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"cID"},{"field"=>"cNumber"},{"field"=>"firstName"},{"field"=>"hasVehicle"},{"field"=>"lat"},{"field"=>"lon"},{"field"=>"hNumber"},{"field"=>"lastName"},{"field"=>"passwd"},{"field"=>"voided"}]}'

@@ -133,10 +133,9 @@ public class XStatRecordService  extends XBaseStatService{
 					total+= one_cop.getRows();					
 				}
 				regionJSON.put("total", total); // total number of appointments because one row corresponds to one appointment
-				// add the statistics of request
-				JSONObject reqStatJSON = new JSONObject();
+				// add the statistics of request				
 				JSONArray copStatJSON = this.buildCopStat(coprocessors);
-				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
+				regionJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
 				regionJSON.put(XConstants.REQUEST_COPS_STAT, copStatJSON);	
 				
 			} catch (JSONException e) {

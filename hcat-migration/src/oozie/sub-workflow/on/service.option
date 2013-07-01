@@ -14,7 +14,7 @@ ID
 service
 
 --hbase-row-key
-'{"region":"onedge","identifier":"nm","combined":"ID"}'
+'{"region":"on","identifier":"nm","combined":"ID"}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"des"},{"field"=>"d"}]}'
