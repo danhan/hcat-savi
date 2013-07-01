@@ -295,11 +295,10 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				regionJSON.put("values", values);								
 				// get all coprocessors of this region request
 				List<RCopResult> coprocessors = callback.coprocesses.get(key);
-				// add the statistics of request
-				JSONObject reqStatJSON = new JSONObject();
+				// add the statistics of request				
 				JSONArray copStatJSON = this.buildCopStat(coprocessors);
-				reqStatJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
-				regionJSON.put(XConstants.REQUEST_COPS_STAT, copStatJSON);				
+				regionJSON.put(XConstants.REQUEST_STAT_RESPONSE_TIME, exe_time);
+				regionJSON.put(XConstants.REQUEST_COPS_STAT, copStatJSON);					
 				
 			} catch (JSONException e) {
 				e.printStackTrace();
