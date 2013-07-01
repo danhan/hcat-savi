@@ -360,7 +360,9 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 			HashMap<String,Double> distances = result.getDistances();			
 			if(this.regions.containsKey(patientRegion)){
 				HashMap<String,Double> temp = this.regions.get(patientRegion).getDistances();
-				temp.putAll(distances);
+				if(null != distances){
+					temp.putAll(distances);
+				}				
 				List<RCopResult> cops = coprocesses.get(patientRegion);
 				cops.add(result.getCopStat());	
 			}else{
