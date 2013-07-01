@@ -33,7 +33,11 @@ public class XStatRecordService  extends XBaseStatService{
 	private static Log LOG = LogFactory.getLog(XStatRecordService.class);
 	
 	public XStatRecordService(){
-		this.tableSchema = new XTableSchema("schema/record.schema"); // it is used for proving table description to query in hbase
+		if(this.numberator.equals(XConstants.POST_VALUE_SERVICE)){
+			this.tableSchema = new XTableSchema("schema/record.schema"); // it is used for proving table description to query in hbase	
+		}else if(this.numberator.equals(XConstants.POST_VALUE_MEDIA)){
+			this.tableSchema = new XTableSchema("schema/media.schema"); // it is used for proving table description to query in hbase
+		}		
 		if(this.tableSchema == null){
 			LOG.error("the table schema fails to be loaded ");
 		}else{
@@ -81,13 +85,6 @@ public class XStatRecordService  extends XBaseStatService{
 			String[] rowRange = getScanRowRange(pair.getKey(),pair.getValue());// getRowRange		
 			
 			String familyname=this.tableSchema.getFamilyName();
-			if(null != this.numberator){
-				if(this.numberator.equals(XConstants.POST_VALUE_SERVICE)){
-					familyname="s";
-				}else if(this.numberator.equals(XConstants.POST_VALUE_MEDIA)){
-					familyname="m";
-				}
-			}
 			// send separate queries for each city
 			for(final String region: regions){	
 				try {

@@ -13,7 +13,7 @@ zhu88jie
 ID
 
 --hbase-table
-record
+media
 
 --hbase-row-key
 '{"region":"bc","identifier":"m","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'

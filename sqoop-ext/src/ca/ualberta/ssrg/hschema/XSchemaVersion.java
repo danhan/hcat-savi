@@ -93,7 +93,7 @@ public class XSchemaVersion implements Serializable{
 	 * @param tsValue
 	 * @return
 	 */
-	private long getOffsetOfPeriod(String tsValue){
+	private long getOffsetOfPeriod(String tsValue){		
 		long offset = 0;
 		try{
 			if(this.period.equals(XConstants.EXT_TIMESTAMP_PERIOD_BLOCK)){
@@ -136,8 +136,8 @@ public class XSchemaVersion implements Serializable{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		System.out.println("the second offset is "+offset);
-		LOG.info("the second offset is "+offset);
+		System.out.println("ts value=>"+tsValue+"; the second offset is "+offset);
+		//LOG.info("the second offset is "+offset);
 		return offset;
 	}
 	

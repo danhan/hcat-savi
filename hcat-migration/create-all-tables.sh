@@ -6,6 +6,7 @@ service
 patient-spatial
 appointment
 record
+media
 "
 
 export tables
