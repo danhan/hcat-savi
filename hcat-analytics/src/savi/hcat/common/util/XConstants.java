@@ -56,6 +56,8 @@ public class XConstants {
 	public static final String REQUEST_STAT_ROWS="num_of_rows";
 	public static final String REQUEST_STAT_CELLS="num_of_cells";
 	public static final String REQUEST_CELL_SIZE="cell_size";
+	public static final String REQUEST_STAT_START_ROW="start_row";
+	public static final String REQUEST_STAT_END_ROW="end_row";
 	public static final String REQUEST_STAT_RESPONSE_TIME="response_time";
 	
 	/**

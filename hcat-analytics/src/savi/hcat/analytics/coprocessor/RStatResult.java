@@ -38,6 +38,8 @@ public class RStatResult implements Serializable{
 	}
 
 	public HashMap<String, Double> getDistances() {
+		if(this.distances == null)
+			this.distances = new HashMap<String,Double>();
 		return distances;
 	}
 
