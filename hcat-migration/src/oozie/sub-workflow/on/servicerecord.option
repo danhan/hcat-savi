@@ -18,7 +18,7 @@ ts=String
 record
 
 --hbase-row-key
-'{"region":"on","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","format":"yyyy-MM-dd HH:mm:ss","version":{"unit":"sec","interval":1}}}'
+'{"region":"on","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","format":"yyyy-MM-dd HH:mm:ss","version":{"unit":"sec","interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'

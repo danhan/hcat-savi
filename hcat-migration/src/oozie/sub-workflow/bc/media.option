@@ -16,7 +16,7 @@ ID
 media
 
 --hbase-row-key
-'{"region":"bc","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
+'{"region":"bc","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'
