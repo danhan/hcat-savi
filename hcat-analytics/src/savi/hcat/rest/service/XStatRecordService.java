@@ -32,10 +32,10 @@ public class XStatRecordService  extends XBaseStatService{
 
 	private static Log LOG = LogFactory.getLog(XStatRecordService.class);
 	
-	public XStatRecordService(){
-		if(this.numberator.equals(XConstants.POST_VALUE_SERVICE)){
+	public XStatRecordService(String objectName){
+		if(objectName.equals(XConstants.POST_VALUE_SERVICE)){
 			this.tableSchema = new XTableSchema("schema/record.schema"); // it is used for proving table description to query in hbase	
-		}else if(this.numberator.equals(XConstants.POST_VALUE_MEDIA)){
+		}else if(objectName.equals(XConstants.POST_VALUE_MEDIA)){
 			this.tableSchema = new XTableSchema("schema/media.schema"); // it is used for proving table description to query in hbase
 		}		
 		if(this.tableSchema == null){

@@ -39,7 +39,9 @@ public class XBaseStatService extends XBaseService{
 		if(objName.equals(XConstants.POST_VALUE_APPOINTMENT)){				
 			return new XStatApmtService(); 
 		}else if(objName.equals(XConstants.POST_VALUE_RECORD)){
-			return new XStatRecordService();
+			return new XStatRecordService(objName);
+		}else if(objName.equals(XConstants.POST_VALUE_MEDIA)){
+			return new XStatRecordService(objName);
 		}
 		
 		return null;
