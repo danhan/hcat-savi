@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.0.0.20/hcaschedule
+jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
 --username
 root
 --password
@@ -25,4 +25,4 @@ hca
 --target-dir
 /user/${wf:user()}/oozie/output/on/hca
 -m
-1
+2

@@ -1,4 +1,4 @@
-<workflow-app name="on-media-move" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="ab-media-move" xmlns="uri:oozie:workflow:0.2">
    <start to="media-sqoop"/> 
 
     <action name="media-sqoop">
@@ -6,8 +6,8 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${onOutput}/media"/>
-                <mkdir path="${onOutput}"/>
+                <delete path="${bcOutput}/media"/>
+                <mkdir path="${bcOutput}"/>
             </prepare>
             <configuration>
                 <property>

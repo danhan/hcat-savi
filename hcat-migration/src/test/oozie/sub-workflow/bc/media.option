@@ -25,4 +25,4 @@ record
 /user/${wf:user()}/oozie/output/bc/media
 
 -m
-4
+2

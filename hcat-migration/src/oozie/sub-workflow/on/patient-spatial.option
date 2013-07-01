@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.0.0.12/hcaschedule
+jdbc:mysql://10.0.0.20/hcaschedule
 --username
 root
 --password
@@ -28,4 +28,4 @@ patient-spatial
 /user/${wf:user()}/oozie/output/on/patient-spatial
 
 -m
-2
+1

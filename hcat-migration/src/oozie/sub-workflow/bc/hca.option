@@ -25,4 +25,4 @@ hca
 --target-dir
 /user/${wf:user()}/oozie/output/bc/hca
 -m
-2
+1

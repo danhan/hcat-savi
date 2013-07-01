@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.0.0.20/hcaschedule
+jdbc:mysql://10.0.0.7/hcaschedule
 --username
 root
 --password
@@ -14,17 +14,18 @@ ID
 --map-column-java
 ts=String
 
+
 --hbase-table
 record
 
 --hbase-row-key
-'{"region":"onedge","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","format":"yyyy-MM-dd HH:mm:ss","version":{"unit":"sec","interval":1}}}'
+'{"region":"bcedge","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","format":"yyyy-MM-dd HH:mm:ss","version":{"unit":"sec","interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/on/servicerecord
+/user/${wf:user()}/oozie/output/bc/servicerecord
 
 -m
-2
+4

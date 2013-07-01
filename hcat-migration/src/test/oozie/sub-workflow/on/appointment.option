@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.0.0.20/hcaschedule
+jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
 --username
 root
 --password
@@ -24,4 +24,4 @@ appointment
 /user/${wf:user()}/oozie/output/on/app
 
 -m
-2
+4

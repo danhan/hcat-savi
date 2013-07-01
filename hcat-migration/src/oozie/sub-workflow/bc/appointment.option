@@ -24,4 +24,4 @@ appointment
 /user/${wf:user()}/oozie/output/bc/app
 
 -m
-4
+2

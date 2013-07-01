@@ -1,13 +1,13 @@
-<workflow-app name="on-media-move" xmlns="uri:oozie:workflow:0.2">
-   <start to="media-sqoop"/> 
+<workflow-app name="bc-appointment-move" xmlns="uri:oozie:workflow:0.2">
+   <start to="appointment-sqoop"/> 
 
-    <action name="media-sqoop">
+    <action name="appointment-sqoop">
         <sqoop xmlns="uri:oozie:sqoop-action:0.2">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
 	    <prepare>
-                <delete path="${onOutput}/media"/>
-                <mkdir path="${onOutput}"/>
+                <delete path="${bcOutput}/appointment"/>
+                <mkdir path="${bcOutput}"/>
             </prepare>
             <configuration>
                 <property>
@@ -21,19 +21,19 @@
 	    	<arg>-D</arg>
 	    	<arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.TimeSeriesPutTransformer</arg>
             <arg>--options-file</arg>
-            <arg>media.option</arg>
-           <file>media.option</file>
+            <arg>appointment.option</arg>
+           <file>appointment.option</file>
 	   	   <file>${subwf}/sqoop-ext.jar</file>
         </sqoop>
-        <ok to="media-updatebatch"/>
-        <error to="media-sqoop-fail"/>
+        <ok to="appointment-updatebatch"/>
+        <error to="appointment-sqoop-fail"/>
     </action>
  
-    <kill name="media-sqoop-fail">
+    <kill name="appointment-sqoop-fail">
         <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
-    <action name="media-updatebatch">
+    <action name="appointment-updatebatch">
        <shell xmlns="uri:oozie:shell-action:0.1">
           <job-tracker>${jobTracker}</job-tracker>
           <name-node>${nameNode}</name-node>
@@ -43,16 +43,16 @@
                <value>${queueName}</value>
              </property>
          </configuration>
-         <exec>media.script</exec>
-         <file>media.script</file>
-         <file>media.import</file>
-         <file>media.option</file>
+         <exec>appointment.script</exec>
+         <file>appointment.script</file>
+         <file>appointment.import</file>
+         <file>appointment.option</file>
         </shell>
         <ok to="end"/>
-        <error to="media-shell-fail"/>
+        <error to="appointment-shell-fail"/>
     </action>
  
-  <kill name="media-shell-fail">
+  <kill name="appointment-shell-fail">
         <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
   </kill> 
 

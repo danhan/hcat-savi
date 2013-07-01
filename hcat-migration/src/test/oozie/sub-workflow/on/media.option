@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.0.0.7/hcaschedule
+jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
 --username
 root
 --password
@@ -16,13 +16,13 @@ ID
 record
 
 --hbase-row-key
-'{"region":"bcedge","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
+'{"region":"onedge","identifier":"block","combined":"pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'
 
 --target-dir
-/user/${wf:user()}/oozie/output/bc/media
+/user/${wf:user()}/oozie/output/on/media
 
 -m
 4
