@@ -68,14 +68,19 @@ public class XSchemaVersion implements Serializable{
 		LOG.info("getVersionValue: tsValue=>"+tsValue);
 		String result = null;
 		try{
-				
-			long offset = this.getOffsetOfPeriod(tsValue);
+			if(null != tsValue){
+				long offset = this.getOffsetOfPeriod(tsValue);	
+				if(this.unit.equals(XConstants.EXT_VERSION_UNIT_MINUTE)){				
+					result = String.valueOf(offset/60 / this.interval); // this is to get the offset 				
+				}else if(this.unit.equals(XConstants.EXT_VERSION_UNIT_SECOND)){				
+					result = String.valueOf(offset/this.interval);
+				}	
+			}else{
+				System.out.println("**** timestamp value is null***");
+			}
 			
-			if(this.unit.equals(XConstants.EXT_VERSION_UNIT_MINUTE)){				
-				result = String.valueOf(offset/60 / this.interval); // this is to get the offset 				
-			}else if(this.unit.equals(XConstants.EXT_VERSION_UNIT_SECOND)){				
-				result = String.valueOf(offset/this.interval);
-			}			
+			
+		
 		}catch(Exception e){
 			e.printStackTrace();
 		}

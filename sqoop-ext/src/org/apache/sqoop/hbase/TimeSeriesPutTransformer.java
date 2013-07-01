@@ -37,7 +37,7 @@ public class TimeSeriesPutTransformer extends HSchemaPutTransformer{
 	@Override
 	public List<Put> getPutCommand(Map<String, Object> fields)
 			throws IOException {
-		System.out.println("getPutCommand: "+fields.toString());
+		//System.out.println("getPutCommand: "+fields.toString());
 		String colFamily = getColumnFamily();
 		byte [] colFamilyBytes = Bytes.toBytes(colFamily);
 		
@@ -67,7 +67,7 @@ public class TimeSeriesPutTransformer extends HSchemaPutTransformer{
 				throw new IOException("family=>"+this.getColumnFamily()+"; qualifer=>"+qualifer+";version=>"+version);
 			}
 			
-			System.out.println("rowKey=>"+rowKey+";family=>"+this.getColumnFamily()+"; qualifer=>"+qualifer+";version=>"+version);
+			//System.out.println("rowKey=>"+rowKey+";family=>"+this.getColumnFamily()+"; qualifer=>"+qualifer+";version=>"+version);
 			JSONObject object =  new JSONObject();						
 							
 			// all the remaining columns are wrapped into a JSON object
