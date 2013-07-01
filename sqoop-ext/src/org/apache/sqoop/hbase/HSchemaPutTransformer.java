@@ -161,6 +161,8 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 	 * 
 	 * get the row key value for the cell, just build the common rowkey value
 	 * in each child class, they should add their own special row key value
+	 * This allows the constant identifier. for example, to differeciate the service and media, you can use "s" and "m".
+	 * So recommend to use the combined ID to concat the field.
 	 * @param fields
 	 * @return
 	 */
@@ -171,12 +173,14 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 			if(this.rowkeyColumns.containsKey(XConstants.EXT_ROW_KEY_IDENTIFIER)){
 				String field = String.valueOf(this.rowkeyColumns.get(XConstants.EXT_ROW_KEY_IDENTIFIER));
 				String val = this.getFieldValue(fields, field);
-				if(null == val) return null;				
-				rowKey += val;						
-				fields.remove(field);						
-				
-				}			
-			}
+				if(null == val){ // this is to allow the hard-code identifier
+					rowKey += field;
+				}else{
+					rowKey += val;						
+					fields.remove(field);		
+				}
+			}			
+		}
 		return rowKey;
 	}		
 	
