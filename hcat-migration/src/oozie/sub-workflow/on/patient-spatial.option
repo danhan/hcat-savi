@@ -19,7 +19,7 @@ row_key=String
 patient-spatial
 
 --hbase-row-key
-'{"region":"onedge","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"-138.95,41.77,60,19","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
+'{"region":"on","identifier":"row_key","spatial":{"fields":"lattd,longtd","schema":{"space":"-138.95,41.77,60,19","indexing":"2","encoding":"1","tile":"-1","subspace":"0.01"}}}'
 
 --column-family
 '{"family"=>"d"}'
