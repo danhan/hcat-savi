@@ -365,16 +365,19 @@ public abstract class HSchemaPutTransformer extends PutTransformer{
 			rowKey += region;	
 			rowKey += XConstants.DELIMETER_ROW_KEY;
 		}
-		String timestamp =this.buildTimestampToRowKey(fields);
-		if(!timestamp.isEmpty()){
-			rowKey += timestamp;		
-			rowKey += XConstants.DELIMETER_ROW_KEY;	
-		}
+		
 		String identifier = this.buildIdentifierToRowKey(fields);	
 		if(!identifier.isEmpty()){
 			rowKey += identifier;	
 			rowKey += XConstants.DELIMETER_ROW_KEY;
 		}
+		
+		String timestamp =this.buildTimestampToRowKey(fields);
+		if(!timestamp.isEmpty()){
+			rowKey += timestamp;		
+			rowKey += XConstants.DELIMETER_ROW_KEY;	
+		}
+
 		String combined = this.buildCombinedToRowKey(fields);
 		if(!combined.isEmpty()){
 			rowKey += combined;	
