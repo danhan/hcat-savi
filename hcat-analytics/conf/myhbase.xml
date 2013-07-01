@@ -46,7 +46,7 @@
 
 <property>
 <name>hbase.block.cache.size</name>
-<value>10000</value>
+<value>5000</value>
 <description>number of rows during query</description>
 </property>
 
