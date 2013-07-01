@@ -107,7 +107,7 @@ public class XBaseStatService extends XBaseService{
 				prefix += identifier+XConstants.ROW_KEY_DELIMETER;
 			}
 			// add row filter ==> required
-			Filter rowFilter = hbase.getPrefixFilter(region+XConstants.ROW_KEY_DELIMETER);
+			Filter rowFilter = hbase.getPrefixFilter(prefix);
 			fAll.addFilter(rowFilter);
 			Filter rowTopFilter = hbase.getBinaryFilter(">=", prefix+rowRange[0]);
 			Filter rowDownFilter = hbase.getBinaryFilter("<=", prefix+rowRange[1]);			
