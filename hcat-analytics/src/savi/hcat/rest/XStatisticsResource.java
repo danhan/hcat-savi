@@ -61,7 +61,12 @@ public class XStatisticsResource extends XBaseResource{
 					if(kpi.equals("pct")){
 						result = record_service.getPercentage(payload);
 					}
-				}											
+				}else if(object.equals(XConstants.POST_VALUE_MEDIA)){
+					XStatRecordService record_service = (XStatRecordService)XBaseStatService.getInstance(XConstants.POST_VALUE_MEDIA);
+					if(kpi.equals("pct")){
+						result = record_service.getPercentage(payload);
+					}
+				}
 			}
 
 			getResponse().setStatus(Status.SUCCESS_OK);
