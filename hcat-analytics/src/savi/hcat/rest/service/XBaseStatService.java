@@ -72,16 +72,16 @@ public class XBaseStatService extends XBaseService{
 	/**
 	 * This is to get the row range based on the parameters, start-time,end-time-cities
 	 * rowkey: city-20130824-hcaid-pid, columns:0,1,2,3,4,5,6, version: 0,1,2,3, value: startminutes
-	 * start time 2013-08-28 12:22:22
-	 * end time 2013-08-28 12:22:22
+	 * start time 201308
+	 * end time 201309
 	 * 
 	 * @return
 	 */
-	protected String[] getScanRowRange(){
+	protected String[] getScanRowRange(String start,String end){
 		LOG.info("getScanRowRange");
 		String[] rowRange = new String[2];
-		rowRange[0] = XTimestamp.parseDate(this.start_time);
-		rowRange[1] = XTimestamp.parseDate(this.end_time)+"*"; // it means include all rows before 
+		rowRange[0] = start;
+		rowRange[1] = end+"*"; // it means include all rows before 
 		LOG.info("row range: "+rowRange[0]+"=>"+rowRange[1]);
 		return rowRange;
 	}
@@ -94,12 +94,23 @@ public class XBaseStatService extends XBaseService{
 		LOG.info("getScanFilterList");		
 		FilterList fAll = new FilterList(FilterList.Operator.MUST_PASS_ALL);	
 		try {
-
+			String identifier = null;
+			if(null != this.numberator){
+				if(this.numberator.equals(XConstants.POST_VALUE_SERVICE)){
+					identifier="s";
+				}else if(this.numberator.equals(XConstants.POST_VALUE_MEDIA)){
+					identifier="m";
+				}
+			}
+			String prefix = region+XConstants.ROW_KEY_DELIMETER;
+			if(null != identifier){
+				prefix += identifier+XConstants.ROW_KEY_DELIMETER;
+			}
 			// add row filter ==> required
 			Filter rowFilter = hbase.getPrefixFilter(region+XConstants.ROW_KEY_DELIMETER);
 			fAll.addFilter(rowFilter);
-			Filter rowTopFilter = hbase.getBinaryFilter(">=", region+XConstants.ROW_KEY_DELIMETER+rowRange[0]);
-			Filter rowDownFilter = hbase.getBinaryFilter("<=", region+XConstants.ROW_KEY_DELIMETER+rowRange[1]);			
+			Filter rowTopFilter = hbase.getBinaryFilter(">=", prefix+rowRange[0]);
+			Filter rowDownFilter = hbase.getBinaryFilter("<=", prefix+rowRange[1]);			
 			fAll.addFilter(rowTopFilter);
 			fAll.addFilter(rowDownFilter);			
 			

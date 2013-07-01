@@ -16,12 +16,36 @@ public class XTimestamp {
 	static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static Log LOG = LogFactory.getLog(XTimestamp.class);
 	 
-	public static String parseDate(String timestamp){
+	public static Hashtable<String,String> splitTime(String start,String end, int parts){
+		Hashtable<String,String> slots = new Hashtable<String,String>();
+		if(parts == 1){
+			slots.put(XTimestamp.parseDate(start), XTimestamp.parseDate(end));
+		}else{
+			try{
+				Date start_time = dateFormat.parse(start);
+				Date end_time = dateFormat.parse(end);
+				long diff = end_time.getTime() - start_time.getTime();
+				long per = diff/parts;
+				Date s = new Date(start_time.getTime());				
+				Date e = new Date(start_time.getTime()+per);
+				for(int i=0;i<parts;i++){
+					slots.put(formatDate(s),formatDate(e));
+					s = new Date(e.getYear(),e.getMonth(),e.getDate()+1);
+					e = new Date(s.getTime()+per);				
+				}
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+
+		return slots;	
 		
-		//LOG.debug("in parseDate(): "+timestamp);
+	}
+	
+	public static String formatDate(Date time){
 		String result = "";
-		try {
-			Date time = dateFormat.parse(timestamp);
+		try{			
 			 Calendar cal = Calendar.getInstance();
 			 cal.setTime(time);
 			 int year = cal.get(Calendar.YEAR);
@@ -29,7 +53,21 @@ public class XTimestamp {
 			 int day = cal.get(Calendar.DAY_OF_MONTH);
 			result += year;
 			result += formatDigit(month);
-			result += formatDigit(day);						
+			result += formatDigit(day);	
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public static String parseDate(String timestamp){
+		
+		//LOG.debug("in parseDate(): "+timestamp);
+		String result = "";
+		try {
+			Date time = dateFormat.parse(timestamp);
+			result = formatDate(time);					
 		} catch (ParseException e) {			
 			e.printStackTrace();
 		}
@@ -176,5 +214,6 @@ public class XTimestamp {
 		else
 			return String.valueOf(m);
 	}
+			
 	
 }

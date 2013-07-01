@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,6 +19,7 @@ import savi.hcat.analytics.coprocessor.HCATProtocol;
 import savi.hcat.analytics.coprocessor.RCopResult;
 import savi.hcat.analytics.coprocessor.RStatResult;
 import savi.hcat.common.util.XConstants;
+import savi.hcat.common.util.XTimestamp;
 
 import com.util.XTableSchema;
 
@@ -72,38 +74,45 @@ public class XStatRecordService  extends XBaseStatService{
 		//prepare the callback function
 		SummaryCallBack callback = new SummaryCallBack(this);
 		
-		// compose the HBase RPC call
-		String[] rowRange = getScanRowRange();// getRowRange		
+		// compose the HBase RPC call		
+		
+		Hashtable<String,String> timeslots = XTimestamp.splitTime(this.start_time,this.end_time,this.split_num);
+		for(Entry<String,String> pair: timeslots.entrySet()){
+			String[] rowRange = getScanRowRange(pair.getKey(),pair.getValue());// getRowRange		
 
-		// send separate queries for each city
-		for(final String region: regions){	
-			try {
-				FilterList fList = getScanFilterList(rowRange,region);// getFilter list
-				// create the scan 
-				final Scan scan = hbase.generateScan(null, fList,
-						new String[] { this.tableSchema.getFamilyName() }, null,this.tableSchema.getMaxVersions());
-				
-				LOG.info("scan: "+scan.toString());
-				//send the caller 
-				hbase.getHTable().coprocessorExec(HCATProtocol.class,
-						scan.getStartRow(), scan.getStopRow(),
-						new Batch.Call<HCATProtocol, RStatResult>() {
+			// send separate queries for each city
+			for(final String region: regions){	
+				try {
+					FilterList fList = getScanFilterList(rowRange,region);// getFilter list
+					// create the scan 
+					final Scan scan = hbase.generateScan(null, fList,
+							new String[] { this.tableSchema.getFamilyName() }, null,this.tableSchema.getMaxVersions());
+					
+					LOG.info("scan: "+scan.toString());
+					//send the caller 
+					hbase.getHTable().coprocessorExec(HCATProtocol.class,
+							scan.getStartRow(), scan.getStopRow(),
+							new Batch.Call<HCATProtocol, RStatResult>() {
 
-					public RStatResult call(HCATProtocol instance)
-							throws IOException {						
-						
-						return instance.getPercentage(scan,region,condition,unit,start_time,end_time,numberator);
-					};
-				}, callback);
+						public RStatResult call(HCATProtocol instance)
+								throws IOException {						
+							
+							return instance.getPercentage(scan,region,condition,unit,start_time,end_time,numberator);
+						};
+					}, callback);
 
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block			
-				e1.printStackTrace();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block			
+					e1.printStackTrace();
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // end of the if				
+
 		}
+		
+		// start to aggregate the result
 		long cop_end = System.currentTimeMillis();		
 		long exe_time = cop_end - s_time;		
 		// prepare the returned

@@ -31,6 +31,7 @@ public class XBaseService {
 	protected String start_time = null; // 2013-08-28 12:22:22
 	protected String end_time = null; // 2013-08-28 12:22:22
 	protected ArrayList<String> regions = new ArrayList<String>();
+	protected int split_num = 1;
 	
 	
 	/**
@@ -81,7 +82,12 @@ public class XBaseService {
 					for(String item: items){
 						this.regions.add(item);	
 					}					
+				}
+				if(reqObj.has(XConstants.POST_KEY_SPLIT_NUM)){
+					this.split_num = Integer.valueOf(reqObj.getInt(XConstants.POST_KEY_SPLIT_NUM));
 				}				
+				
+				
 				return true;
 			}
 		}catch(Exception e){

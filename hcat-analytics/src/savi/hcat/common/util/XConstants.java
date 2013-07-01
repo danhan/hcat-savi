@@ -1,7 +1,5 @@
 package savi.hcat.common.util;
 
-import java.util.List;
-
 public class XConstants {
 
 	
@@ -19,6 +17,9 @@ public class XConstants {
 	public static final String POST_KEY_START_TIME="start-time";
 	public static final String POST_KEY_END_TIME="end-time";
 	public static final String POST_KEY_REGIONS="regions"; // "c1,c2,c3"
+	public static final String POST_KEY_SPLIT_BY="split-by"; // This is to make the large query to smaller one, hope it is common, but it only works for time-series now
+	public static final String POST_KEY_SPLIT_NUM="split-num"; // How many you want to split
+	
 	/**
 	 *  specially for statistics query
 	 */
