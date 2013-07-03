@@ -4,7 +4,7 @@
 # the instance internal ip: 10.0.0.47
 # the public ip: 136.159.94.246
 dest_dir=/home/ubuntu/test-data/
-datasource=ubuntu@10.0.0.47:/home/ubuntu/hcat-data
+datasource=ubuntu@10.0.0.47:/home/ubuntu/hcat-small
 #keypair=mykeypair.pem
 
 

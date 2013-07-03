@@ -3,11 +3,10 @@
 username=root
 password=zhu88jie
 data_dir=/home/ubuntu/test-data
-datasource=ubuntu@10.0.0.47:/home/ubuntu/hcat-data
+datasource=ubuntu@10.0.0.47:/home/ubuntu/hcat-small
 
 #upload the large table incrementally by month
 months="
-test
 201001
 201002
 201003
