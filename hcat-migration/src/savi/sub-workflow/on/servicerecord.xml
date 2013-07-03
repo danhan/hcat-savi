@@ -1,0 +1,62 @@
+<workflow-app name="on-servicerecord-move" xmlns="uri:oozie:workflow:0.2">
+   <start to="servicerecord-sqoop"/> 
+
+    <action name="servicerecord-sqoop">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+	    <prepare>
+                <delete path="${onOutput}/servicerecord"/>
+                <mkdir path="${onOutput}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+            <arg>import</arg>
+	    	<arg>-libjars</arg>
+	    	<arg>${subwf}/sqoop-ext.jar</arg>
+	    	<arg>-D</arg>
+	    	<arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.TimeSeriesPutTransformer</arg>
+            <arg>--options-file</arg>
+            <arg>servicerecord.option</arg>
+           <file>servicerecord.option</file>
+	   	   <file>../sqoop-ext.jar</file>
+        </sqoop>
+        <ok to="servicerecord-updatebatch"/>
+        <error to="servicerecord-sqoop-fail"/>
+    </action>
+ 
+    <kill name="servicerecord-sqoop-fail">
+        <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="servicerecord-updatebatch">
+       <shell xmlns="uri:oozie:shell-action:0.1">
+          <job-tracker>${jobTracker}</job-tracker>
+          <name-node>${nameNode}</name-node>
+          <configuration>
+             <property>
+               <name>mapred.job.queue.name</name>
+               <value>${queueName}</value>
+             </property>
+         </configuration>
+         <exec>servicerecord.script</exec>
+         <file>servicerecord.script</file>
+         <file>servicerecord.import</file>
+         <file>servicerecord.option</file>
+        </shell>
+        <ok to="end"/>
+        <error to="servicerecord-shell-fail"/>
+    </action>
+ 
+  <kill name="servicerecord-shell-fail">
+        <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill> 
+
+  
+   <end name="end"/>
+
+ </workflow-app>

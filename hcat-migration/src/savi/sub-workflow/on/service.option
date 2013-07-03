@@ -1,0 +1,26 @@
+--connect
+jdbc:mysql://10.0.0.20/hcaschedule
+--username
+root
+--password
+zhu88jie
+--verbose
+--query
+'SELECT ID, des, d, nm from (SELECT Service$PersistentID as ID, Service$description as des, Service$duration as d, Service$NAME as nm FROM Service) as short where $CONDITIONS'
+--split-by
+ID
+
+--hbase-table 
+service
+
+--hbase-row-key
+'{"region":"on","identifier":"nm","combined":"ID"}'
+
+--column-family
+'{"family"=>"d","columns"=>[{"field"=>"des"},{"field"=>"d"}]}'
+
+--target-dir
+/user/${wf:user()}/oozie/output/on/service
+
+-m
+1
