@@ -1,0 +1,34 @@
+<workflow-app name="hcat-migration" xmlns="uri:oozie:workflow:0.2">	
+     <start to="bc-edge" />
+	<!-- BC edge -->
+	<action name="bc-edge">
+		<sub-workflow>
+			<app-path>${subwf}/bcedge.xml</app-path>
+			<propagate-configuration />
+            <configuration>
+                <property>
+                    <name>jobTracker</name>
+                    <value>${jobTracker}</value>
+                </property>
+                <property>
+                    <name>nameNode</name>
+                    <value>${nameNode}</value>
+                </property>
+                <property>
+                    <name>queueName</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+
+	</sub-workflow>
+	<ok to="hcat-migration-end" />
+	<error to="kill"/>
+	</action>
+
+	<kill name="kill">
+		<message>Workflow failed with error message [${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<end name="hcat-migration-end" />
+
+</workflow-app>  

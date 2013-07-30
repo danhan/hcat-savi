@@ -1,0 +1,62 @@
+<workflow-app name="bc-appointment-move" xmlns="uri:oozie:workflow:0.2">
+   <start to="appointment-sqoop"/> 
+
+    <action name="appointment-sqoop">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+	    <prepare>
+                <delete path="${bcOutput}/appointment"/>
+                <mkdir path="${bcOutput}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+            <arg>import</arg>
+	    	<arg>-libjars</arg>
+	    	<arg>${bcwf}/app/sqoop-ext.jar</arg>
+	    	<arg>-D</arg>
+	    	<arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.TimeSeriesPutTransformer</arg>
+            <arg>--options-file</arg>
+            <arg>appointment.option</arg>
+           <file>appointment.option</file>
+	   	   <file>${bcwf}/app/sqoop-ext.jar</file>
+        </sqoop>
+        <ok to="appointment-updatebatch"/>
+        <error to="appointment-sqoop-fail"/>
+    </action>
+ 
+    <kill name="appointment-sqoop-fail">
+        <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="appointment-updatebatch">
+       <shell xmlns="uri:oozie:shell-action:0.1">
+          <job-tracker>${jobTracker}</job-tracker>
+          <name-node>${nameNode}</name-node>
+          <configuration>
+             <property>
+               <name>mapred.job.queue.name</name>
+               <value>${queueName}</value>
+             </property>
+         </configuration>
+         <exec>appointment.script</exec>
+         <file>appointment.script</file>
+         <file>appointment.import</file>
+         <file>appointment.option</file>
+        </shell>
+        <ok to="end"/>
+        <error to="appointment-shell-fail"/>
+    </action>
+ 
+  <kill name="appointment-shell-fail">
+        <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill> 
+
+  
+   <end name="end"/>
+
+ </workflow-app>
