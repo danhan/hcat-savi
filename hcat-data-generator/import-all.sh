@@ -1,7 +1,7 @@
 #!/bin/bash
 
-username=root
-password=zhu88jie
+username=hca
+password=hcadb
 data_dir=/home/ubuntu/test-data
 
 folders="
@@ -99,7 +99,7 @@ done
 
 
 echo "**************************************************"
-echo "**********Finish uploading ******************"
+echo "**********Finish importing to mysql******************"
 echo "**************************************************"
 
 

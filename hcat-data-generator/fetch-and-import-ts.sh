@@ -1,9 +1,10 @@
 #!/bin/bash
 
-username=root
-password=zhu88jie
+username=hca
+password=hcadb
 data_dir=/home/ubuntu/test-data
-datasource=ubuntu@10.0.0.47:/home/ubuntu/hcat-small
+datasource=ubuntu@136.159.94.246:/home/ubuntu/hcat-small
+keypair=mykeypair.pem
 
 #upload the large table incrementally by month
 months="
@@ -25,8 +26,8 @@ for f in $months;do
     current_time=$(date "+%Y.%m.%d-%H.%M.%S")
     printf "\n====$current_time======Start to fetch $file============\n"
     printf "\n Fetch [folder][start][$current_time] $file"
-    printf "\n scp -r $file $data_dir \n"
-    scp -r $file $data_dir
+    printf "\n scp -i $keypair -r $file $data_dir \n"
+    scp -i $keypair -r $file $data_dir
     printf "\n Fetch [folder][end] $file\n"
     
     current_time=$(date "+%Y.%m.%d-%H.%M.%S")
@@ -56,7 +57,7 @@ done
 
 
 echo "**************************************************"
-echo "**********Finish uploading large data****************"
+echo "**********Finish uploading time-series data****************"
 echo "**************************************************"
 
 
