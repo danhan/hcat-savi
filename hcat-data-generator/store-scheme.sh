@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-username=root
-password=zhu88jie
+username=hca
+password=hcadb
 
 echo "drop database"
 mysql -u$username -p$password -e "drop database hcaschedule"
