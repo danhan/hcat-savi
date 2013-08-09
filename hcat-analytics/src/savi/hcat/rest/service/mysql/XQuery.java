@@ -8,4 +8,10 @@ public class XQuery {
 				"Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID"+
 				" and s.Schedule$startDate >= ?"+
 				" and s.Schedule$startDate <= ?";
+	
+	public static String app_short="select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, " +
+			"Appointment$WEEKDAY AS wday,Appointment$block AS block," +
+			"Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID"+
+			" and s.Schedule$startDate >= ?"+
+			" and s.Schedule$startDate <= ?";
 }
