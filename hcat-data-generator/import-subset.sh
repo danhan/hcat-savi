@@ -1,7 +1,7 @@
 #!/bin/bash
 
-username=root
-password=zhu88jie
+username=hca
+password=hcadb
 data_dir=/home/ubuntu/test-data
 
 folders="
@@ -13,7 +13,7 @@ appointment
 schedule
 "
 
-echo "********************Upload the load**********************************************"
+echo "********************import the load**********************************************"
 echo "******************* $data_dir****************"
 echo "*******************to MySQL******************************************************"
 

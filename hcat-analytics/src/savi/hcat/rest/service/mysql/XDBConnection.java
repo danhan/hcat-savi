@@ -27,7 +27,7 @@ public class XDBConnection {
                     String password = prop.getProperty("password");
                     
                     connection = DriverManager.getConnection("jdbc:mysql://"+hostname+"/"+dbName, username, password); // connect
-                    connection.setAutoCommit(true);
+                    connection.setAutoCommit(false);
 
                     // create a statement that we can use later
                     sql = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,

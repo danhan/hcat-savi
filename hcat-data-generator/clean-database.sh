@@ -1,7 +1,7 @@
 #!/bin/bash
 
-username=root
-password=zhu88jie
+username=hca
+password=hcadb
 
 #"delete all data from all tables"
 tablenames="

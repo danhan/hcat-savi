@@ -4,8 +4,8 @@
 # the instance internal ip: 10.0.0.47
 # the public ip: 136.159.94.246
 dest_dir=/home/ubuntu/test-data/
-datasource=ubuntu@10.0.0.47:/home/ubuntu/hcat-small
-#keypair=mykeypair.pem
+datasource=ubuntu@136.159.94.246:/home/ubuntu/hcat-small
+keypair=mykeypair.pem
 
 
 # this is for the small data
@@ -27,7 +27,7 @@ for f in $folders;do
     current_time=$(date "+%Y.%m.%d-%H.%M.%S")
     printf "\n[folder][start][$current_time] $file"
     printf "\nscp -i $keypair -r $file  $dest_dir \n"
-    scp  -r $file  $dest_dir
+    scp  -i $keypair -r $file  $dest_dir
     printf "\n[folder][end] $file\n"
 done
 
@@ -46,15 +46,16 @@ months="
 201011
 201012
 "
-printf "============fetch the large data ============\n"
+#printf "============fetch the large data ============\n"
 
-for f in $months; do
-    file=$datasource/$f
-    current_time=$(date "+%Y.%m.%d-%H.%M.%S")
-    printf "\n[folder][start][$current_time] $file"
-    printf "\n scp -r $file $dest_dir \n"
-    scp -r $file $dest_dir
-    printf "\n[folder][end] $file\n"
-done
+
+#for f in $months; do
+#    file=$datasource/$f
+#    current_time=$(date "+%Y.%m.%d-%H.%M.%S")
+#    printf "\n[folder][start][$current_time] $file"
+#    printf "\n scp -i $keypair -r $file $dest_dir \n"
+#    scp -r $file $dest_dir
+#    printf "\n[folder][end] $file\n"
+#done
 
 

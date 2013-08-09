@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,7 +15,6 @@ import org.json.JSONObject;
 
 import savi.hcat.common.util.XConstants;
 import savi.hcat.rest.service.XBaseStatService;
-import savi.hcat.rest.service.XStatApmtService;
 
 public class XMySQLService extends XBaseStatService{
 
@@ -54,6 +52,7 @@ public class XMySQLService extends XBaseStatService{
 	 */
 	public JSONArray getAppointmentbyMonth(JSONObject request){
  
+		long start=System.currentTimeMillis();
 		boolean decomposed = this.decompose(request);
 		if(!decomposed)
 			LOG.error("decompose Error!");
@@ -62,25 +61,30 @@ public class XMySQLService extends XBaseStatService{
            Date startDate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(this.start_time).getTime());
            Date endDate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(this.end_time).getTime());
    		// join schedule and count all appointments
-   		String sql = "select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, " +
+ /*  		String sql = "select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, " +
    				"Appointment$block AS block," +
    				"Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID"+
    				" and s.Schedule$startDate >= ?"+
-   				" and s.Schedule$startDate <= ?";
-           PreparedStatement prest = dbCon.getConnection().prepareStatement(sql);
+   				" and s.Schedule$startDate <= ?";*/
+           PreparedStatement prest = dbCon.getConnection().prepareStatement(XQuery.app_short);
            prest.setDate(1, startDate);
            prest.setDate(2, endDate);
            Statement statement = dbCon.getConnection().createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, 
                    java.sql.ResultSet.CONCUR_READ_ONLY);//These are defaults though,I believe
-           statement.setFetchSize(Integer.MIN_VALUE);
-           
-           
+          // turn use of the cursor on
+           statement.setFetchSize(50);
+                     
            ResultSet rs = prest.executeQuery();
     	   while(rs.next()){
     		   System.out.println(rs.getString("sweek"));
-    	   }
-    	         
+    	   }    	         
     	   rs.close();
+    	   //turn off the cursor
+    	   statement.setFetchSize(0);
+    	   long end=System.currentTimeMillis();
+    	 
+    	   System.out.println("time=>"+(end-start));
+    	   
        }catch(Exception e){
     	   e.printStackTrace();
        }
@@ -93,8 +97,9 @@ public class XMySQLService extends XBaseStatService{
 		XMySQLService service = new XMySQLService();
 		JSONObject obj = new JSONObject();
 		try{
+			// 64s
 			obj.put(XConstants.POST_KEY_START_TIME, "2010-01-01");
-			obj.put(XConstants.POST_KEY_END_TIME, "2011-12-31");
+			obj.put(XConstants.POST_KEY_END_TIME, "2010-01-31");
 			service.getAppointmentbyMonth(obj);
 		}catch(Exception e){
 			e.printStackTrace();
