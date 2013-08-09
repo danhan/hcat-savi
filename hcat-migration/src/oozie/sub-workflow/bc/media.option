@@ -1,12 +1,12 @@
 --connect
-jdbc:mysql://bcedge/hcaschedule
+jdbc:mysql://10.6.11.3/hcaschedule
 --username
-root
+hca
 --password
-zhu88jie
+hcadb
 --verbose
 --query
-'select ID, ts, pid, hid, block, type, mime, note,urgent, uri from (select MediaMessage$PersistentID as ID, MediaMessage$timestamp as ts, MediaMessage$mimetype as mime, MediaMessage$note as note, MediaMessage$type as type,  MediaMessage$urgent as urgent, MediaMessage$uri as uri, mm.R_HCA as hid, Appointment$block as block, R_Patient as pid from MediaMessage mm left join Appointment app on mm.R_Appointment = app.Appointment$PersistentID where MediaMessage$PersistentID >= 1 and MediaMessage$PersistentID <= 1000000) as short where $CONDITIONS'
+'select ID, ts, pid, hid, block, type, mime, note,urgent, uri from (select MediaMessage$PersistentID as ID, MediaMessage$timestamp as ts, MediaMessage$mimetype as mime, MediaMessage$note as note, MediaMessage$type as type,  MediaMessage$urgent as urgent, MediaMessage$uri as uri, mm.R_HCA as hid, Appointment$block as block, R_Patient as pid from MediaMessage mm left join Appointment app on mm.R_Appointment = app.Appointment$PersistentID where MediaMessage$PersistentID between 1 and 1000000 ) as short where $CONDITIONS'
 
 
 --split-by
@@ -16,7 +16,7 @@ ID
 media
 
 --hbase-row-key
-'{"region":"bc","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","version":{"unit":"sec","interval":1}}}'
+'{"region":"bc","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","version":{"interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'

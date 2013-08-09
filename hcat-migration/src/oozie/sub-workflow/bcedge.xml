@@ -1,14 +1,14 @@
 <workflow-app name="bc-subwf" xmlns="uri:oozie:workflow:0.2">
    <start to="fork-move"/> 
    <fork name="fork-move">      
-      <path start="static-data-move"/>
+<!--      <path start="static-data-move"/> -->
  <!--
      <path start="patient-spatial-move"/>     
       <path start="service-move"/>   
  -->
       <path start="appointment-move"/>
       <path start="servicerecord-move"/>
-      <path start="media-move"/>
+<!--      <path start="media-move"/> -->
    </fork>
    <join name="joining-move" to="bc-subwf-end"/>
     

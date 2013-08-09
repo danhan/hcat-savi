@@ -23,7 +23,7 @@
             <arg>--options-file</arg>
             <arg>appointment.option</arg>
            <file>appointment.option</file>
-	   	   <file>${subwf}/sqoop-ext.jar</file>
+   	   <archive>../sqoop-ext.jar</archive>
         </sqoop>
         <ok to="appointment-updatebatch"/>
         <error to="appointment-sqoop-fail"/>
