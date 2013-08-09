@@ -5,7 +5,7 @@
 	  "compression":"GZ",
 	  "versions":"",
 	  "min_versions":"1",
-	  "blocksize":"",
+	  "blocksize":"32768",
 	  "in_memory":"",
 	  "blockcache":"true",
 	  "bloomfilter":"ROWCOL",
