@@ -12,7 +12,5 @@
 	  "replication_scope":""	  
 	}
 	],
-	"max_file_size":"",
-	"mem_store_size":"",
 	"log_file_name":"appointment"
 }

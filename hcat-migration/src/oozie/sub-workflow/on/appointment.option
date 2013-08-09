@@ -1,12 +1,12 @@
 --connect
-jdbc:mysql://onedge/hcaschedule
+jdbc:mysql://10.2.11.3/hcaschedule
 --username
-root
+hca
 --password
-zhu88jie
+hcadb
 --verbose
 --query
-'select sweek,hid,pid,wday, block,startMin,ID from( select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, Appointment$WEEKDAY AS wday,Appointment$block AS block, Appointment$startMinute AS startMin,Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID and Appointment$PersistentID between 1 and 1000000) as short  where $CONDITIONS'
+'select sweek,hid,pid,wday, block,startMin,ID from( select s.Schedule$startDate AS sweek,R_HCA as hid, R_Patient as pid, Appointment$WEEKDAY AS wday,Appointment$block AS block, Appointment$startMinute AS startMin,Appointment$PersistentID as ID from Appointment a,Schedule s where a.R_Schedule=s.Schedule$PersistentID and Appointment$PersistentID between 1 and 88000) as short  where $CONDITIONS'
 
 --split-by
 ID

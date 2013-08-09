@@ -1,12 +1,12 @@
 --connect
-jdbc:mysql://onedge/hcaschedule
+jdbc:mysql://10.2.11.3/hcaschedule
 --username
-root
+hca
 --password
-zhu88jie
+hcadb
 --verbose
 --query
-'select ID, ts, pid, hid, block, sid, status from (select ServiceRecord$PersistentID as ID, ServiceRecord$Status as status, R_Service as sid, ServiceRecord$timestamp as ts, Appointment$block as block,  R_Patient as pid,  R_HCA as hid from ServiceRecord sr left join Appointment app on sr.R_Appointment = app.Appointment$PersistentID where ServiceRecord$PersistentID >= 1 and ServiceRecord$PersistentID <= 1000000) as short where $CONDITIONS'
+'select ID, ts, pid, hid, block, sid, status from (select ServiceRecord$PersistentID as ID, ServiceRecord$Status as status, R_Service as sid, ServiceRecord$timestamp as ts, Appointment$block as block,  R_Patient as pid,  R_HCA as hid from ServiceRecord sr left join Appointment app on sr.R_Appointment = app.Appointment$PersistentID where ServiceRecord$PersistentID between 1 and 1000000) as short where $CONDITIONS'
 
 --split-by
 ID
@@ -18,7 +18,7 @@ ts=String
 record
 
 --hbase-row-key
-'{"region":"on","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","format":"yyyy-MM-dd HH:mm:ss","version":{"unit":"sec","interval":1}}}'
+'{"region":"on","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","format":"yyyy-MM-dd HH:mm:ss","version":{"interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'
@@ -27,4 +27,4 @@ record
 /user/${wf:user()}/oozie/output/on/servicerecord
 
 -m
-2
+4

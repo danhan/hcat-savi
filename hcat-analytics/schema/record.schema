@@ -3,7 +3,7 @@
 	{
 	  "name":"d",
 	  "compression":"GZ",
-	  "versions":"7200",
+	  "versions":"240",
 	  "min_versions":"1",
 	  "blocksize":"",
 	  "in_memory":"",
@@ -12,7 +12,5 @@
 	  "replication_scope":""
 	}
 	],
-	"max_file_size":"",
-	"mem_store_size":"",
 	"log_file_name":"record"
 }

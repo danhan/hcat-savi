@@ -1,5 +1,5 @@
 --connect
-jdbc:mysql://10.12.7.48/hcaschedule
+jdbc:mysql://10.6.11.3/hcaschedule
 --username
 hca
 --password
@@ -8,7 +8,7 @@ hcadb
 --verbose
 
 --query
-'select ID,username,cID,cNumber,firstName,hasVehicle,lat,lon,hNumber,lastName,passwd,voided from(SELECT HCA$userName as username,HCA$PersistentID as ID,HCA$calendarID as cID,HCA$cellNumber as cNumber,HCA$firstName as firstname,HCA$hasVehicle as hasVehicle,HCA$homeNumber as hNumber,HCA$lastName as lastname,HCA$lat as lat,HCA$lon as lon,HCA$PASSWORD as passwd, HCA$voided as voided FROM HCA h) as short where $CONDITIONS'
+'select ID,username,cID,cNumber,firstName,hasVehicle,lat,lon,hNumber,lastName,passwd,voided from(SELECT HCA$userName as username,HCA$PersistentID as ID,HCA$calendarID as cID,HCA$cellNumber as cNumber,HCA$firstName as firstname,HCA$hasVehicle as hasVehicle,HCA$homeNumber as hNumber,HCA$lastName as lastname,HCA$lat as lat,HCA$lon as lon,HCA$PASSWORD as passwd, HCA$voided as voided FROM HCA h where HCA$PersistentID between 1 and 1000) as short where $CONDITIONS'
 
 --split-by
 'ID'

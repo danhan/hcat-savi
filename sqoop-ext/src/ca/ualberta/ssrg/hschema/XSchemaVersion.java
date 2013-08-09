@@ -17,7 +17,7 @@ public class XSchemaVersion implements Serializable{
 		
 	private String tsField = null;
 	private String tsformat = "yyyy-MM-dd HH:mm:ss";
-	private String unit = XConstants.EXT_VERSION_UNIT_SECOND;
+	private String unit = XConstants.EXT_VERSION_UNIT_MINUTE;
 
 	private String period = XConstants.EXT_TIMESTAMP_PERIOD_BLOCK; // Period stands for the coarsed granualrity of timestamp, unit means the finest granularity of timestmap 
 	private int interval = 1;
@@ -77,9 +77,7 @@ public class XSchemaVersion implements Serializable{
 				}	
 			}else{
 				System.out.println("**** timestamp value is null***");
-			}
-			
-			
+			}			
 		
 		}catch(Exception e){
 			e.printStackTrace();

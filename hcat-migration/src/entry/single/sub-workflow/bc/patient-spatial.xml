@@ -25,14 +25,15 @@
            <file>patient-spatial.option</file>
 	   <archive>../sqoop-ext.jar</archive>
         </sqoop>
-        <ok to="end"/>
+<!--        <ok to="end"/> -->
+        <ok to="patient-spatial-updatebatch" />
         <error to="patient-spatial-sqoop-fail"/>
     </action>
  
     <kill name="patient-spatial-sqoop-fail">
         <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
-<!--    
+    
   <action name="patient-spatial-updatebatch">
        <shell xmlns="uri:oozie:shell-action:0.1">
           <job-tracker>${jobTracker}</job-tracker>
@@ -51,7 +52,7 @@
         <ok to="end"/>
         <error to="patient-spatial-shell-fail"/>
     </action>
- -->
+
   <kill name="patient-spatial-shell-fail">
         <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
   </kill> 

@@ -20,12 +20,37 @@
             <arg>hca.option</arg>
            <file>hca.option</file>
         </sqoop>
-        <ok to="end"/>
+        <ok to="updatebatch"/>
         <error to="hca-sqoop-fail"/>
     </action>
- 
+
+
     <kill name="hca-sqoop-fail">
         <message>Sqoop failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="updatebatch">
+       <shell xmlns="uri:oozie:shell-action:0.1">
+          <job-tracker>${jobTracker}</job-tracker>
+          <name-node>${nameNode}</name-node>
+          <configuration>
+             <property>
+               <name>mapred.job.queue.name</name>
+               <value>${queueName}</value>
+             </property>
+         </configuration>
+         <exec>hca.script</exec>
+         <file>hca.script</file>
+         <file>hca.import</file>
+         <file>hca.option</file>
+        </shell>
+        <ok to="end"/>
+        <error to="hca-shell-fail"/>
+    </action>
+
+ 
+    <kill name="hca-shell-fail">
+        <message>Shell failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
   

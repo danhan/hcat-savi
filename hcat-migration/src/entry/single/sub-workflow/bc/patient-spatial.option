@@ -1,9 +1,9 @@
 --connect
-jdbc:mysql://10.12.7.48/hcaschedule
+jdbc:mysql://myria.cs.ualberta.ca/hcaschedule
 --username
-hca
+root
 --password
-hcadb
+zhu88jie
 --verbose
 
 --query

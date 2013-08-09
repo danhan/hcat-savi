@@ -3,7 +3,7 @@
 
 importFile=appointment.import
 optionFile=appointment.option
-hdfsJobFolder=/user/ubuntu/oozie/sub-workflow/bc
+hdfsJobFolder=/user/ubuntu/multiple/sub-workflow/bc
 indexField="Appointment\$PersistentID"
 
 . $importFile

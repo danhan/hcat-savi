@@ -1,17 +1,17 @@
 #!/bin/sh
 
 
-importFile=media.import
-optionFile=media.option
-hdfsJobFolder=/user/ubuntu/oozie/sub-workflow/bc
-indexField="MediaMessage\$PersistentID"
+importFile=patient-spatial.import
+optionFile=patient-spatial.option
+hdfsJobFolder=/user/ubuntu/multiple/sub-workflow/bc
+indexField="Patient\$PersistentID"
 
 . $importFile
 
 # find the where condition in option file
 oldStartIndex=`expr $startIndex - $chunkSize`
 oldEndIndex=`expr $startIndex - 1`
-oldWhere="$indexField >= "$oldStartIndex" and $indexField <= "$oldEndIndex
+oldWhere="$indexField between "$oldStartIndex" and "$oldEndIndex
 echo "the old WHERE clause should be $oldWhere"
 
 #calculate the new index
@@ -23,7 +23,7 @@ oldStartIndexStr=startIndex=$startIndex
 chunkSizeStr=chunkSize=$chunkSize
 
 # build the new WHERE clause
-newWhere="$indexField >= "$startIndex" and $indexField <= "$newEndIndex
+newWhere="$indexField between "$startIndex" and "$newEndIndex
 echo "the new WHERE clause would be $newWhere"
 
 echo "Updating old option file: $optionFile"
