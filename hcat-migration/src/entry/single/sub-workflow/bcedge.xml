@@ -1,0 +1,35 @@
+<workflow-app name="bc-subwf" xmlns="uri:oozie:workflow:0.2">
+   <start to="patient-spatial-move"/>  
+	
+    <action name="patient-spatial-move">
+	 <sub-workflow>
+             <app-path>${bcwf}/patient-spatial.xml</app-path>
+             <propagate-configuration />
+
+           <configuration>
+                <property>
+                    <name>jobTracker</name>
+                    <value>${jobTracker}</value>
+                </property>
+                <property>
+                    <name>nameNode</name>
+                    <value>${nameNode}</value>
+                </property>
+                <property>
+                    <name>queueName</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+
+         </sub-workflow>	 
+	<ok to="bc-subwf-end" />
+         <error to="kill" />
+    </action>
+    
+	
+  <kill name="kill">
+        <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill> 
+
+   <end name="bc-subwf-end"/>
+ </workflow-app>

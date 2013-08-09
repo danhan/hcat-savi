@@ -1,9 +1,9 @@
 --connect
-jdbc:mysql://bcedge/hcaschedule
+jdbc:mysql://10.12.7.48/hcaschedule
 --username
-root
+hca
 --password
-zhu88jie
+hcadb
 
 --verbose
 
@@ -17,12 +17,13 @@ zhu88jie
 hca
 
 --hbase-row-key
-'{"region":"bc","identifier":"username","combined":"ID"}'
+'ID'
 
 --column-family
-'{"family"=>"d","columns"=>[{"field"=>"cID"},{"field"=>"cNumber"},{"field"=>"firstName"},{"field"=>"hasVehicle"},{"field"=>"lat"},{"field"=>"lon"},{"field"=>"hNumber"},{"field"=>"lastName"},{"field"=>"passwd"},{"field"=>"voided"}]}'
+'d'
 
 --target-dir
 /user/${wf:user()}/oozie/output/bc/hca
+
 -m
 1
