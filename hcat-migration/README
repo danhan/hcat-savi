@@ -19,3 +19,7 @@ So there is no need for the spatial/time-series schema.
 
 5 TODO List
 * Dynamically create the subworkflow for each edge
+
+
+6 There is a problem for the configuration of oozie,
+It is about archive or file. 

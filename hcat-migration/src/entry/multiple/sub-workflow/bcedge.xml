@@ -1,9 +1,10 @@
 <workflow-app name="bc-subwf" xmlns="uri:oozie:workflow:0.2">
+   <start to="fork-move"/>
    <fork name="fork-move">      
     <path start="hca-move"/>
      <path start="patient-spatial-move"/>     
-  <!--    <path start="service-move"/>   
-      <path start="appointment-move"/>
+     <path start="appointment-move"/>
+ <!--    <path start="service-move"/>   
       <path start="servicerecord-move"/>
       <path start="media-move"/>
 -->

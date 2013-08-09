@@ -17,13 +17,13 @@
             </configuration>
             <arg>import</arg>
 	    	<arg>-libjars</arg>
-	    	<arg>${bcwf}/app/sqoop-ext.jar</arg>
+	    	<arg>${subwf}/sqoop-ext.jar</arg>
 	    	<arg>-D</arg>
 	    	<arg>sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.TimeSeriesPutTransformer</arg>
             <arg>--options-file</arg>
             <arg>appointment.option</arg>
            <file>appointment.option</file>
-	   	   <file>${bcwf}/app/sqoop-ext.jar</file>
+  	   <archive>../sqoop-ext.jar</archive>
         </sqoop>
         <ok to="appointment-updatebatch"/>
         <error to="appointment-sqoop-fail"/>

@@ -1,17 +1,17 @@
 #!/bin/sh
 
 
-importFile=appointment.import
-optionFile=appointment.option
-hdfsJobFolder=/user/ubuntu/multiple/sub-workflow/bc
-indexField="Appointment\$PersistentID"
+importFile=patient-spatial.import
+optionFile=patient-spatial.option
+hdfsJobFolder=/user/ubuntu/single/sub-workflow/bc
+indexField="Patient\$PersistentID"
 
 . $importFile
 
 # find the where condition in option file
 oldStartIndex=`expr $startIndex - $chunkSize`
 oldEndIndex=`expr $startIndex - 1`
-oldWhere="$indexField between "$oldStartIndex" and "$oldEndIndex
+oldWhere="$indexField >= "$oldStartIndex" and $indexField <= "$oldEndIndex
 echo "the old WHERE clause should be $oldWhere"
 
 #calculate the new index
@@ -23,7 +23,7 @@ oldStartIndexStr=startIndex=$startIndex
 chunkSizeStr=chunkSize=$chunkSize
 
 # build the new WHERE clause
-newWhere="$indexField between "$startIndex" and "$newEndIndex
+newWhere="$indexField >= "$startIndex" and $indexField <= "$newEndIndex
 echo "the new WHERE clause would be $newWhere"
 
 echo "Updating old option file: $optionFile"
