@@ -117,9 +117,9 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 				regionJSON.put("region", key);
 				JSONArray values = new JSONArray();
 				for(Entry<String,Integer> entry: result.getHashUnit().entrySet()){
-					values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
+					values.put(new JSONObject().put(entry.getKey(), entry.getValue()));									
 				}
-				regionJSON.put("values", values);
+				regionJSON.put("values", values);				
 				// get all coprocessors of this region request
 				List<RCopResult> coprocessors = callback.coprocesses.get(key);
 				// add the statistics of request				
@@ -286,13 +286,23 @@ public class XGeoPatientService extends XBaseGeoService implements XGeoSpatialIn
 			JSONObject regionJSON = new JSONObject();
 			try {
 				regionJSON.put("region", key);
-				JSONArray values = new JSONArray();				
+				JSONArray values = new JSONArray();
+				int count = 0;
+				double min=Double.MAX_VALUE;
+				double max = Double.MIN_VALUE;
 				if(null != one_region){
 					for(Entry<String,Double> entry: one_region.entrySet()){
 						values.put(new JSONObject().put(entry.getKey(), entry.getValue()));
+						count++;
+						double v = entry.getValue().doubleValue();
+						min = min>v? v: min;
+						max = max<v? v:max;
 					}					
 				}				
-				regionJSON.put("values", values);								
+				regionJSON.put("values", values);
+				regionJSON.put("count", count);
+				regionJSON.put("Min", min);
+				regionJSON.put("Max", max);
 				// get all coprocessors of this region request
 				List<RCopResult> coprocessors = callback.coprocesses.get(key);
 				// add the statistics of request				
