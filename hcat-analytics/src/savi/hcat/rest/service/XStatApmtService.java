@@ -48,7 +48,7 @@ public class XStatApmtService extends XBaseStatService implements XStatisticsInt
 		}		
 	}
 	/**
-	 * get the summary of Appointment
+	 * get the summary of Appointment, count appointment, but with all information returned
 	 */
 	@Override
 	public JSONArray getSummary(JSONObject request){		
