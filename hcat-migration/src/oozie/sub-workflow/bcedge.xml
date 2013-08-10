@@ -8,7 +8,7 @@
  -->
       <path start="appointment-move"/>
       <path start="servicerecord-move"/>
-<!--      <path start="media-move"/> -->
+      <path start="media-move"/> 
    </fork>
    <join name="joining-move" to="bc-subwf-end"/>
     

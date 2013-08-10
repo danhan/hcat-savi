@@ -9,7 +9,7 @@
 <!--      <path start="static-data-move"/> -->
       <path start="appointment-move"/>
       <path start="servicerecord-move"/>       
-<!--      <path start="media-move"/> -->
+      <path start="media-move"/> 
    </fork>
    <join name="joining-move" to="on-subwf-end"/>
 

@@ -2,12 +2,12 @@
 
 #location: ON=>(x:[-95,141602,-79.453125]; y: [41.771312,56.909002]); BC=>(x:[-138.95,-117.02], y:[49.00,59.99])
 
-analytics_engine="10.0.0.41"
+analytics_engine="10.12.11.12"
 url="http://"$analytics_engine":9999/analytics"
 
 # query parameters
 query_start_time="2010-01-01 01:00:00"
-query_end_time="2010-02-03 18:00:00"
+query_end_time="2010-02-01 18:00:00"
 query_one_region='bc'
 query_regions='on,bc'
 # incomplete,complete, refused prevented
