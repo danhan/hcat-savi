@@ -6,7 +6,7 @@ hca
 hcadb
 --verbose
 --query
-'select ID, ts, pid, hid, block, type, mime, note,urgent, uri from (select MediaMessage$PersistentID as ID, MediaMessage$timestamp as ts, MediaMessage$mimetype as mime, MediaMessage$note as note, MediaMessage$type as type,  MediaMessage$urgent as urgent, MediaMessage$uri as uri, mm.R_HCA as hid, Appointment$block as block, R_Patient as pid from MediaMessage mm left join Appointment app on mm.R_Appointment = app.Appointment$PersistentID where MediaMessage$PersistentID between 1 and 1000000 ) as short where $CONDITIONS'
+'select ID, ts, pid, hid, block, type, mime, note,urgent, uri from (select MediaMessage$PersistentID as ID, MediaMessage$timestamp as ts, MediaMessage$mimetype as mime, MediaMessage$note as note, MediaMessage$type as type,  MediaMessage$urgent as urgent, MediaMessage$uri as uri, mm.R_HCA as hid, Appointment$block as block, R_Patient as pid from MediaMessage mm left join Appointment app on mm.R_Appointment = app.Appointment$PersistentID where MediaMessage$PersistentID between 1 and 100000000 ) as short where $CONDITIONS'
 
 
 --split-by
@@ -25,4 +25,4 @@ media
 /user/${wf:user()}/oozie/output/bc/media
 
 -m
-4
+3

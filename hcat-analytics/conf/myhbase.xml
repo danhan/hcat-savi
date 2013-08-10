@@ -5,7 +5,7 @@
 
 <property>
       <name>hbase.zookeeper.quorum</name>
-      <value>10.0.0.13</value>
+      <value>10.12.11.3</value>
       <description>Comma separated list of servers in the ZooKeeper Quorum.If HBASE_MANAGES_ZK is set in hbase-env.sh this is the list of servers which we will start/stop ZooKeeper on.
       </description>
  </property>
