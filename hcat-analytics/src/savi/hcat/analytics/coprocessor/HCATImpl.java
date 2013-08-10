@@ -84,7 +84,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			results.getCopStat().setCells(cell_num);
 			results.getCopStat().setKvLength(kvLength);
 			results.getCopStat().setStartRow(startRow);
-			results.getCopStat().setStartRow(endRow);
+			results.getCopStat().setEndRow(endRow);
 			//LOG.info("Hash Unit: "+results.getHashUnit().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getHashUnit().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 
@@ -177,7 +177,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			unitHashArrayResult.getCopStat().setCells(cell_num);
 			unitHashArrayResult.getCopStat().setKvLength(kvLength);
 			unitHashArrayResult.getCopStat().setStartRow(startRow);
-			unitHashArrayResult.getCopStat().setStartRow(endRow);
+			unitHashArrayResult.getCopStat().setEndRow(endRow);
 			//LOG.info("Hash Unit: "+unitHashArrayResult.getHashUnitArray().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+unitHashArrayResult.getHashUnitArray().size()+
 					";cell_num=>"+cell_num+";row_num=>"+row_num);	
@@ -256,7 +256,7 @@ public class HCATImpl extends BaseEndpointCoprocessor implements HCATProtocol {
 			results.getCopStat().setCells(cell_num);
 			results.getCopStat().setKvLength(kvLength);
 			results.getCopStat().setStartRow(startRow);
-			results.getCopStat().setStartRow(endRow);
+			results.getCopStat().setEndRow(endRow);
 			//LOG.info("Hash Unit: "+results.getHashUnit().toString());	
 			LOG.info("exe_time=>"+(eTime-sTime)+";result=>"+results.getHashUnit().size()+";cell_num=>"+cell_num+";row_num=>"+row_num);	
 

@@ -104,7 +104,7 @@ public class XBaseService {
 			reqStatJSON.put(XConstants.REQUEST_STAT_ROWS, one_cop.getRows());
 			reqStatJSON.put(XConstants.REQUEST_CELL_SIZE, one_cop.getKvLength());
 			reqStatJSON.put(XConstants.REQUEST_STAT_START_ROW, one_cop.getStartRow());
-			reqStatJSON.put(XConstants.REQUEST_STAT_END_ROW, one_cop.getStartRow());
+			reqStatJSON.put(XConstants.REQUEST_STAT_END_ROW, one_cop.getEndRow());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
