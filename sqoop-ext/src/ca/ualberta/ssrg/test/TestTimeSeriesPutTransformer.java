@@ -79,10 +79,12 @@ public class TestTimeSeriesPutTransformer {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TestTimeSeriesPutTransformer timeseries = new TestTimeSeriesPutTransformer();
-		String columFamily = "{\"family\":\"d\",\"columns\":[{\"field\":\"sid\",\"prefix\":\"\"},{\"field\":\"type\",\"prefix\":\"m\"}],\"version\":{\"field\":\"ts\",\"interval\":1,\"unit\":\"sec\",\"period\":\"block\"}}";
+		//String columFamily = "{\"family\":\"d\",\"columns\":[{\"field\":\"sid\",\"prefix\":\"\"},{\"field\":\"type\",\"prefix\":\"m\"}],\"version\":{\"field\":\"ts\",\"interval\":1,\"unit\":\"sec\",\"period\":\"block\"}}";
+		String columFamily = "{\"family\":\"d\",\"columns\":[{\"field\":\"sid\",\"prefix\":\"\"},{\"field\":\"type\",\"prefix\":\"m\"}],\"version\":{\"interval\":1}}";
 		timeseries.setColumnFamily(columFamily);
 		try{
-			timeseries.version.getVersionValue("Fri Apr 12 15:16:50 MDT 2013");
+			timeseries.version=new XSchemaVersion(new JSONObject(),"ts","block","yyyy-MM-dd HH:mm:ss");
+			timeseries.version.getVersionValue("2010-01-01 13:20:30.0");
 			System.out.println(timeseries.columnFamily);
 			System.out.println(timeseries.columnNames.toString());
 		}catch(Exception e){
