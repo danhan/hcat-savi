@@ -35,7 +35,6 @@ under the License.
     Files will be consulted in lexicographical order only if this property
     is unset.
   -->
-
   <property>
     <name>sqoop.connection.factories</name>
     <value>com.cloudera.sqoop.manager.DefaultManagerFactory</value>

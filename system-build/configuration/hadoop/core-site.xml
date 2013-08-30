@@ -14,7 +14,7 @@
 
 <property>
   <name>fs.default.name</name>
-  <value>hdfs://10.0.0.13:54310</value>
+  <value>hdfs://10.12.11.3:54310</value>
   <description>The name of the default file system.  A URI whose
   scheme and authority determine the FileSystem implementation.  The
   uri's scheme determines the config property (fs.SCHEME.impl) naming
@@ -25,12 +25,14 @@
 <!-- OOZIE -->
   <property>
     <name>hadoop.proxyuser.ubuntu.hosts</name>
-    <value>10.0.0.13</value>
+    <value>10.12.11.12</value>
   </property>
   <property>
     <name>hadoop.proxyuser.ubuntu.groups</name>
     <value>ubuntu</value>
   </property>
+
+
 
 
 

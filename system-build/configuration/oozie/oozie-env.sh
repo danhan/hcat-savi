@@ -23,18 +23,6 @@
 # Java System properties for Oozie should be specified in this variable
 #
 export CATALINA_OPTS="$CATALINA_OPTS -Xmx1024m"
-export SQOOP_HOME=/usr/local/sqoop
-export SQOOP_CONF_DIR=/usr/local/sqoop/conf
-export HADOOP_MAPRED_HOME=/usr/local/hadoop
-
-
-export OOZIE_CONF=${OOZIE_HOME}/conf
-export OOZIE_DATA=${OOZIE_HOME}/data
-export OOZIE_LOG=${OOZIE_HOME}/logs
-export CATALINA_BASE=${OOZIE_HOME}/oozie-server
-export CATALINA_TMPDIR=${OOZIE_HOME}/oozie-server/temp
-#export CATALINA_OUT=${OOZIE_LOGS}/catalina.out
-#export CATALINA_PID=/tmp/oozie.pid
 
 # Oozie configuration file to load from Oozie configuration directory
 #

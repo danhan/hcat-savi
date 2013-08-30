@@ -20,16 +20,18 @@
 # Set Hadoop-specific environment variables here.
 
 #Set path to where bin/hadoop is available
-#export HADOOP_COMMON_HOME=
+export HADOOP_COMMON_HOME=/usr/local/hadoop
 
 #Set path to where hadoop-*-core.jar is available
-#export HADOOP_MAPRED_HOME=
+export HADOOP_MAPRED_HOME=/usr/local/hadoop
 
 #set the path to where bin/hbase is available
-#export HBASE_HOME=
+export HBASE_HOME=/usr/local/hbase
 
 #Set the path to where bin/hive is available
 #export HIVE_HOME=
 
 #Set the path for where zookeper config dir is
-#export ZOOCFGDIR=
+export ZOOCFGDIR=/usr/local/zookeeper/conf
+
+#export SQOOP_USER_CLASSPATH="`ls ${HIVE_HOME}/lib/libthrift-*.jar 2> /dev/null`:${SQOOP_USER_CLASSPATH}"

@@ -22,28 +22,31 @@
 # Set environment variables here.
 
 # The java implementation to use.  Java 1.6 required.
-export JAVA_HOME=/usr/lib/jvm/java-6-openjdk
+ export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64
 
 # Extra Java CLASSPATH elements.  Optional.
-export HBASE_CLASSPATH=/usr/local/hadoop/conf
+ export HBASE_CLASSPATH=/usr/local/hadoop/conf
 
 # The maximum amount of heap to use, in MB. Default is 1000.
- export HBASE_HEAPSIZE=4000
+ export HBASE_HEAPSIZE=2000
 
 # Extra Java runtime options.
 # Below are what we set by default.  May only work with SUN JVM.
 # For more on why as well as other possible settings,
 # see http://wiki.apache.org/hadoop/PerformanceTuning
-#export HBASE_OPTS="-ea -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode"
-#export HBASE_OPTS="-XX:+UseConcMarkSweepGC -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/usr/local/hbase/logs/gc-hbase.log"
-export HBASE_OPTS="-XX:+UseParNewGC -XX:+UseConcMarkSweepGC"
+export HBASE_OPTS="-XX:NewSize=64m -XX:MaxNewSize=64m -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode"
+# -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:/usr/local/hbase/logs/gc-hbase.log"
 
- #Uncomment below to enable java garbage collection logging in the .out file.
-# export HBASE_OPTS="$HBASE_OPTS -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps" 
+# Uncomment below to enable java garbage collection logging in the .out file.
+# export HBASE_OPTS="$HBASE_OPTS -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps $HBASE_GC_OPTS" 
+
+# Uncomment below (along with above GC logging) to put GC information in its own logfile (will set HBASE_GC_OPTS)
+# export HBASE_USE_GC_LOGFILE=true
+
 
 # Uncomment below if you intend to use the EXPERIMENTAL off heap cache.
 # export HBASE_OPTS="$HBASE_OPTS -XX:MaxDirectMemorySize="
-# Set hbase.offheapcachesize in hbase-site.xml
+# Set hbase.offheapcache.percentage in hbase-site.xml to a nonzero value.
 
 
 # Uncomment and adjust to enable JMX exporting
@@ -51,10 +54,10 @@ export HBASE_OPTS="-XX:+UseParNewGC -XX:+UseConcMarkSweepGC"
 # More details at: http://java.sun.com/javase/6/docs/technotes/guides/management/agent.html
 #
 # export HBASE_JMX_BASE="-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
-# export HBASE_MASTER_OPTS="$HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10101"
-# export HBASE_REGIONSERVER_OPTS="$HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10102"
-# export HBASE_THRIFT_OPTS="$HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10103"
-# export HBASE_ZOOKEEPER_OPTS="$HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10104"
+# export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS $HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10101"
+# export HBASE_REGIONSERVER_OPTS="$HBASE_REGIONSERVER_OPTS $HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10102"
+# export HBASE_THRIFT_OPTS="$HBASE_THRIFT_OPTS $HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10103"
+# export HBASE_ZOOKEEPER_OPTS="$HBASE_ZOOKEEPER_OPTS $HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10104"
 
 # File naming hosts on which HRegionServers will run.  $HBASE_HOME/conf/regionservers by default.
 # export HBASE_REGIONSERVERS=${HBASE_HOME}/conf/regionservers
@@ -64,6 +67,12 @@ export HBASE_OPTS="-XX:+UseParNewGC -XX:+UseConcMarkSweepGC"
 
 # Where log files are stored.  $HBASE_HOME/logs by default.
 # export HBASE_LOG_DIR=${HBASE_HOME}/logs
+
+# Enable remote JDWP debugging of major HBase processes. Meant for Core Developers 
+# export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8070"
+# export HBASE_REGIONSERVER_OPTS="$HBASE_REGIONSERVER_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8071"
+# export HBASE_THRIFT_OPTS="$HBASE_THRIFT_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8072"
+# export HBASE_ZOOKEEPER_OPTS="$HBASE_ZOOKEEPER_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8073"
 
 # A string representing this instance of hbase. $USER by default.
 # export HBASE_IDENT_STRING=$USER

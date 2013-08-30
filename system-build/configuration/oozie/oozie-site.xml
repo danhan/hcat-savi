@@ -66,9 +66,25 @@
 
     <property>
         <name>oozie.service.PurgeService.older.than</name>
-        <value>30</value>
+        <value>3</value>
         <description>
             Jobs older than this value, in days, will be purged by the PurgeService.
+        </description>
+    </property>
+
+    <property>
+        <name>oozie.service.PurgeService.coord.older.than</name>
+        <value>1</value>
+        <description>
+            Completed coordinator jobs older than this value, in days, will be purged by the PurgeService.
+        </description>
+    </property>
+
+    <property>
+        <name>oozie.service.PurgeService.bundle.older.than</name>
+        <value>1</value>
+        <description>
+            Completed bundle jobs older than this value, in days, will be purged by the PurgeService.
         </description>
     </property>
 
