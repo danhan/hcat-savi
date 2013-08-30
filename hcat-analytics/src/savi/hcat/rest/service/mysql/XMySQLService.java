@@ -89,6 +89,8 @@ public class XMySQLService extends XBaseStatService{
            JSONObject obj = new JSONObject();
            obj.put("count", count);
            obj.put("response_time", (end-start));
+           result.put(obj);
+           
     	   System.out.println("count=>"+count+";time=>"+(end-start));
     	   
        }catch(Exception e){
