@@ -1,0 +1,582 @@
+=== Request with CURL=========
+
+************************************************
+** The result of query { 'object':'appointment', 'condition':'', 'start-time':'2010-04-01 01:00:00', 'end-time':'2010-06-30 18:00:00', 'unit':'m', 'regions':'on,bc'} 
+*************************************************
+[
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 7101, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 9397, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 11102, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 22880, 
+                "end_row": "on-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "on-20100405-1"
+            }
+        ], 
+        "region": "on", 
+        "response_time": 39992, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }, 
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 16, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 13, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 2309, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 16564, 
+                "end_row": "bc-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "bc-20100405-1"
+            }
+        ], 
+        "region": "bc", 
+        "response_time": 39992, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }
+]
+
+************************************************
+************Finish the request*******************
+*************************************************
+=== Request with CURL=========
+
+************************************************
+** The result of query { 'object':'appointment', 'condition':'', 'start-time':'2010-04-01 01:00:00', 'end-time':'2010-06-30 18:00:00', 'unit':'m', 'regions':'on,bc'} 
+*************************************************
+[
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 2331, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 2938, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 11785, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 22857, 
+                "end_row": "on-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "on-20100405-1"
+            }
+        ], 
+        "region": "on", 
+        "response_time": 45359, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }, 
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 4, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 8, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 2643, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 22410, 
+                "end_row": "bc-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "bc-20100405-1"
+            }
+        ], 
+        "region": "bc", 
+        "response_time": 45359, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }
+]
+
+************************************************
+************Finish the request*******************
+*************************************************
+=== Request with CURL=========
+
+************************************************
+** The result of query { 'object':'appointment', 'condition':'', 'start-time':'2010-04-01 01:00:00', 'end-time':'2010-06-30 18:00:00', 'unit':'m', 'regions':'on,bc'} 
+*************************************************
+[
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 1783, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 2947, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 9709, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 17366, 
+                "end_row": "on-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "on-20100405-1"
+            }
+        ], 
+        "region": "on", 
+        "response_time": 34203, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }, 
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 8, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 5, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 1883, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 16744, 
+                "end_row": "bc-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "bc-20100405-1"
+            }
+        ], 
+        "region": "bc", 
+        "response_time": 34203, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }
+]
+
+************************************************
+************Finish the request*******************
+*************************************************
+=== Request with CURL=========
+
+************************************************
+** The result of query { 'object':'appointment', 'condition':'', 'start-time':'2010-04-01 01:00:00', 'end-time':'2010-06-30 18:00:00', 'unit':'m', 'regions':'on,bc'} 
+*************************************************
+[
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 1788, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 3018, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 10282, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 22643, 
+                "end_row": "on-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "on-20100405-1"
+            }
+        ], 
+        "region": "on", 
+        "response_time": 40228, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }, 
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 5, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 5, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 2156, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 17501, 
+                "end_row": "bc-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "bc-20100405-1"
+            }
+        ], 
+        "region": "bc", 
+        "response_time": 40228, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }
+]
+
+************************************************
+************Finish the request*******************
+*************************************************
+=== Request with CURL=========
+
+************************************************
+** The result of query { 'object':'appointment', 'condition':'', 'start-time':'2010-04-01 01:00:00', 'end-time':'2010-06-30 18:00:00', 'unit':'m', 'regions':'on,bc'} 
+*************************************************
+[
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 1968, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 3552, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 13071, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 23072, 
+                "end_row": "on-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "on-20100405-1"
+            }
+        ], 
+        "region": "on", 
+        "response_time": 40105, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }, 
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 5, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 8, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 2199, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 16947, 
+                "end_row": "bc-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "bc-20100405-1"
+            }
+        ], 
+        "region": "bc", 
+        "response_time": 40105, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }
+]
+
+************************************************
+************Finish the request*******************
+*************************************************
+=== Request with CURL=========
+
+************************************************
+** The result of query { 'object':'appointment', 'condition':'', 'start-time':'2010-04-01 01:00:00', 'end-time':'2010-06-30 18:00:00', 'unit':'m', 'regions':'on,bc'} 
+*************************************************
+[
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 1579, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 2695, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 9843, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 18886, 
+                "end_row": "on-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "on-20100405-1"
+            }
+        ], 
+        "region": "on", 
+        "response_time": 40288, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }, 
+    {
+        "cops_stat": [
+            {
+                "cell_size": 0, 
+                "cop_time": 4, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 3, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 0, 
+                "cop_time": 1866, 
+                "num_of_cells": 0, 
+                "num_of_rows": 0
+            }, 
+            {
+                "cell_size": 88, 
+                "cop_time": 21334, 
+                "end_row": "bc-20100621-99999", 
+                "num_of_cells": 4696006, 
+                "num_of_rows": 1151920, 
+                "start_row": "bc-20100405-1"
+            }
+        ], 
+        "region": "bc", 
+        "response_time": 40288, 
+        "values": [
+            {
+                "201004": 1924721
+            }, 
+            {
+                "201005": 2136138
+            }, 
+            {
+                "201006": 635147
+            }
+        ]
+    }
+]
+
+************************************************
+************Finish the request*******************
+*************************************************
