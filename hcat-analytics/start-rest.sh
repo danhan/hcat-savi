@@ -38,7 +38,8 @@ ${PWD}/lib/hschema-hd.jar:\
 ${PWD}/lib/org.json.jar:\
 ${PWD}/lib/org.restlet.ext.json.jar:\
 ${PWD}/lib/org.restlet.jar:\
-${PWD}/lib/google-collections-0.8.jar
+${PWD}/lib/google-collections-0.8.jar:\
+${PWD}/lib/mysql-connector-java-5.1.24-bin.jar
 
 HBASELIB=${HBASE_HOME}/hbase-0.94.1-security.jar
 HBASECONF=${HBASE_HOME}/conf

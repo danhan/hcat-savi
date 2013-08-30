@@ -16,7 +16,7 @@ ID
 media
 
 --hbase-row-key
-'{"region":"bc","combined":"block,pid,hid","timestamp":{"field":"ts","period":"block","version":{"interval":1}}}'
+'{"region":"bc","combined":"block","timestamp":{"field":"ts","period":"block","version":{"interval":1}}}'
 
 --column-family
 '{"family"=>"d","columns"=>[{"field"=>"sid","prefix"=>"s"},{"field"=>"type","prefix"=>"m"}]}'
@@ -25,4 +25,4 @@ media
 /user/${wf:user()}/oozie/output/bc/media
 
 -m
-3
+2

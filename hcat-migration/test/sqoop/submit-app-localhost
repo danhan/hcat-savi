@@ -1,1 +1,1 @@
-sqoop import -libjars sqoop-ext.jar -D sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.TimeSeriesPutTransformer --options-file localhost-app.option
+sqoop import -libjars sqoop-ext.jar -D sqoop.hbase.insert.put.transformer.class=org.apache.sqoop.hbase.TimeSeriesPutTransformer --options-file appointment.option

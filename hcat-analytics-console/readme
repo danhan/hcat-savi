@@ -3,3 +3,9 @@ install Python, because the output is formatted with python -mjson.tool
 console.sh is the only one you need
 
 #use nodejs to trigger http request
+
+BC:
+The scope: x:[-138.955078,-117.026367]; y: [49.009051,59.998986]	
+
+Ontario:
+The scope: x:[-95,141602,-79.453125]; y: [41.771312,56.909002]

@@ -1,5 +1,6 @@
 <workflow-app name="bc-subwf" xmlns="uri:oozie:workflow:0.2">
-   <start to="fork-move"/> 
+	<start to="appointment-move" />
+<!--   <start to="fork-move"/>  -->
    <fork name="fork-move">      
 <!--      <path start="static-data-move"/> -->
  <!--
@@ -33,7 +34,8 @@
             </configuration>
 
          </sub-workflow>	 
-         <ok to="joining-move" />
+		<ok to="bc-subwf-end" />
+<!--         <ok to="joining-move" /> -->
          <error to="kill" />
     </action>
 

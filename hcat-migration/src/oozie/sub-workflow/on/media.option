@@ -25,4 +25,4 @@ media
 /user/${wf:user()}/oozie/output/on/media
 
 -m
-3
+2

@@ -52,7 +52,7 @@
             </configuration>
 
 		</sub-workflow>
-		<ok to="joining-edge"/>
+		<ok to="joining-edge"/> 
 		<error to="kill"/>
 	</action>
 
